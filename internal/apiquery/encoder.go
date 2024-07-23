@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/param"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

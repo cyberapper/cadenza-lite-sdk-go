@@ -1,14 +1,14 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite
+package cadenzasdk
 
 import (
 	"context"
 	"net/http"
 	"os"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/requestconfig"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/requestconfig"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apijson"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apijson"
 )
 
 // Error represents an error that originates from the API, i.e. when a request is

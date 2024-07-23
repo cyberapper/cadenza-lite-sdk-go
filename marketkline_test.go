@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite_test
+package cadenzasdk_test
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/testutil"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/testutil"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func TestMarketKlineGetWithOptionalParams(t *testing.T) {
@@ -21,20 +21,20 @@ func TestMarketKlineGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Market.Kline.Get(context.TODO(), cadenzalite.MarketKlineGetParams{
-		ExchangeType: cadenzalite.F(cadenzalite.MarketKlineGetParamsExchangeTypeBinance),
-		Interval:     cadenzalite.F(cadenzalite.MarketKlineGetParamsInterval1s),
-		Symbol:       cadenzalite.F("BTC/USDT"),
-		EndTime:      cadenzalite.F(int64(1632933600000)),
-		Limit:        cadenzalite.F(int64(100)),
-		StartTime:    cadenzalite.F(int64(1622505600000)),
+	_, err := client.Market.Kline.Get(context.TODO(), cadenzasdk.MarketKlineGetParams{
+		ExchangeType: cadenzasdk.F(cadenzasdk.MarketKlineGetParamsExchangeTypeBinance),
+		Interval:     cadenzasdk.F(cadenzasdk.MarketKlineGetParamsInterval1s),
+		Symbol:       cadenzasdk.F("BTC/USDT"),
+		EndTime:      cadenzasdk.F(int64(1632933600000)),
+		Limit:        cadenzasdk.F(int64(100)),
+		StartTime:    cadenzasdk.F(int64(1622505600000)),
 	})
 	if err != nil {
-		var apierr *cadenzalite.Error
+		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

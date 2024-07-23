@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite
+package cadenzasdk
 
 import (
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apierror"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apierror"
 )
 
 type Error = apierror.Error
