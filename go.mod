@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/cadenza-lite-go
+module github.com/cyberapper/cadenza-lite-sdk-go
 
 go 1.19
 

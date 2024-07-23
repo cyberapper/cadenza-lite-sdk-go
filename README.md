@@ -1,6 +1,6 @@
 # Cadenza Go API Library
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/cadenza-lite-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/cadenza-lite-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go"><img src="https://pkg.go.dev/badge/github.com/cyberapper/cadenza-lite-sdk-go.svg" alt="Go Reference"></a>
 
 The Cadenza Go library provides convenient access to [the Cadenza REST
 API](https://docs.cadenza.algo724.com) from applications written in Go. The full API of this library can be found in [api.md](api.md).
@@ -9,17 +9,25 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/cadenza-lite-go" // imported as cadenzalite
+	"github.com/cyberapper/cadenza-lite-sdk-go" // imported as cadenzasdk
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/cadenza-lite-go@v0.0.1-alpha.0'
+go get -u 'github.com/cyberapper/cadenza-lite-sdk-go@v0.0.1-alpha.0'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -36,12 +44,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func main() {
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBearerToken("My Bearer Token"), // defaults to os.LookupEnv("CADENZA_CLIENT_SDK_BEARER_TOKEN")
 		option.WithEnvironmentUat(),               // defaults to option.WithEnvironmentProd()
 	)
@@ -68,18 +76,18 @@ To send a null, use `Null[T]()`, and to send a nonconforming value, use `Raw[T](
 
 ```go
 params := FooParams{
-	Name: cadenzalite.F("hello"),
+	Name: cadenzasdk.F("hello"),
 
 	// Explicitly send `"description": null`
-	Description: cadenzalite.Null[string](),
+	Description: cadenzasdk.Null[string](),
 
-	Point: cadenzalite.F(cadenzalite.Point{
-		X: cadenzalite.Int(0),
-		Y: cadenzalite.Int(1),
+	Point: cadenzasdk.F(cadenzasdk.Point{
+		X: cadenzasdk.Int(0),
+		Y: cadenzasdk.Int(1),
 
 		// In cases where the API specifies a given type,
 		// but you want to send something else, use `Raw`:
-		Z: cadenzalite.Raw[int64](0.01), // sends a float
+		Z: cadenzasdk.Raw[int64](0.01), // sends a float
 	}),
 }
 ```
@@ -133,7 +141,7 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := cadenzalite.NewClient(
+client := cadenzasdk.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
@@ -146,7 +154,7 @@ client.Clients.Info.Get(context.TODO(), ...,
 )
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/cadenza-lite-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go/option).
 
 ### Pagination
 
@@ -160,7 +168,7 @@ with additional helper methods like `.GetNextPage()`, e.g.:
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*cadenzalite.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*cadenzasdk.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
@@ -169,7 +177,7 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 ```go
 _, err := client.Clients.Info.Get(context.TODO())
 if err != nil {
-	var apierr *cadenzalite.Error
+	var apierr *cadenzasdk.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
@@ -209,7 +217,7 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `cadenzalite.FileParam(reader io.Reader, filename string, contentType string)`
+We also provide a helper `cadenzasdk.FileParam(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ### Retries
@@ -222,7 +230,7 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := cadenzalite.NewClient(
+client := cadenzasdk.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
@@ -263,9 +271,9 @@ or the `option.WithJSONSet()` methods.
 
 ```go
 params := FooNewParams{
-    ID:   cadenzalite.F("id_xxxx"),
-    Data: cadenzalite.F(FooNewParamsData{
-        FirstName: cadenzalite.F("John"),
+    ID:   cadenzasdk.F("id_xxxx"),
+    Data: cadenzasdk.F(FooNewParamsData{
+        FirstName: cadenzasdk.F("John"),
     }),
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -300,7 +308,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := cadenzalite.NewClient(
+client := cadenzasdk.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```
@@ -325,4 +333,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/cadenza-lite-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/cyberapper/cadenza-lite-sdk-go/issues) with questions, bugs, or suggestions.

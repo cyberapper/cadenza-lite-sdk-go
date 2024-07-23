@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite_test
+package cadenzasdk_test
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/testutil"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/testutil"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func TestWebhookPubsubWithOptionalParams(t *testing.T) {
@@ -21,28 +21,28 @@ func TestWebhookPubsubWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Webhook.Pubsub(context.TODO(), cadenzalite.WebhookPubsubParams{
-		Event: cadenzalite.EventParam{
-			EventID:   cadenzalite.F("eventId"),
-			EventType: cadenzalite.F("eventType"),
-			Source:    cadenzalite.F("source"),
-			Timestamp: cadenzalite.F(int64(1632933600000)),
-			Payload: cadenzalite.F[cadenzalite.EventPayloadUnionParam](cadenzalite.EventPayloadQuoteRequestParam{
-				BaseCurrency:      cadenzalite.F("baseCurrency"),
-				QuoteCurrency:     cadenzalite.F("quoteCurrency"),
-				OrderSide:         cadenzalite.F("orderSide"),
-				Quantity:          cadenzalite.F(0.000000),
-				QuoteQuantity:     cadenzalite.F(0.000000),
-				ExchangeAccountID: cadenzalite.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+	_, err := client.Webhook.Pubsub(context.TODO(), cadenzasdk.WebhookPubsubParams{
+		Event: cadenzasdk.EventParam{
+			EventID:   cadenzasdk.F("eventId"),
+			EventType: cadenzasdk.F("eventType"),
+			Source:    cadenzasdk.F("source"),
+			Timestamp: cadenzasdk.F(int64(1632933600000)),
+			Payload: cadenzasdk.F[cadenzasdk.EventPayloadUnionParam](cadenzasdk.EventPayloadQuoteRequestParam{
+				BaseCurrency:      cadenzasdk.F("baseCurrency"),
+				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+				OrderSide:         cadenzasdk.F("orderSide"),
+				Quantity:          cadenzasdk.F(0.000000),
+				QuoteQuantity:     cadenzasdk.F(0.000000),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}),
 		},
 	})
 	if err != nil {
-		var apierr *cadenzalite.Error
+		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

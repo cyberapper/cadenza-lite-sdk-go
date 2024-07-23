@@ -17,10 +17,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apierror"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apiform"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apiquery"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apierror"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apiform"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

@@ -12,7 +12,7 @@ import (
 
 	"github.com/tidwall/sjson"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/param"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/param"
 )
 
 var encoders sync.Map // map[encoderEntry]encoderFunc

@@ -1,15 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite_test
+package cadenzasdk_test
 
 import (
 	"context"
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/testutil"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/testutil"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func TestUsage(t *testing.T) {
@@ -20,7 +20,7 @@ func TestUsage(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)

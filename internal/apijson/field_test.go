@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/param"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/param"
 )
 
 type Struct struct {

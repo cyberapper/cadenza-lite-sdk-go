@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite_test
+package cadenzasdk_test
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/testutil"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/testutil"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
@@ -21,20 +21,20 @@ func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Trading.Quote.RequestForQuote(context.TODO(), cadenzalite.TradingQuoteRequestForQuoteParams{
-		BaseCurrency:      cadenzalite.F("baseCurrency"),
-		OrderSide:         cadenzalite.F("orderSide"),
-		QuoteCurrency:     cadenzalite.F("quoteCurrency"),
-		ExchangeAccountID: cadenzalite.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Quantity:          cadenzalite.F(0.000000),
-		QuoteQuantity:     cadenzalite.F(0.000000),
+	_, err := client.Trading.Quote.RequestForQuote(context.TODO(), cadenzasdk.TradingQuoteRequestForQuoteParams{
+		BaseCurrency:      cadenzasdk.F("baseCurrency"),
+		OrderSide:         cadenzasdk.F("orderSide"),
+		QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+		ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Quantity:          cadenzasdk.F(0.000000),
+		QuoteQuantity:     cadenzasdk.F(0.000000),
 	})
 	if err != nil {
-		var apierr *cadenzalite.Error
+		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

@@ -1,17 +1,17 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite
+package cadenzasdk
 
 import (
 	"context"
 	"net/http"
 	"net/url"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apijson"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/apiquery"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/param"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/requestconfig"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apijson"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apiquery"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/param"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/requestconfig"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 // PortfolioService contains methods and other services that help with interacting

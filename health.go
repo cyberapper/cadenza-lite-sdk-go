@@ -1,13 +1,13 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite
+package cadenzasdk
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/stainless-sdks/cadenza-lite-go/internal/requestconfig"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/requestconfig"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 // HealthService contains methods and other services that help with interacting

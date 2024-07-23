@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package cadenzalite_test
+package cadenzasdk_test
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/cadenza-lite-go"
-	"github.com/stainless-sdks/cadenza-lite-go/internal/testutil"
-	"github.com/stainless-sdks/cadenza-lite-go/option"
+	"github.com/cyberapper/cadenza-lite-sdk-go"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/testutil"
+	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
 func TestTradingExecutionReportListWithOptionalParams(t *testing.T) {
@@ -21,19 +21,19 @@ func TestTradingExecutionReportListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Trading.ExecutionReport.List(context.TODO(), cadenzalite.TradingExecutionReportListParams{
-		EndTime:        cadenzalite.F(int64(1632933600000)),
-		Limit:          cadenzalite.F(int64(100)),
-		Offset:         cadenzalite.F(int64(0)),
-		QuoteRequestID: cadenzalite.F("quoteRequestId"),
-		StartTime:      cadenzalite.F(int64(1622505600000)),
+	_, err := client.Trading.ExecutionReport.List(context.TODO(), cadenzasdk.TradingExecutionReportListParams{
+		EndTime:        cadenzasdk.F(int64(1632933600000)),
+		Limit:          cadenzasdk.F(int64(100)),
+		Offset:         cadenzasdk.F(int64(0)),
+		QuoteRequestID: cadenzasdk.F("quoteRequestId"),
+		StartTime:      cadenzasdk.F(int64(1622505600000)),
 	})
 	if err != nil {
-		var apierr *cadenzalite.Error
+		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -49,15 +49,15 @@ func TestTradingExecutionReportGetQuoteExecutionReportWithOptionalParams(t *test
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := cadenzalite.NewClient(
+	client := cadenzasdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Trading.ExecutionReport.GetQuoteExecutionReport(context.TODO(), cadenzalite.TradingExecutionReportGetQuoteExecutionReportParams{
-		QuoteRequestID: cadenzalite.F("quoteRequestId"),
+	_, err := client.Trading.ExecutionReport.GetQuoteExecutionReport(context.TODO(), cadenzasdk.TradingExecutionReportGetQuoteExecutionReportParams{
+		QuoteRequestID: cadenzasdk.F("quoteRequestId"),
 	})
 	if err != nil {
-		var apierr *cadenzalite.Error
+		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
