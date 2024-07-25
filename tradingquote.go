@@ -92,6 +92,14 @@ func (r quoteJSON) RawJSON() string {
 
 func (r Quote) implementsEventPayload() {}
 
+func (r Quote) implementsOrder() {}
+
+func (r Quote) implementsExchangeAccountPortfolio() {}
+
+func (r Quote) implementsQuote() {}
+
+func (r Quote) implementsOrderbook() {}
+
 // Exchange type
 type QuoteExchangeType string
 
@@ -141,7 +149,15 @@ func (r QuoteParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r QuoteParam) implementsEventPayloadUnionParam() {}
+func (r QuoteParam) implementsOrderUnionParam() {}
+
+func (r QuoteParam) implementsExchangeAccountPortfolioUnionParam() {}
+
+func (r QuoteParam) implementsQuoteUnionParam() {}
+
+func (r QuoteParam) implementsEventMarketDataKlineParamsPayloadUnion() {}
+
+func (r QuoteParam) implementsOrderbookUnionParam() {}
 
 type QuoteRequest struct {
 	// Base currency is the currency you want to buy or sell
@@ -182,6 +198,14 @@ func (r quoteRequestJSON) RawJSON() string {
 
 func (r QuoteRequest) implementsEventPayload() {}
 
+func (r QuoteRequest) implementsOrder() {}
+
+func (r QuoteRequest) implementsExchangeAccountPortfolio() {}
+
+func (r QuoteRequest) implementsQuote() {}
+
+func (r QuoteRequest) implementsOrderbook() {}
+
 type QuoteRequestParam struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
@@ -202,7 +226,15 @@ func (r QuoteRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r QuoteRequestParam) implementsEventPayloadUnionParam() {}
+func (r QuoteRequestParam) implementsOrderUnionParam() {}
+
+func (r QuoteRequestParam) implementsExchangeAccountPortfolioUnionParam() {}
+
+func (r QuoteRequestParam) implementsQuoteUnionParam() {}
+
+func (r QuoteRequestParam) implementsEventMarketDataKlineParamsPayloadUnion() {}
+
+func (r QuoteRequestParam) implementsOrderbookUnionParam() {}
 
 type TradingQuoteGetParams struct {
 	QuoteRequest QuoteRequestParam `json:"quoteRequest,required"`
