@@ -33,6 +33,14 @@ func NewPortfolioService(opts ...option.RequestOption) (r *PortfolioService) {
 	return
 }
 
+// List Portfolio Summary
+func (r *PortfolioService) List(ctx context.Context, query PortfolioListParams, opts ...option.RequestOption) (res *[]ExchangeAccountPortfolio, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "api/v2/portfolio/listSummaries"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return
+}
+
 // List balances
 func (r *PortfolioService) ListBalances(ctx context.Context, query PortfolioListBalancesParams, opts ...option.RequestOption) (res *[]ExchangeAccountBalance, err error) {
 	opts = append(r.Options[:], opts...)
@@ -249,6 +257,244 @@ func (r ExchangeAccountCreditParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
+type ExchangeAccountPortfolio struct {
+	Payload ExchangeAccountPortfolioPayload `json:"payload"`
+	JSON    exchangeAccountPortfolioJSON    `json:"-"`
+}
+
+// exchangeAccountPortfolioJSON contains the JSON metadata for the struct
+// [ExchangeAccountPortfolio]
+type exchangeAccountPortfolioJSON struct {
+	Payload     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *ExchangeAccountPortfolio) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r exchangeAccountPortfolioJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r ExchangeAccountPortfolio) implementsEventPayload() {}
+
+type ExchangeAccountPortfolioPayload struct {
+	Balances []ExchangeAccountPortfolioPayloadBalance `json:"balances,required"`
+	// Exchange Account Credit Info
+	Credit ExchangeAccountCredit `json:"credit,required"`
+	// The unique identifier for the account.
+	ExchangeAccountID string `json:"exchangeAccountId,required" format:"uuid"`
+	// Exchange type
+	ExchangeType ExchangeAccountPortfolioPayloadExchangeType `json:"exchangeType,required"`
+	Positions    []ExchangeAccountPortfolioPayloadPosition   `json:"positions,required"`
+	// The timestamp when the portfolio information was updated.
+	UpdatedAt int64                               `json:"updatedAt,required"`
+	JSON      exchangeAccountPortfolioPayloadJSON `json:"-"`
+}
+
+// exchangeAccountPortfolioPayloadJSON contains the JSON metadata for the struct
+// [ExchangeAccountPortfolioPayload]
+type exchangeAccountPortfolioPayloadJSON struct {
+	Balances          apijson.Field
+	Credit            apijson.Field
+	ExchangeAccountID apijson.Field
+	ExchangeType      apijson.Field
+	Positions         apijson.Field
+	UpdatedAt         apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *ExchangeAccountPortfolioPayload) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r exchangeAccountPortfolioPayloadJSON) RawJSON() string {
+	return r.raw
+}
+
+type ExchangeAccountPortfolioPayloadBalance struct {
+	// Asset
+	Asset string `json:"asset,required"`
+	// Free balance
+	Free float64 `json:"free,required"`
+	// Locked balance
+	Locked float64 `json:"locked,required"`
+	// Total balance
+	Total float64                                    `json:"total,required"`
+	JSON  exchangeAccountPortfolioPayloadBalanceJSON `json:"-"`
+}
+
+// exchangeAccountPortfolioPayloadBalanceJSON contains the JSON metadata for the
+// struct [ExchangeAccountPortfolioPayloadBalance]
+type exchangeAccountPortfolioPayloadBalanceJSON struct {
+	Asset       apijson.Field
+	Free        apijson.Field
+	Locked      apijson.Field
+	Total       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *ExchangeAccountPortfolioPayloadBalance) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r exchangeAccountPortfolioPayloadBalanceJSON) RawJSON() string {
+	return r.raw
+}
+
+// Exchange type
+type ExchangeAccountPortfolioPayloadExchangeType string
+
+const (
+	ExchangeAccountPortfolioPayloadExchangeTypeBinance       ExchangeAccountPortfolioPayloadExchangeType = "BINANCE"
+	ExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin ExchangeAccountPortfolioPayloadExchangeType = "BINANCE_MARGIN"
+	ExchangeAccountPortfolioPayloadExchangeTypeB2C2          ExchangeAccountPortfolioPayloadExchangeType = "B2C2"
+	ExchangeAccountPortfolioPayloadExchangeTypeWintermute    ExchangeAccountPortfolioPayloadExchangeType = "WINTERMUTE"
+	ExchangeAccountPortfolioPayloadExchangeTypeBlockfills    ExchangeAccountPortfolioPayloadExchangeType = "BLOCKFILLS"
+	ExchangeAccountPortfolioPayloadExchangeTypeStonex        ExchangeAccountPortfolioPayloadExchangeType = "STONEX"
+)
+
+func (r ExchangeAccountPortfolioPayloadExchangeType) IsKnown() bool {
+	switch r {
+	case ExchangeAccountPortfolioPayloadExchangeTypeBinance, ExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin, ExchangeAccountPortfolioPayloadExchangeTypeB2C2, ExchangeAccountPortfolioPayloadExchangeTypeWintermute, ExchangeAccountPortfolioPayloadExchangeTypeBlockfills, ExchangeAccountPortfolioPayloadExchangeTypeStonex:
+		return true
+	}
+	return false
+}
+
+type ExchangeAccountPortfolioPayloadPosition struct {
+	// Amount
+	Amount float64 `json:"amount,required"`
+	// Position side
+	PositionSide ExchangeAccountPortfolioPayloadPositionsPositionSide `json:"positionSide,required"`
+	// Status
+	Status ExchangeAccountPortfolioPayloadPositionsStatus `json:"status,required"`
+	// Symbol
+	Symbol string `json:"symbol,required"`
+	// Cost
+	Cost float64 `json:"cost"`
+	// Entry price
+	EntryPrice float64                                     `json:"entryPrice"`
+	JSON       exchangeAccountPortfolioPayloadPositionJSON `json:"-"`
+}
+
+// exchangeAccountPortfolioPayloadPositionJSON contains the JSON metadata for the
+// struct [ExchangeAccountPortfolioPayloadPosition]
+type exchangeAccountPortfolioPayloadPositionJSON struct {
+	Amount       apijson.Field
+	PositionSide apijson.Field
+	Status       apijson.Field
+	Symbol       apijson.Field
+	Cost         apijson.Field
+	EntryPrice   apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *ExchangeAccountPortfolioPayloadPosition) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r exchangeAccountPortfolioPayloadPositionJSON) RawJSON() string {
+	return r.raw
+}
+
+// Position side
+type ExchangeAccountPortfolioPayloadPositionsPositionSide string
+
+const (
+	ExchangeAccountPortfolioPayloadPositionsPositionSideLong  ExchangeAccountPortfolioPayloadPositionsPositionSide = "LONG"
+	ExchangeAccountPortfolioPayloadPositionsPositionSideShort ExchangeAccountPortfolioPayloadPositionsPositionSide = "SHORT"
+)
+
+func (r ExchangeAccountPortfolioPayloadPositionsPositionSide) IsKnown() bool {
+	switch r {
+	case ExchangeAccountPortfolioPayloadPositionsPositionSideLong, ExchangeAccountPortfolioPayloadPositionsPositionSideShort:
+		return true
+	}
+	return false
+}
+
+// Status
+type ExchangeAccountPortfolioPayloadPositionsStatus string
+
+const (
+	ExchangeAccountPortfolioPayloadPositionsStatusOpen ExchangeAccountPortfolioPayloadPositionsStatus = "OPEN"
+)
+
+func (r ExchangeAccountPortfolioPayloadPositionsStatus) IsKnown() bool {
+	switch r {
+	case ExchangeAccountPortfolioPayloadPositionsStatusOpen:
+		return true
+	}
+	return false
+}
+
+type ExchangeAccountPortfolioParam struct {
+	Payload param.Field[ExchangeAccountPortfolioPayloadParam] `json:"payload"`
+}
+
+func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
+
+type ExchangeAccountPortfolioPayloadParam struct {
+	Balances param.Field[[]ExchangeAccountPortfolioPayloadBalanceParam] `json:"balances,required"`
+	// Exchange Account Credit Info
+	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
+	// The unique identifier for the account.
+	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
+	// Exchange type
+	ExchangeType param.Field[ExchangeAccountPortfolioPayloadExchangeType]    `json:"exchangeType,required"`
+	Positions    param.Field[[]ExchangeAccountPortfolioPayloadPositionParam] `json:"positions,required"`
+	// The timestamp when the portfolio information was updated.
+	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
+}
+
+func (r ExchangeAccountPortfolioPayloadParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type ExchangeAccountPortfolioPayloadBalanceParam struct {
+	// Asset
+	Asset param.Field[string] `json:"asset,required"`
+	// Free balance
+	Free param.Field[float64] `json:"free,required"`
+	// Locked balance
+	Locked param.Field[float64] `json:"locked,required"`
+	// Total balance
+	Total param.Field[float64] `json:"total,required"`
+}
+
+func (r ExchangeAccountPortfolioPayloadBalanceParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type ExchangeAccountPortfolioPayloadPositionParam struct {
+	// Amount
+	Amount param.Field[float64] `json:"amount,required"`
+	// Position side
+	PositionSide param.Field[ExchangeAccountPortfolioPayloadPositionsPositionSide] `json:"positionSide,required"`
+	// Status
+	Status param.Field[ExchangeAccountPortfolioPayloadPositionsStatus] `json:"status,required"`
+	// Symbol
+	Symbol param.Field[string] `json:"symbol,required"`
+	// Cost
+	Cost param.Field[float64] `json:"cost"`
+	// Entry price
+	EntryPrice param.Field[float64] `json:"entryPrice"`
+}
+
+func (r ExchangeAccountPortfolioPayloadPositionParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
 type ExchangeAccountPosition struct {
 	// Exchange account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
@@ -341,6 +587,21 @@ func (r ExchangeAccountPositionPositionsStatus) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+type PortfolioListParams struct {
+	// Exchange account ID
+	ExchangeAccountID param.Field[string] `query:"exchangeAccountId"`
+	// Hide small account
+	HideEmptyValue param.Field[bool] `query:"hideEmptyValue"`
+}
+
+// URLQuery serializes [PortfolioListParams]'s query parameters as `url.Values`.
+func (r PortfolioListParams) URLQuery() (v url.Values) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PortfolioListBalancesParams struct {

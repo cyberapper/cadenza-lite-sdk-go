@@ -26,12 +26,14 @@ func TestTradingQuoteGetWithOptionalParams(t *testing.T) {
 		option.WithBearerToken("My Bearer Token"),
 	)
 	_, err := client.Trading.Quote.Get(context.TODO(), cadenzasdk.TradingQuoteGetParams{
-		BaseCurrency:      cadenzasdk.F("baseCurrency"),
-		OrderSide:         cadenzasdk.F("orderSide"),
-		QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
-		ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Quantity:          cadenzasdk.F(0.000000),
-		QuoteQuantity:     cadenzasdk.F(0.000000),
+		QuoteRequest: cadenzasdk.QuoteRequestParam{
+			BaseCurrency:      cadenzasdk.F("baseCurrency"),
+			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+			OrderSide:         cadenzasdk.F("orderSide"),
+			Quantity:          cadenzasdk.F(0.000000),
+			QuoteQuantity:     cadenzasdk.F(0.000000),
+			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
 	})
 	if err != nil {
 		var apierr *cadenzasdk.Error

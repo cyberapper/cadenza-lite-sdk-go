@@ -23,7 +23,6 @@ import (
 type WebhookService struct {
 	Options        []option.RequestOption
 	CloudScheduler *WebhookCloudSchedulerService
-	Event          *WebhookEventService
 }
 
 // NewWebhookService generates a new service that applies the given options to each
@@ -33,7 +32,6 @@ func NewWebhookService(opts ...option.RequestOption) (r *WebhookService) {
 	r = &WebhookService{}
 	r.Options = opts
 	r.CloudScheduler = NewWebhookCloudSchedulerService(opts...)
-	r.Event = NewWebhookEventService(opts...)
 	return
 }
 
@@ -48,8 +46,8 @@ func (r *WebhookService) Pubsub(ctx context.Context, body WebhookPubsubParams, o
 type Event struct {
 	// A unique identifier for the event.
 	EventID string `json:"eventId,required"`
-	// The type of the event (e.g., order, executionReport, portfolio, orderBook).
-	EventType string `json:"eventType,required"`
+	// Event Type
+	EventType EventEventType `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
 	Timestamp int64 `json:"timestamp,required"`
 	// The actual data of the event, which varies based on the event type.
@@ -76,6 +74,27 @@ func (r *Event) UnmarshalJSON(data []byte) (err error) {
 
 func (r eventJSON) RawJSON() string {
 	return r.raw
+}
+
+// Event Type
+type EventEventType string
+
+const (
+	EventEventTypeCadenzaTaskPlaceOrderRequestAck  EventEventType = "cadenza.task.placeOrderRequestAck"
+	EventEventTypeCadenzaTaskCancelOrderRequestAck EventEventType = "cadenza.task.cancelOrderRequestAck"
+	EventEventTypeCadenzaDropCopyQuote             EventEventType = "cadenza.dropCopy.quote"
+	EventEventTypeCadenzaDropCopyOrder             EventEventType = "cadenza.dropCopy.order"
+	EventEventTypeCadenzaDropCopyPortfolio         EventEventType = "cadenza.dropCopy.portfolio"
+	EventEventTypeCadenzaMarketDataOrderBook       EventEventType = "cadenza.marketData.orderBook"
+	EventEventTypeCadenzaMarketDataKline           EventEventType = "cadenza.marketData.kline"
+)
+
+func (r EventEventType) IsKnown() bool {
+	switch r {
+	case EventEventTypeCadenzaTaskPlaceOrderRequestAck, EventEventTypeCadenzaTaskCancelOrderRequestAck, EventEventTypeCadenzaDropCopyQuote, EventEventTypeCadenzaDropCopyOrder, EventEventTypeCadenzaDropCopyPortfolio, EventEventTypeCadenzaMarketDataOrderBook, EventEventTypeCadenzaMarketDataKline:
+		return true
+	}
+	return false
 }
 
 // The actual data of the event, which varies based on the event type.
@@ -160,8 +179,7 @@ type EventPayload struct {
 	Fees interface{} `json:"fees,required"`
 	// This field can have the runtime type of [[]Order].
 	Executions interface{} `json:"executions,required"`
-	// This field can have the runtime type of
-	// [EventPayloadExchangeAccountPortfolioPayload].
+	// This field can have the runtime type of [ExchangeAccountPortfolioPayload].
 	Payload interface{} `json:"payload,required"`
 	// This field can have the runtime type of [[][]float64].
 	Asks interface{} `json:"asks,required"`
@@ -242,19 +260,18 @@ func (r *EventPayload) UnmarshalJSON(data []byte) (err error) {
 // AsUnion returns a [EventPayloadUnion] interface which you can cast to the
 // specific types for more type safety.
 //
-// Possible runtime types of the union are [EventPayloadQuoteRequest],
-// [EventPayloadPlaceOrderRequest], [EventPayloadCancelOrderRequest], [Quote],
-// [Order], [ExecutionReport], [EventPayloadExchangeAccountPortfolio], [Orderbook],
-// [EventPayloadKline].
+// Possible runtime types of the union are [QuoteRequest], [PlaceOrderRequest],
+// [CancelOrderRequest], [Quote], [Order], [ExecutionReport],
+// [ExchangeAccountPortfolio], [Orderbook], [EventPayloadKline].
 func (r EventPayload) AsUnion() EventPayloadUnion {
 	return r.union
 }
 
 // The actual data of the event, which varies based on the event type.
 //
-// Union satisfied by [EventPayloadQuoteRequest], [EventPayloadPlaceOrderRequest],
-// [EventPayloadCancelOrderRequest], [Quote], [Order], [ExecutionReport],
-// [EventPayloadExchangeAccountPortfolio], [Orderbook] or [EventPayloadKline].
+// Union satisfied by [QuoteRequest], [PlaceOrderRequest], [CancelOrderRequest],
+// [Quote], [Order], [ExecutionReport], [ExchangeAccountPortfolio], [Orderbook] or
+// [EventPayloadKline].
 type EventPayloadUnion interface {
 	implementsEventPayload()
 }
@@ -265,15 +282,15 @@ func init() {
 		"",
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(EventPayloadQuoteRequest{}),
+			Type:       reflect.TypeOf(QuoteRequest{}),
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(EventPayloadPlaceOrderRequest{}),
+			Type:       reflect.TypeOf(PlaceOrderRequest{}),
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(EventPayloadCancelOrderRequest{}),
+			Type:       reflect.TypeOf(CancelOrderRequest{}),
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
@@ -289,7 +306,7 @@ func init() {
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(EventPayloadExchangeAccountPortfolio{}),
+			Type:       reflect.TypeOf(ExchangeAccountPortfolio{}),
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
@@ -300,405 +317,6 @@ func init() {
 			Type:       reflect.TypeOf(EventPayloadKline{}),
 		},
 	)
-}
-
-type EventPayloadQuoteRequest struct {
-	// Base currency is the currency you want to buy or sell
-	BaseCurrency string `json:"baseCurrency,required"`
-	// Order side, BUY or SELL
-	OrderSide string `json:"orderSide,required"`
-	// Quote currency is the currency you want to pay or receive, and the price of the
-	// base currency is quoted in the quote currency
-	QuoteCurrency string `json:"quoteCurrency,required"`
-	// The identifier for the exchange account
-	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Amount of the base currency
-	Quantity float64 `json:"quantity"`
-	// Amount of the quote currency
-	QuoteQuantity float64                      `json:"quoteQuantity"`
-	JSON          eventPayloadQuoteRequestJSON `json:"-"`
-}
-
-// eventPayloadQuoteRequestJSON contains the JSON metadata for the struct
-// [EventPayloadQuoteRequest]
-type eventPayloadQuoteRequestJSON struct {
-	BaseCurrency      apijson.Field
-	OrderSide         apijson.Field
-	QuoteCurrency     apijson.Field
-	ExchangeAccountID apijson.Field
-	Quantity          apijson.Field
-	QuoteQuantity     apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *EventPayloadQuoteRequest) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadQuoteRequestJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r EventPayloadQuoteRequest) implementsEventPayload() {}
-
-type EventPayloadPlaceOrderRequest struct {
-	// Exchange account ID
-	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Levarage
-	Leverage int64 `json:"leverage"`
-	// Order side
-	OrderSide EventPayloadPlaceOrderRequestOrderSide `json:"orderSide"`
-	// Order type
-	OrderType EventPayloadPlaceOrderRequestOrderType `json:"orderType"`
-	// Position ID for closing position in margin trading
-	PositionID string `json:"positionId" format:"uuid"`
-	// Price
-	Price float64 `json:"price"`
-	// Price slippage tolerance, range: [0, 0.1] with 2 decimal places
-	PriceSlippageTolerance float64 `json:"priceSlippageTolerance"`
-	// Priority list of exchange account ID in descending order
-	Priority []string `json:"priority"`
-	// Quantity. One of quantity or quoteQuantity must be provided. If both is
-	// provided, only quantity will be used.
-	Quantity float64 `json:"quantity"`
-	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
-	// QUOTED order
-	QuoteID string `json:"quoteId"`
-	// Quote Quantity
-	QuoteQuantity float64 `json:"quoteQuantity"`
-	// Quote request ID
-	QuoteRequestID string `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy EventPayloadPlaceOrderRequestRoutePolicy `json:"routePolicy"`
-	// Symbol
-	Symbol string `json:"symbol"`
-	// Tenant ID
-	TenantID string `json:"tenantId"`
-	// Time in force
-	TimeInForce EventPayloadPlaceOrderRequestTimeInForce `json:"timeInForce"`
-	JSON        eventPayloadPlaceOrderRequestJSON        `json:"-"`
-}
-
-// eventPayloadPlaceOrderRequestJSON contains the JSON metadata for the struct
-// [EventPayloadPlaceOrderRequest]
-type eventPayloadPlaceOrderRequestJSON struct {
-	ExchangeAccountID      apijson.Field
-	Leverage               apijson.Field
-	OrderSide              apijson.Field
-	OrderType              apijson.Field
-	PositionID             apijson.Field
-	Price                  apijson.Field
-	PriceSlippageTolerance apijson.Field
-	Priority               apijson.Field
-	Quantity               apijson.Field
-	QuoteID                apijson.Field
-	QuoteQuantity          apijson.Field
-	QuoteRequestID         apijson.Field
-	RoutePolicy            apijson.Field
-	Symbol                 apijson.Field
-	TenantID               apijson.Field
-	TimeInForce            apijson.Field
-	raw                    string
-	ExtraFields            map[string]apijson.Field
-}
-
-func (r *EventPayloadPlaceOrderRequest) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadPlaceOrderRequestJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r EventPayloadPlaceOrderRequest) implementsEventPayload() {}
-
-// Order side
-type EventPayloadPlaceOrderRequestOrderSide string
-
-const (
-	EventPayloadPlaceOrderRequestOrderSideBuy  EventPayloadPlaceOrderRequestOrderSide = "BUY"
-	EventPayloadPlaceOrderRequestOrderSideSell EventPayloadPlaceOrderRequestOrderSide = "SELL"
-)
-
-func (r EventPayloadPlaceOrderRequestOrderSide) IsKnown() bool {
-	switch r {
-	case EventPayloadPlaceOrderRequestOrderSideBuy, EventPayloadPlaceOrderRequestOrderSideSell:
-		return true
-	}
-	return false
-}
-
-// Order type
-type EventPayloadPlaceOrderRequestOrderType string
-
-const (
-	EventPayloadPlaceOrderRequestOrderTypeMarket          EventPayloadPlaceOrderRequestOrderType = "MARKET"
-	EventPayloadPlaceOrderRequestOrderTypeLimit           EventPayloadPlaceOrderRequestOrderType = "LIMIT"
-	EventPayloadPlaceOrderRequestOrderTypeStopLoss        EventPayloadPlaceOrderRequestOrderType = "STOP_LOSS"
-	EventPayloadPlaceOrderRequestOrderTypeStopLossLimit   EventPayloadPlaceOrderRequestOrderType = "STOP_LOSS_LIMIT"
-	EventPayloadPlaceOrderRequestOrderTypeTakeProfit      EventPayloadPlaceOrderRequestOrderType = "TAKE_PROFIT"
-	EventPayloadPlaceOrderRequestOrderTypeTakeProfitLimit EventPayloadPlaceOrderRequestOrderType = "TAKE_PROFIT_LIMIT"
-	EventPayloadPlaceOrderRequestOrderTypeQuoted          EventPayloadPlaceOrderRequestOrderType = "QUOTED"
-)
-
-func (r EventPayloadPlaceOrderRequestOrderType) IsKnown() bool {
-	switch r {
-	case EventPayloadPlaceOrderRequestOrderTypeMarket, EventPayloadPlaceOrderRequestOrderTypeLimit, EventPayloadPlaceOrderRequestOrderTypeStopLoss, EventPayloadPlaceOrderRequestOrderTypeStopLossLimit, EventPayloadPlaceOrderRequestOrderTypeTakeProfit, EventPayloadPlaceOrderRequestOrderTypeTakeProfitLimit, EventPayloadPlaceOrderRequestOrderTypeQuoted:
-		return true
-	}
-	return false
-}
-
-// Route policy. For PRIORITY, the order request will be routed to the exchange
-// account with the highest priority. For QUOTE, the system will execute the
-// execution plan based on the quote. Order request with route policy QUOTE will
-// only accept two parameters, quoteRequestId and priceSlippageTolerance
-type EventPayloadPlaceOrderRequestRoutePolicy string
-
-const (
-	EventPayloadPlaceOrderRequestRoutePolicyPriority EventPayloadPlaceOrderRequestRoutePolicy = "PRIORITY"
-	EventPayloadPlaceOrderRequestRoutePolicyQuote    EventPayloadPlaceOrderRequestRoutePolicy = "QUOTE"
-)
-
-func (r EventPayloadPlaceOrderRequestRoutePolicy) IsKnown() bool {
-	switch r {
-	case EventPayloadPlaceOrderRequestRoutePolicyPriority, EventPayloadPlaceOrderRequestRoutePolicyQuote:
-		return true
-	}
-	return false
-}
-
-// Time in force
-type EventPayloadPlaceOrderRequestTimeInForce string
-
-const (
-	EventPayloadPlaceOrderRequestTimeInForceDay EventPayloadPlaceOrderRequestTimeInForce = "DAY"
-	EventPayloadPlaceOrderRequestTimeInForceGtc EventPayloadPlaceOrderRequestTimeInForce = "GTC"
-	EventPayloadPlaceOrderRequestTimeInForceGtx EventPayloadPlaceOrderRequestTimeInForce = "GTX"
-	EventPayloadPlaceOrderRequestTimeInForceGtd EventPayloadPlaceOrderRequestTimeInForce = "GTD"
-	EventPayloadPlaceOrderRequestTimeInForceOpg EventPayloadPlaceOrderRequestTimeInForce = "OPG"
-	EventPayloadPlaceOrderRequestTimeInForceCls EventPayloadPlaceOrderRequestTimeInForce = "CLS"
-	EventPayloadPlaceOrderRequestTimeInForceIoc EventPayloadPlaceOrderRequestTimeInForce = "IOC"
-	EventPayloadPlaceOrderRequestTimeInForceFok EventPayloadPlaceOrderRequestTimeInForce = "FOK"
-	EventPayloadPlaceOrderRequestTimeInForceGfa EventPayloadPlaceOrderRequestTimeInForce = "GFA"
-	EventPayloadPlaceOrderRequestTimeInForceGfs EventPayloadPlaceOrderRequestTimeInForce = "GFS"
-	EventPayloadPlaceOrderRequestTimeInForceGtm EventPayloadPlaceOrderRequestTimeInForce = "GTM"
-	EventPayloadPlaceOrderRequestTimeInForceMoo EventPayloadPlaceOrderRequestTimeInForce = "MOO"
-	EventPayloadPlaceOrderRequestTimeInForceMoc EventPayloadPlaceOrderRequestTimeInForce = "MOC"
-	EventPayloadPlaceOrderRequestTimeInForceExt EventPayloadPlaceOrderRequestTimeInForce = "EXT"
-)
-
-func (r EventPayloadPlaceOrderRequestTimeInForce) IsKnown() bool {
-	switch r {
-	case EventPayloadPlaceOrderRequestTimeInForceDay, EventPayloadPlaceOrderRequestTimeInForceGtc, EventPayloadPlaceOrderRequestTimeInForceGtx, EventPayloadPlaceOrderRequestTimeInForceGtd, EventPayloadPlaceOrderRequestTimeInForceOpg, EventPayloadPlaceOrderRequestTimeInForceCls, EventPayloadPlaceOrderRequestTimeInForceIoc, EventPayloadPlaceOrderRequestTimeInForceFok, EventPayloadPlaceOrderRequestTimeInForceGfa, EventPayloadPlaceOrderRequestTimeInForceGfs, EventPayloadPlaceOrderRequestTimeInForceGtm, EventPayloadPlaceOrderRequestTimeInForceMoo, EventPayloadPlaceOrderRequestTimeInForceMoc, EventPayloadPlaceOrderRequestTimeInForceExt:
-		return true
-	}
-	return false
-}
-
-type EventPayloadCancelOrderRequest struct {
-	// Order ID
-	OrderID string                             `json:"orderId,required"`
-	JSON    eventPayloadCancelOrderRequestJSON `json:"-"`
-}
-
-// eventPayloadCancelOrderRequestJSON contains the JSON metadata for the struct
-// [EventPayloadCancelOrderRequest]
-type eventPayloadCancelOrderRequestJSON struct {
-	OrderID     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *EventPayloadCancelOrderRequest) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadCancelOrderRequestJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r EventPayloadCancelOrderRequest) implementsEventPayload() {}
-
-type EventPayloadExchangeAccountPortfolio struct {
-	Payload EventPayloadExchangeAccountPortfolioPayload `json:"payload"`
-	JSON    eventPayloadExchangeAccountPortfolioJSON    `json:"-"`
-}
-
-// eventPayloadExchangeAccountPortfolioJSON contains the JSON metadata for the
-// struct [EventPayloadExchangeAccountPortfolio]
-type eventPayloadExchangeAccountPortfolioJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *EventPayloadExchangeAccountPortfolio) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadExchangeAccountPortfolioJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r EventPayloadExchangeAccountPortfolio) implementsEventPayload() {}
-
-type EventPayloadExchangeAccountPortfolioPayload struct {
-	Balances []EventPayloadExchangeAccountPortfolioPayloadBalance `json:"balances,required"`
-	// Exchange Account Credit Info
-	Credit ExchangeAccountCredit `json:"credit,required"`
-	// The unique identifier for the account.
-	ExchangeAccountID string `json:"exchangeAccountId,required" format:"uuid"`
-	// Exchange type
-	ExchangeType EventPayloadExchangeAccountPortfolioPayloadExchangeType `json:"exchangeType,required"`
-	Positions    []EventPayloadExchangeAccountPortfolioPayloadPosition   `json:"positions,required"`
-	// The timestamp when the portfolio information was updated.
-	UpdatedAt int64                                           `json:"updatedAt,required"`
-	JSON      eventPayloadExchangeAccountPortfolioPayloadJSON `json:"-"`
-}
-
-// eventPayloadExchangeAccountPortfolioPayloadJSON contains the JSON metadata for
-// the struct [EventPayloadExchangeAccountPortfolioPayload]
-type eventPayloadExchangeAccountPortfolioPayloadJSON struct {
-	Balances          apijson.Field
-	Credit            apijson.Field
-	ExchangeAccountID apijson.Field
-	ExchangeType      apijson.Field
-	Positions         apijson.Field
-	UpdatedAt         apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *EventPayloadExchangeAccountPortfolioPayload) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadExchangeAccountPortfolioPayloadJSON) RawJSON() string {
-	return r.raw
-}
-
-type EventPayloadExchangeAccountPortfolioPayloadBalance struct {
-	// Asset
-	Asset string `json:"asset,required"`
-	// Free balance
-	Free float64 `json:"free,required"`
-	// Locked balance
-	Locked float64 `json:"locked,required"`
-	// Total balance
-	Total float64                                                `json:"total,required"`
-	JSON  eventPayloadExchangeAccountPortfolioPayloadBalanceJSON `json:"-"`
-}
-
-// eventPayloadExchangeAccountPortfolioPayloadBalanceJSON contains the JSON
-// metadata for the struct [EventPayloadExchangeAccountPortfolioPayloadBalance]
-type eventPayloadExchangeAccountPortfolioPayloadBalanceJSON struct {
-	Asset       apijson.Field
-	Free        apijson.Field
-	Locked      apijson.Field
-	Total       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *EventPayloadExchangeAccountPortfolioPayloadBalance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadExchangeAccountPortfolioPayloadBalanceJSON) RawJSON() string {
-	return r.raw
-}
-
-// Exchange type
-type EventPayloadExchangeAccountPortfolioPayloadExchangeType string
-
-const (
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBinance       EventPayloadExchangeAccountPortfolioPayloadExchangeType = "BINANCE"
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin EventPayloadExchangeAccountPortfolioPayloadExchangeType = "BINANCE_MARGIN"
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeB2C2          EventPayloadExchangeAccountPortfolioPayloadExchangeType = "B2C2"
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeWintermute    EventPayloadExchangeAccountPortfolioPayloadExchangeType = "WINTERMUTE"
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBlockfills    EventPayloadExchangeAccountPortfolioPayloadExchangeType = "BLOCKFILLS"
-	EventPayloadExchangeAccountPortfolioPayloadExchangeTypeStonex        EventPayloadExchangeAccountPortfolioPayloadExchangeType = "STONEX"
-)
-
-func (r EventPayloadExchangeAccountPortfolioPayloadExchangeType) IsKnown() bool {
-	switch r {
-	case EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBinance, EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin, EventPayloadExchangeAccountPortfolioPayloadExchangeTypeB2C2, EventPayloadExchangeAccountPortfolioPayloadExchangeTypeWintermute, EventPayloadExchangeAccountPortfolioPayloadExchangeTypeBlockfills, EventPayloadExchangeAccountPortfolioPayloadExchangeTypeStonex:
-		return true
-	}
-	return false
-}
-
-type EventPayloadExchangeAccountPortfolioPayloadPosition struct {
-	// Amount
-	Amount float64 `json:"amount,required"`
-	// Position side
-	PositionSide EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide `json:"positionSide,required"`
-	// Status
-	Status EventPayloadExchangeAccountPortfolioPayloadPositionsStatus `json:"status,required"`
-	// Symbol
-	Symbol string `json:"symbol,required"`
-	// Cost
-	Cost float64 `json:"cost"`
-	// Entry price
-	EntryPrice float64                                                 `json:"entryPrice"`
-	JSON       eventPayloadExchangeAccountPortfolioPayloadPositionJSON `json:"-"`
-}
-
-// eventPayloadExchangeAccountPortfolioPayloadPositionJSON contains the JSON
-// metadata for the struct [EventPayloadExchangeAccountPortfolioPayloadPosition]
-type eventPayloadExchangeAccountPortfolioPayloadPositionJSON struct {
-	Amount       apijson.Field
-	PositionSide apijson.Field
-	Status       apijson.Field
-	Symbol       apijson.Field
-	Cost         apijson.Field
-	EntryPrice   apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *EventPayloadExchangeAccountPortfolioPayloadPosition) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadExchangeAccountPortfolioPayloadPositionJSON) RawJSON() string {
-	return r.raw
-}
-
-// Position side
-type EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide string
-
-const (
-	EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSideLong  EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide = "LONG"
-	EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSideShort EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide = "SHORT"
-)
-
-func (r EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide) IsKnown() bool {
-	switch r {
-	case EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSideLong, EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSideShort:
-		return true
-	}
-	return false
-}
-
-// Status
-type EventPayloadExchangeAccountPortfolioPayloadPositionsStatus string
-
-const (
-	EventPayloadExchangeAccountPortfolioPayloadPositionsStatusOpen EventPayloadExchangeAccountPortfolioPayloadPositionsStatus = "OPEN"
-)
-
-func (r EventPayloadExchangeAccountPortfolioPayloadPositionsStatus) IsKnown() bool {
-	switch r {
-	case EventPayloadExchangeAccountPortfolioPayloadPositionsStatusOpen:
-		return true
-	}
-	return false
 }
 
 type EventPayloadKline struct {
@@ -893,8 +511,8 @@ func (r EventPayloadInterval) IsKnown() bool {
 type EventParam struct {
 	// A unique identifier for the event.
 	EventID param.Field[string] `json:"eventId,required"`
-	// The type of the event (e.g., order, executionReport, portfolio, orderBook).
-	EventType param.Field[string] `json:"eventType,required"`
+	// Event Type
+	EventType param.Field[EventEventType] `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
 	Timestamp param.Field[int64] `json:"timestamp,required"`
 	// The actual data of the event, which varies based on the event type.
@@ -1003,153 +621,12 @@ func (r EventPayloadParam) implementsEventPayloadUnionParam() {}
 
 // The actual data of the event, which varies based on the event type.
 //
-// Satisfied by [EventPayloadQuoteRequestParam],
-// [EventPayloadPlaceOrderRequestParam], [EventPayloadCancelOrderRequestParam],
-// [QuoteParam], [OrderParam], [ExecutionReportParam],
-// [EventPayloadExchangeAccountPortfolioParam], [OrderbookParam],
-// [EventPayloadKlineParam], [EventPayloadParam].
+// Satisfied by [QuoteRequestParam], [PlaceOrderRequestParam],
+// [CancelOrderRequestParam], [QuoteParam], [OrderParam], [ExecutionReportParam],
+// [ExchangeAccountPortfolioParam], [OrderbookParam], [EventPayloadKlineParam],
+// [EventPayloadParam].
 type EventPayloadUnionParam interface {
 	implementsEventPayloadUnionParam()
-}
-
-type EventPayloadQuoteRequestParam struct {
-	// Base currency is the currency you want to buy or sell
-	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
-	// Order side, BUY or SELL
-	OrderSide param.Field[string] `json:"orderSide,required"`
-	// Quote currency is the currency you want to pay or receive, and the price of the
-	// base currency is quoted in the quote currency
-	QuoteCurrency param.Field[string] `json:"quoteCurrency,required"`
-	// The identifier for the exchange account
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Amount of the base currency
-	Quantity param.Field[float64] `json:"quantity"`
-	// Amount of the quote currency
-	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
-}
-
-func (r EventPayloadQuoteRequestParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r EventPayloadQuoteRequestParam) implementsEventPayloadUnionParam() {}
-
-type EventPayloadPlaceOrderRequestParam struct {
-	// Exchange account ID
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Levarage
-	Leverage param.Field[int64] `json:"leverage"`
-	// Order side
-	OrderSide param.Field[EventPayloadPlaceOrderRequestOrderSide] `json:"orderSide"`
-	// Order type
-	OrderType param.Field[EventPayloadPlaceOrderRequestOrderType] `json:"orderType"`
-	// Position ID for closing position in margin trading
-	PositionID param.Field[string] `json:"positionId" format:"uuid"`
-	// Price
-	Price param.Field[float64] `json:"price"`
-	// Price slippage tolerance, range: [0, 0.1] with 2 decimal places
-	PriceSlippageTolerance param.Field[float64] `json:"priceSlippageTolerance"`
-	// Priority list of exchange account ID in descending order
-	Priority param.Field[[]string] `json:"priority"`
-	// Quantity. One of quantity or quoteQuantity must be provided. If both is
-	// provided, only quantity will be used.
-	Quantity param.Field[float64] `json:"quantity"`
-	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
-	// QUOTED order
-	QuoteID param.Field[string] `json:"quoteId"`
-	// Quote Quantity
-	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
-	// Quote request ID
-	QuoteRequestID param.Field[string] `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[EventPayloadPlaceOrderRequestRoutePolicy] `json:"routePolicy"`
-	// Symbol
-	Symbol param.Field[string] `json:"symbol"`
-	// Tenant ID
-	TenantID param.Field[string] `json:"tenantId"`
-	// Time in force
-	TimeInForce param.Field[EventPayloadPlaceOrderRequestTimeInForce] `json:"timeInForce"`
-}
-
-func (r EventPayloadPlaceOrderRequestParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r EventPayloadPlaceOrderRequestParam) implementsEventPayloadUnionParam() {}
-
-type EventPayloadCancelOrderRequestParam struct {
-	// Order ID
-	OrderID param.Field[string] `json:"orderId,required"`
-}
-
-func (r EventPayloadCancelOrderRequestParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r EventPayloadCancelOrderRequestParam) implementsEventPayloadUnionParam() {}
-
-type EventPayloadExchangeAccountPortfolioParam struct {
-	Payload param.Field[EventPayloadExchangeAccountPortfolioPayloadParam] `json:"payload"`
-}
-
-func (r EventPayloadExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r EventPayloadExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
-
-type EventPayloadExchangeAccountPortfolioPayloadParam struct {
-	Balances param.Field[[]EventPayloadExchangeAccountPortfolioPayloadBalanceParam] `json:"balances,required"`
-	// Exchange Account Credit Info
-	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
-	// The unique identifier for the account.
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[EventPayloadExchangeAccountPortfolioPayloadExchangeType]    `json:"exchangeType,required"`
-	Positions    param.Field[[]EventPayloadExchangeAccountPortfolioPayloadPositionParam] `json:"positions,required"`
-	// The timestamp when the portfolio information was updated.
-	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
-}
-
-func (r EventPayloadExchangeAccountPortfolioPayloadParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type EventPayloadExchangeAccountPortfolioPayloadBalanceParam struct {
-	// Asset
-	Asset param.Field[string] `json:"asset,required"`
-	// Free balance
-	Free param.Field[float64] `json:"free,required"`
-	// Locked balance
-	Locked param.Field[float64] `json:"locked,required"`
-	// Total balance
-	Total param.Field[float64] `json:"total,required"`
-}
-
-func (r EventPayloadExchangeAccountPortfolioPayloadBalanceParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type EventPayloadExchangeAccountPortfolioPayloadPositionParam struct {
-	// Amount
-	Amount param.Field[float64] `json:"amount,required"`
-	// Position side
-	PositionSide param.Field[EventPayloadExchangeAccountPortfolioPayloadPositionsPositionSide] `json:"positionSide,required"`
-	// Status
-	Status param.Field[EventPayloadExchangeAccountPortfolioPayloadPositionsStatus] `json:"status,required"`
-	// Symbol
-	Symbol param.Field[string] `json:"symbol,required"`
-	// Cost
-	Cost param.Field[float64] `json:"cost"`
-	// Entry price
-	EntryPrice param.Field[float64] `json:"entryPrice"`
-}
-
-func (r EventPayloadExchangeAccountPortfolioPayloadPositionParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
 }
 
 type EventPayloadKlineParam struct {
