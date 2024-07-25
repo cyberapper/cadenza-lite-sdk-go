@@ -73,7 +73,7 @@ func (r orderbookJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r Orderbook) implementsGenericEventPayload() {}
+func (r Orderbook) implementsEventPayload() {}
 
 type OrderbookParam struct {
 	Asks param.Field[[][]float64] `json:"asks"`
@@ -90,7 +90,7 @@ func (r OrderbookParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r OrderbookParam) implementsGenericEventPayloadUnionParam() {}
+func (r OrderbookParam) implementsEventPayloadUnionParam() {}
 
 type MarketOrderbookGetParams struct {
 	// Exchange type
