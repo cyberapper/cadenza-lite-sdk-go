@@ -189,60 +189,6 @@ func (r QuoteWithOrderCandidatesOrderCandidatesRoutePolicy) IsKnown() bool {
 	return false
 }
 
-type QuoteWithOrderCandidatesParam struct {
-	// Base currency
-	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
-	// Quote currency
-	QuoteCurrency param.Field[string] `json:"quoteCurrency,required"`
-	// Quote request ID
-	QuoteRequestID param.Field[string] `json:"quoteRequestId,required" format:"uuid"`
-	// Create time of the quote
-	Timestamp param.Field[int64] `json:"timestamp,required"`
-	// Expiration time of the quote
-	ValidUntil param.Field[int64] `json:"validUntil,required"`
-	// Ask price
-	AskPrice param.Field[float64] `json:"askPrice"`
-	// Ask quantity
-	AskQuantity param.Field[float64] `json:"askQuantity"`
-	// Bid price
-	BidPrice param.Field[float64] `json:"bidPrice"`
-	// Bid quantity
-	BidQuantity     param.Field[float64]                                       `json:"bidQuantity"`
-	OrderCandidates param.Field[[]QuoteWithOrderCandidatesOrderCandidateParam] `json:"orderCandidates"`
-}
-
-func (r QuoteWithOrderCandidatesParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r QuoteWithOrderCandidatesParam) implementsEventPayloadUnionParam() {}
-
-type QuoteWithOrderCandidatesOrderCandidateParam struct {
-	// Exchange account ID
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Order side
-	OrderSide param.Field[QuoteWithOrderCandidatesOrderCandidatesOrderSide] `json:"orderSide"`
-	// Order type
-	OrderType param.Field[QuoteWithOrderCandidatesOrderCandidatesOrderType] `json:"orderType"`
-	// Quantity
-	Quantity param.Field[float64] `json:"quantity"`
-	// Quote Quantity
-	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
-	// Quote request ID
-	QuoteRequestID param.Field[string] `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[QuoteWithOrderCandidatesOrderCandidatesRoutePolicy] `json:"routePolicy"`
-	// Symbol
-	Symbol param.Field[string] `json:"symbol"`
-}
-
-func (r QuoteWithOrderCandidatesOrderCandidateParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
 type TradingQuoteRequestForQuoteParams struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
