@@ -155,16 +155,18 @@ type EventPayload struct {
 	BidPrice float64 `json:"bidPrice"`
 	// Bid quantity
 	BidQuantity float64 `json:"bidQuantity"`
-	// Create time of the quote
+	// deprecated, alias of createdAt, Create time of the quote
 	Timestamp int64 `json:"timestamp"`
-	// Expiration time of the quote
+	// Create time of the quote
+	CreatedAt int64 `json:"createdAt"`
+	// deprecated, alias of expiredAtExpiration time of the quote
 	ValidUntil int64 `json:"validUntil"`
+	// Expiration time of the quote
+	ExpiredAt int64 `json:"expiredAt"`
 	// Exchange type
 	ExchangeType string `json:"exchangeType"`
 	// The total cost of this order.
 	Cost float64 `json:"cost"`
-	// Created timestamp
-	CreatedAt int64 `json:"createdAt"`
 	// The quantity of this order that has been filled.
 	Filled float64 `json:"filled"`
 	// Order status
@@ -229,10 +231,11 @@ type eventPayloadJSON struct {
 	BidPrice               apijson.Field
 	BidQuantity            apijson.Field
 	Timestamp              apijson.Field
+	CreatedAt              apijson.Field
 	ValidUntil             apijson.Field
+	ExpiredAt              apijson.Field
 	ExchangeType           apijson.Field
 	Cost                   apijson.Field
-	CreatedAt              apijson.Field
 	Filled                 apijson.Field
 	Status                 apijson.Field
 	UpdatedAt              apijson.Field
@@ -588,16 +591,18 @@ type EventPayloadParam struct {
 	BidPrice param.Field[float64] `json:"bidPrice"`
 	// Bid quantity
 	BidQuantity param.Field[float64] `json:"bidQuantity"`
-	// Create time of the quote
+	// deprecated, alias of createdAt, Create time of the quote
 	Timestamp param.Field[int64] `json:"timestamp"`
-	// Expiration time of the quote
+	// Create time of the quote
+	CreatedAt param.Field[int64] `json:"createdAt"`
+	// deprecated, alias of expiredAtExpiration time of the quote
 	ValidUntil param.Field[int64] `json:"validUntil"`
+	// Expiration time of the quote
+	ExpiredAt param.Field[int64] `json:"expiredAt"`
 	// Exchange type
 	ExchangeType param.Field[string] `json:"exchangeType"`
 	// The total cost of this order.
 	Cost param.Field[float64] `json:"cost"`
-	// Created timestamp
-	CreatedAt param.Field[int64] `json:"createdAt"`
 	// The quantity of this order that has been filled.
 	Filled param.Field[float64] `json:"filled"`
 	// Order status
