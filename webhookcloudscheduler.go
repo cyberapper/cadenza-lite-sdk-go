@@ -6,6 +6,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apijson"
 	"github.com/cyberapper/cadenza-lite-sdk-go/internal/requestconfig"
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
@@ -37,4 +38,23 @@ func (r *WebhookCloudSchedulerService) UpdatePortfolioRoutine(ctx context.Contex
 	return
 }
 
-type WebhookCloudSchedulerUpdatePortfolioRoutineResponse = interface{}
+type WebhookCloudSchedulerUpdatePortfolioRoutineResponse struct {
+	Data string                                                  `json:"data"`
+	JSON webhookCloudSchedulerUpdatePortfolioRoutineResponseJSON `json:"-"`
+}
+
+// webhookCloudSchedulerUpdatePortfolioRoutineResponseJSON contains the JSON
+// metadata for the struct [WebhookCloudSchedulerUpdatePortfolioRoutineResponse]
+type webhookCloudSchedulerUpdatePortfolioRoutineResponseJSON struct {
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WebhookCloudSchedulerUpdatePortfolioRoutineResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r webhookCloudSchedulerUpdatePortfolioRoutineResponseJSON) RawJSON() string {
+	return r.raw
+}
