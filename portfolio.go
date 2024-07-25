@@ -258,16 +258,30 @@ func (r ExchangeAccountCreditParam) MarshalJSON() (data []byte, err error) {
 }
 
 type ExchangeAccountPortfolio struct {
-	Payload ExchangeAccountPortfolioPayload `json:"payload"`
-	JSON    exchangeAccountPortfolioJSON    `json:"-"`
+	Balances []ExchangeAccountPortfolioBalance `json:"balances,required"`
+	// Exchange Account Credit Info
+	Credit ExchangeAccountCredit `json:"credit,required"`
+	// The unique identifier for the account.
+	ExchangeAccountID string `json:"exchangeAccountId,required" format:"uuid"`
+	// Exchange type
+	ExchangeType ExchangeAccountPortfolioExchangeType `json:"exchangeType,required"`
+	Positions    []ExchangeAccountPortfolioPosition   `json:"positions,required"`
+	// The timestamp when the portfolio information was updated.
+	UpdatedAt int64                        `json:"updatedAt,required"`
+	JSON      exchangeAccountPortfolioJSON `json:"-"`
 }
 
 // exchangeAccountPortfolioJSON contains the JSON metadata for the struct
 // [ExchangeAccountPortfolio]
 type exchangeAccountPortfolioJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Balances          apijson.Field
+	Credit            apijson.Field
+	ExchangeAccountID apijson.Field
+	ExchangeType      apijson.Field
+	Positions         apijson.Field
+	UpdatedAt         apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *ExchangeAccountPortfolio) UnmarshalJSON(data []byte) (err error) {
@@ -280,42 +294,7 @@ func (r exchangeAccountPortfolioJSON) RawJSON() string {
 
 func (r ExchangeAccountPortfolio) implementsEventPayload() {}
 
-type ExchangeAccountPortfolioPayload struct {
-	Balances []ExchangeAccountPortfolioPayloadBalance `json:"balances,required"`
-	// Exchange Account Credit Info
-	Credit ExchangeAccountCredit `json:"credit,required"`
-	// The unique identifier for the account.
-	ExchangeAccountID string `json:"exchangeAccountId,required" format:"uuid"`
-	// Exchange type
-	ExchangeType ExchangeAccountPortfolioPayloadExchangeType `json:"exchangeType,required"`
-	Positions    []ExchangeAccountPortfolioPayloadPosition   `json:"positions,required"`
-	// The timestamp when the portfolio information was updated.
-	UpdatedAt int64                               `json:"updatedAt,required"`
-	JSON      exchangeAccountPortfolioPayloadJSON `json:"-"`
-}
-
-// exchangeAccountPortfolioPayloadJSON contains the JSON metadata for the struct
-// [ExchangeAccountPortfolioPayload]
-type exchangeAccountPortfolioPayloadJSON struct {
-	Balances          apijson.Field
-	Credit            apijson.Field
-	ExchangeAccountID apijson.Field
-	ExchangeType      apijson.Field
-	Positions         apijson.Field
-	UpdatedAt         apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *ExchangeAccountPortfolioPayload) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r exchangeAccountPortfolioPayloadJSON) RawJSON() string {
-	return r.raw
-}
-
-type ExchangeAccountPortfolioPayloadBalance struct {
+type ExchangeAccountPortfolioBalance struct {
 	// Asset
 	Asset string `json:"asset,required"`
 	// Free balance
@@ -323,13 +302,13 @@ type ExchangeAccountPortfolioPayloadBalance struct {
 	// Locked balance
 	Locked float64 `json:"locked,required"`
 	// Total balance
-	Total float64                                    `json:"total,required"`
-	JSON  exchangeAccountPortfolioPayloadBalanceJSON `json:"-"`
+	Total float64                             `json:"total,required"`
+	JSON  exchangeAccountPortfolioBalanceJSON `json:"-"`
 }
 
-// exchangeAccountPortfolioPayloadBalanceJSON contains the JSON metadata for the
-// struct [ExchangeAccountPortfolioPayloadBalance]
-type exchangeAccountPortfolioPayloadBalanceJSON struct {
+// exchangeAccountPortfolioBalanceJSON contains the JSON metadata for the struct
+// [ExchangeAccountPortfolioBalance]
+type exchangeAccountPortfolioBalanceJSON struct {
 	Asset       apijson.Field
 	Free        apijson.Field
 	Locked      apijson.Field
@@ -338,53 +317,53 @@ type exchangeAccountPortfolioPayloadBalanceJSON struct {
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *ExchangeAccountPortfolioPayloadBalance) UnmarshalJSON(data []byte) (err error) {
+func (r *ExchangeAccountPortfolioBalance) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r exchangeAccountPortfolioPayloadBalanceJSON) RawJSON() string {
+func (r exchangeAccountPortfolioBalanceJSON) RawJSON() string {
 	return r.raw
 }
 
 // Exchange type
-type ExchangeAccountPortfolioPayloadExchangeType string
+type ExchangeAccountPortfolioExchangeType string
 
 const (
-	ExchangeAccountPortfolioPayloadExchangeTypeBinance       ExchangeAccountPortfolioPayloadExchangeType = "BINANCE"
-	ExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin ExchangeAccountPortfolioPayloadExchangeType = "BINANCE_MARGIN"
-	ExchangeAccountPortfolioPayloadExchangeTypeB2C2          ExchangeAccountPortfolioPayloadExchangeType = "B2C2"
-	ExchangeAccountPortfolioPayloadExchangeTypeWintermute    ExchangeAccountPortfolioPayloadExchangeType = "WINTERMUTE"
-	ExchangeAccountPortfolioPayloadExchangeTypeBlockfills    ExchangeAccountPortfolioPayloadExchangeType = "BLOCKFILLS"
-	ExchangeAccountPortfolioPayloadExchangeTypeStonex        ExchangeAccountPortfolioPayloadExchangeType = "STONEX"
+	ExchangeAccountPortfolioExchangeTypeBinance       ExchangeAccountPortfolioExchangeType = "BINANCE"
+	ExchangeAccountPortfolioExchangeTypeBinanceMargin ExchangeAccountPortfolioExchangeType = "BINANCE_MARGIN"
+	ExchangeAccountPortfolioExchangeTypeB2C2          ExchangeAccountPortfolioExchangeType = "B2C2"
+	ExchangeAccountPortfolioExchangeTypeWintermute    ExchangeAccountPortfolioExchangeType = "WINTERMUTE"
+	ExchangeAccountPortfolioExchangeTypeBlockfills    ExchangeAccountPortfolioExchangeType = "BLOCKFILLS"
+	ExchangeAccountPortfolioExchangeTypeStonex        ExchangeAccountPortfolioExchangeType = "STONEX"
 )
 
-func (r ExchangeAccountPortfolioPayloadExchangeType) IsKnown() bool {
+func (r ExchangeAccountPortfolioExchangeType) IsKnown() bool {
 	switch r {
-	case ExchangeAccountPortfolioPayloadExchangeTypeBinance, ExchangeAccountPortfolioPayloadExchangeTypeBinanceMargin, ExchangeAccountPortfolioPayloadExchangeTypeB2C2, ExchangeAccountPortfolioPayloadExchangeTypeWintermute, ExchangeAccountPortfolioPayloadExchangeTypeBlockfills, ExchangeAccountPortfolioPayloadExchangeTypeStonex:
+	case ExchangeAccountPortfolioExchangeTypeBinance, ExchangeAccountPortfolioExchangeTypeBinanceMargin, ExchangeAccountPortfolioExchangeTypeB2C2, ExchangeAccountPortfolioExchangeTypeWintermute, ExchangeAccountPortfolioExchangeTypeBlockfills, ExchangeAccountPortfolioExchangeTypeStonex:
 		return true
 	}
 	return false
 }
 
-type ExchangeAccountPortfolioPayloadPosition struct {
+type ExchangeAccountPortfolioPosition struct {
 	// Amount
 	Amount float64 `json:"amount,required"`
 	// Position side
-	PositionSide ExchangeAccountPortfolioPayloadPositionsPositionSide `json:"positionSide,required"`
+	PositionSide ExchangeAccountPortfolioPositionsPositionSide `json:"positionSide,required"`
 	// Status
-	Status ExchangeAccountPortfolioPayloadPositionsStatus `json:"status,required"`
+	Status ExchangeAccountPortfolioPositionsStatus `json:"status,required"`
 	// Symbol
 	Symbol string `json:"symbol,required"`
 	// Cost
 	Cost float64 `json:"cost"`
 	// Entry price
-	EntryPrice float64                                     `json:"entryPrice"`
-	JSON       exchangeAccountPortfolioPayloadPositionJSON `json:"-"`
+	EntryPrice float64                              `json:"entryPrice"`
+	JSON       exchangeAccountPortfolioPositionJSON `json:"-"`
 }
 
-// exchangeAccountPortfolioPayloadPositionJSON contains the JSON metadata for the
-// struct [ExchangeAccountPortfolioPayloadPosition]
-type exchangeAccountPortfolioPayloadPositionJSON struct {
+// exchangeAccountPortfolioPositionJSON contains the JSON metadata for the struct
+// [ExchangeAccountPortfolioPosition]
+type exchangeAccountPortfolioPositionJSON struct {
 	Amount       apijson.Field
 	PositionSide apijson.Field
 	Status       apijson.Field
@@ -395,47 +374,56 @@ type exchangeAccountPortfolioPayloadPositionJSON struct {
 	ExtraFields  map[string]apijson.Field
 }
 
-func (r *ExchangeAccountPortfolioPayloadPosition) UnmarshalJSON(data []byte) (err error) {
+func (r *ExchangeAccountPortfolioPosition) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r exchangeAccountPortfolioPayloadPositionJSON) RawJSON() string {
+func (r exchangeAccountPortfolioPositionJSON) RawJSON() string {
 	return r.raw
 }
 
 // Position side
-type ExchangeAccountPortfolioPayloadPositionsPositionSide string
+type ExchangeAccountPortfolioPositionsPositionSide string
 
 const (
-	ExchangeAccountPortfolioPayloadPositionsPositionSideLong  ExchangeAccountPortfolioPayloadPositionsPositionSide = "LONG"
-	ExchangeAccountPortfolioPayloadPositionsPositionSideShort ExchangeAccountPortfolioPayloadPositionsPositionSide = "SHORT"
+	ExchangeAccountPortfolioPositionsPositionSideLong  ExchangeAccountPortfolioPositionsPositionSide = "LONG"
+	ExchangeAccountPortfolioPositionsPositionSideShort ExchangeAccountPortfolioPositionsPositionSide = "SHORT"
 )
 
-func (r ExchangeAccountPortfolioPayloadPositionsPositionSide) IsKnown() bool {
+func (r ExchangeAccountPortfolioPositionsPositionSide) IsKnown() bool {
 	switch r {
-	case ExchangeAccountPortfolioPayloadPositionsPositionSideLong, ExchangeAccountPortfolioPayloadPositionsPositionSideShort:
+	case ExchangeAccountPortfolioPositionsPositionSideLong, ExchangeAccountPortfolioPositionsPositionSideShort:
 		return true
 	}
 	return false
 }
 
 // Status
-type ExchangeAccountPortfolioPayloadPositionsStatus string
+type ExchangeAccountPortfolioPositionsStatus string
 
 const (
-	ExchangeAccountPortfolioPayloadPositionsStatusOpen ExchangeAccountPortfolioPayloadPositionsStatus = "OPEN"
+	ExchangeAccountPortfolioPositionsStatusOpen ExchangeAccountPortfolioPositionsStatus = "OPEN"
 )
 
-func (r ExchangeAccountPortfolioPayloadPositionsStatus) IsKnown() bool {
+func (r ExchangeAccountPortfolioPositionsStatus) IsKnown() bool {
 	switch r {
-	case ExchangeAccountPortfolioPayloadPositionsStatusOpen:
+	case ExchangeAccountPortfolioPositionsStatusOpen:
 		return true
 	}
 	return false
 }
 
 type ExchangeAccountPortfolioParam struct {
-	Payload param.Field[ExchangeAccountPortfolioPayloadParam] `json:"payload"`
+	Balances param.Field[[]ExchangeAccountPortfolioBalanceParam] `json:"balances,required"`
+	// Exchange Account Credit Info
+	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
+	// The unique identifier for the account.
+	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
+	// Exchange type
+	ExchangeType param.Field[ExchangeAccountPortfolioExchangeType]    `json:"exchangeType,required"`
+	Positions    param.Field[[]ExchangeAccountPortfolioPositionParam] `json:"positions,required"`
+	// The timestamp when the portfolio information was updated.
+	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
 }
 
 func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
@@ -444,24 +432,7 @@ func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
 
 func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
 
-type ExchangeAccountPortfolioPayloadParam struct {
-	Balances param.Field[[]ExchangeAccountPortfolioPayloadBalanceParam] `json:"balances,required"`
-	// Exchange Account Credit Info
-	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
-	// The unique identifier for the account.
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[ExchangeAccountPortfolioPayloadExchangeType]    `json:"exchangeType,required"`
-	Positions    param.Field[[]ExchangeAccountPortfolioPayloadPositionParam] `json:"positions,required"`
-	// The timestamp when the portfolio information was updated.
-	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
-}
-
-func (r ExchangeAccountPortfolioPayloadParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type ExchangeAccountPortfolioPayloadBalanceParam struct {
+type ExchangeAccountPortfolioBalanceParam struct {
 	// Asset
 	Asset param.Field[string] `json:"asset,required"`
 	// Free balance
@@ -472,17 +443,17 @@ type ExchangeAccountPortfolioPayloadBalanceParam struct {
 	Total param.Field[float64] `json:"total,required"`
 }
 
-func (r ExchangeAccountPortfolioPayloadBalanceParam) MarshalJSON() (data []byte, err error) {
+func (r ExchangeAccountPortfolioBalanceParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type ExchangeAccountPortfolioPayloadPositionParam struct {
+type ExchangeAccountPortfolioPositionParam struct {
 	// Amount
 	Amount param.Field[float64] `json:"amount,required"`
 	// Position side
-	PositionSide param.Field[ExchangeAccountPortfolioPayloadPositionsPositionSide] `json:"positionSide,required"`
+	PositionSide param.Field[ExchangeAccountPortfolioPositionsPositionSide] `json:"positionSide,required"`
 	// Status
-	Status param.Field[ExchangeAccountPortfolioPayloadPositionsStatus] `json:"status,required"`
+	Status param.Field[ExchangeAccountPortfolioPositionsStatus] `json:"status,required"`
 	// Symbol
 	Symbol param.Field[string] `json:"symbol,required"`
 	// Cost
@@ -491,7 +462,7 @@ type ExchangeAccountPortfolioPayloadPositionParam struct {
 	EntryPrice param.Field[float64] `json:"entryPrice"`
 }
 
-func (r ExchangeAccountPortfolioPayloadPositionParam) MarshalJSON() (data []byte, err error) {
+func (r ExchangeAccountPortfolioPositionParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
