@@ -95,11 +95,11 @@ Methods:
 
 Response Types:
 
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#QuoteWithOrderCandidates">QuoteWithOrderCandidates</a>
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Quote">Quote</a>
 
 Methods:
 
-- <code title="post /api/v2/trading/fetchQuotes">client.Trading.Quote.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteService.RequestForQuote">RequestForQuote</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteRequestForQuoteParams">TradingQuoteRequestForQuoteParams</a>) ([]<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#QuoteWithOrderCandidates">QuoteWithOrderCandidates</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /api/v2/trading/fetchQuotes">client.Trading.Quote.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteService.RequestForQuote">RequestForQuote</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteRequestForQuoteParams">TradingQuoteRequestForQuoteParams</a>) ([]<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Quote">Quote</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 ## ExecutionReport
 
