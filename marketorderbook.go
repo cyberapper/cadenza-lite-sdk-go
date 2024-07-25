@@ -75,14 +75,6 @@ func (r orderbookJSON) RawJSON() string {
 
 func (r Orderbook) implementsEventPayload() {}
 
-func (r Orderbook) implementsOrder() {}
-
-func (r Orderbook) implementsExchangeAccountPortfolio() {}
-
-func (r Orderbook) implementsQuote() {}
-
-func (r Orderbook) implementsOrderbook() {}
-
 type OrderbookParam struct {
 	Asks param.Field[[][]float64] `json:"asks"`
 	Bids param.Field[[][]float64] `json:"bids"`
@@ -98,15 +90,7 @@ func (r OrderbookParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r OrderbookParam) implementsOrderUnionParam() {}
-
-func (r OrderbookParam) implementsExchangeAccountPortfolioUnionParam() {}
-
-func (r OrderbookParam) implementsQuoteUnionParam() {}
-
-func (r OrderbookParam) implementsEventMarketDataKlineParamsPayloadUnion() {}
-
-func (r OrderbookParam) implementsOrderbookUnionParam() {}
+func (r OrderbookParam) implementsEventPayloadUnionParam() {}
 
 type MarketOrderbookGetParams struct {
 	// Exchange type
