@@ -17,7 +17,6 @@ import (
 type Client struct {
 	Options          []option.RequestOption
 	Health           *HealthService
-	Clients          *ClientService
 	ExchangeAccounts *ExchangeAccountService
 	Market           *MarketService
 	Trading          *TradingService
@@ -40,7 +39,6 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r = &Client{Options: opts}
 
 	r.Health = NewHealthService(opts...)
-	r.Clients = NewClientService(opts...)
 	r.ExchangeAccounts = NewExchangeAccountService(opts...)
 	r.Market = NewMarketService(opts...)
 	r.Trading = NewTradingService(opts...)

@@ -4,18 +4,6 @@ Methods:
 
 - <code title="get /api/v2/health">client.Health.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#HealthService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/builtin#string">string</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
-# Clients
-
-## Info
-
-Response Types:
-
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#ClientInfoGetResponse">ClientInfoGetResponse</a>
-
-Methods:
-
-- <code title="get /api/v2/client/getInfo">client.Clients.Info.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#ClientInfoService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#ClientInfoGetResponse">ClientInfoGetResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-
 # ExchangeAccounts
 
 Response Types:
