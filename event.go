@@ -184,8 +184,12 @@ type EventPayload struct {
 	Fees interface{} `json:"fees,required"`
 	// This field can have the runtime type of [[]Order].
 	Executions interface{} `json:"executions,required"`
-	// This field can have the runtime type of [ExchangeAccountPortfolioPayload].
-	Payload interface{} `json:"payload,required"`
+	// This field can have the runtime type of [[]ExchangeAccountPortfolioBalance].
+	Balances interface{} `json:"balances,required"`
+	// This field can have the runtime type of [[]ExchangeAccountPortfolioPosition].
+	Positions interface{} `json:"positions,required"`
+	// Exchange Account Credit Info
+	Credit ExchangeAccountCredit `json:"credit"`
 	// This field can have the runtime type of [[][]float64].
 	Asks interface{} `json:"asks,required"`
 	// This field can have the runtime type of [[][]float64].
@@ -239,7 +243,9 @@ type eventPayloadJSON struct {
 	Order                  apijson.Field
 	Fees                   apijson.Field
 	Executions             apijson.Field
-	Payload                apijson.Field
+	Balances               apijson.Field
+	Positions              apijson.Field
+	Credit                 apijson.Field
 	Asks                   apijson.Field
 	Bids                   apijson.Field
 	Level                  apijson.Field
@@ -609,9 +615,12 @@ type EventPayloadParam struct {
 	Order      param.Field[OrderParam]  `json:"order"`
 	Fees       param.Field[interface{}] `json:"fees,required"`
 	Executions param.Field[interface{}] `json:"executions,required"`
-	Payload    param.Field[interface{}] `json:"payload,required"`
-	Asks       param.Field[interface{}] `json:"asks,required"`
-	Bids       param.Field[interface{}] `json:"bids,required"`
+	Balances   param.Field[interface{}] `json:"balances,required"`
+	Positions  param.Field[interface{}] `json:"positions,required"`
+	// Exchange Account Credit Info
+	Credit param.Field[ExchangeAccountCreditParam] `json:"credit"`
+	Asks   param.Field[interface{}]                `json:"asks,required"`
+	Bids   param.Field[interface{}]                `json:"bids,required"`
 	// Order book level
 	Level    param.Field[int64]                `json:"level"`
 	Interval param.Field[EventPayloadInterval] `json:"interval"`
