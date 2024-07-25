@@ -280,6 +280,14 @@ func (r exchangeAccountPortfolioJSON) RawJSON() string {
 
 func (r ExchangeAccountPortfolio) implementsEventPayload() {}
 
+func (r ExchangeAccountPortfolio) implementsOrder() {}
+
+func (r ExchangeAccountPortfolio) implementsExchangeAccountPortfolio() {}
+
+func (r ExchangeAccountPortfolio) implementsQuote() {}
+
+func (r ExchangeAccountPortfolio) implementsOrderbook() {}
+
 type ExchangeAccountPortfolioPayload struct {
 	Balances []ExchangeAccountPortfolioPayloadBalance `json:"balances,required"`
 	// Exchange Account Credit Info
@@ -442,7 +450,15 @@ func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
+func (r ExchangeAccountPortfolioParam) implementsOrderUnionParam() {}
+
+func (r ExchangeAccountPortfolioParam) implementsExchangeAccountPortfolioUnionParam() {}
+
+func (r ExchangeAccountPortfolioParam) implementsQuoteUnionParam() {}
+
+func (r ExchangeAccountPortfolioParam) implementsEventMarketDataKlineParamsPayloadUnion() {}
+
+func (r ExchangeAccountPortfolioParam) implementsOrderbookUnionParam() {}
 
 type ExchangeAccountPortfolioPayloadParam struct {
 	Balances param.Field[[]ExchangeAccountPortfolioPayloadBalanceParam] `json:"balances,required"`
