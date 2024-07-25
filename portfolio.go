@@ -278,7 +278,7 @@ func (r exchangeAccountPortfolioJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r ExchangeAccountPortfolio) implementsEventPayload() {}
+func (r ExchangeAccountPortfolio) implementsGenericEventPayload() {}
 
 type ExchangeAccountPortfolioPayload struct {
 	Balances []ExchangeAccountPortfolioPayloadBalance `json:"balances,required"`
@@ -442,7 +442,7 @@ func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
+func (r ExchangeAccountPortfolioParam) implementsGenericEventPayloadUnionParam() {}
 
 type ExchangeAccountPortfolioPayloadParam struct {
 	Balances param.Field[[]ExchangeAccountPortfolioPayloadBalanceParam] `json:"balances,required"`
