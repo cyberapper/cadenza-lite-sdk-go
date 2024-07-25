@@ -271,7 +271,7 @@ type ExchangeAccountNewParams struct {
 	APISecret param.Field[string] `json:"apiSecret,required"`
 	// Environment(0 - real, 1 - sandbox)
 	Environment param.Field[ExchangeAccountNewParamsEnvironment] `json:"environment,required"`
-	// Exchange account name, Available characters: a-z, A-Z, 0-9, \_, ' '(space)
+	// Exchange account name, Available characters: a-z, A-Z, 0-9, \_, (space)
 	ExchangeAccountName param.Field[string] `json:"exchangeAccountName,required"`
 	// Exchange type
 	ExchangeType param.Field[ExchangeAccountNewParamsExchangeType] `json:"exchangeType,required"`
@@ -324,7 +324,7 @@ type ExchangeAccountUpdateParams struct {
 	APIKey param.Field[string] `json:"apiKey"`
 	// API secret
 	APISecret param.Field[string] `json:"apiSecret"`
-	// Exchange account name, Available characters: a-z, A-Z, 0-9, \_, ' '(space)
+	// Exchange account name, Available characters: a-z, A-Z, 0-9, \_, (space)
 	ExchangeAccountName param.Field[string] `json:"exchangeAccountName"`
 }
 

@@ -108,7 +108,7 @@ func (r executionReportJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r ExecutionReport) implementsGenericEventPayload() {}
+func (r ExecutionReport) implementsEventPayload() {}
 
 // Route policy. For PRIORITY, the order request will be routed to the exchange
 // account with the highest priority. For QUOTE, the system will execute the
@@ -216,7 +216,7 @@ func (r ExecutionReportParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r ExecutionReportParam) implementsGenericEventPayloadUnionParam() {}
+func (r ExecutionReportParam) implementsEventPayloadUnionParam() {}
 
 type ExecutionReportFeeParam struct {
 	// Asset
