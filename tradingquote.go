@@ -32,14 +32,14 @@ func NewTradingQuoteService(opts ...option.RequestOption) (r *TradingQuoteServic
 }
 
 // Quote will give the best quote from all available exchange accounts
-func (r *TradingQuoteService) RequestForQuote(ctx context.Context, body TradingQuoteRequestForQuoteParams, opts ...option.RequestOption) (res *[]QuoteWithOrderCandidates, err error) {
+func (r *TradingQuoteService) RequestForQuote(ctx context.Context, body TradingQuoteRequestForQuoteParams, opts ...option.RequestOption) (res *[]Quote, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/trading/fetchQuotes"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
-type QuoteWithOrderCandidates struct {
+type Quote struct {
 	// Base currency
 	BaseCurrency string `json:"baseCurrency,required"`
 	// Quote currency
@@ -57,133 +57,54 @@ type QuoteWithOrderCandidates struct {
 	// Bid price
 	BidPrice float64 `json:"bidPrice"`
 	// Bid quantity
-	BidQuantity     float64                                  `json:"bidQuantity"`
-	OrderCandidates []QuoteWithOrderCandidatesOrderCandidate `json:"orderCandidates"`
-	JSON            quoteWithOrderCandidatesJSON             `json:"-"`
-}
-
-// quoteWithOrderCandidatesJSON contains the JSON metadata for the struct
-// [QuoteWithOrderCandidates]
-type quoteWithOrderCandidatesJSON struct {
-	BaseCurrency    apijson.Field
-	QuoteCurrency   apijson.Field
-	QuoteRequestID  apijson.Field
-	Timestamp       apijson.Field
-	ValidUntil      apijson.Field
-	AskPrice        apijson.Field
-	AskQuantity     apijson.Field
-	BidPrice        apijson.Field
-	BidQuantity     apijson.Field
-	OrderCandidates apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *QuoteWithOrderCandidates) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r quoteWithOrderCandidatesJSON) RawJSON() string {
-	return r.raw
-}
-
-type QuoteWithOrderCandidatesOrderCandidate struct {
-	// Exchange account ID
+	BidQuantity float64 `json:"bidQuantity"`
+	// Exchange Account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Order side
-	OrderSide QuoteWithOrderCandidatesOrderCandidatesOrderSide `json:"orderSide"`
-	// Order type
-	OrderType QuoteWithOrderCandidatesOrderCandidatesOrderType `json:"orderType"`
-	// Quantity
-	Quantity float64 `json:"quantity"`
-	// Quote Quantity
-	QuoteQuantity float64 `json:"quoteQuantity"`
-	// Quote request ID
-	QuoteRequestID string `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy QuoteWithOrderCandidatesOrderCandidatesRoutePolicy `json:"routePolicy"`
-	// Symbol
-	Symbol string                                     `json:"symbol"`
-	JSON   quoteWithOrderCandidatesOrderCandidateJSON `json:"-"`
+	// Exchange type
+	ExchangeType QuoteExchangeType `json:"exchangeType"`
+	JSON         quoteJSON         `json:"-"`
 }
 
-// quoteWithOrderCandidatesOrderCandidateJSON contains the JSON metadata for the
-// struct [QuoteWithOrderCandidatesOrderCandidate]
-type quoteWithOrderCandidatesOrderCandidateJSON struct {
-	ExchangeAccountID apijson.Field
-	OrderSide         apijson.Field
-	OrderType         apijson.Field
-	Quantity          apijson.Field
-	QuoteQuantity     apijson.Field
+// quoteJSON contains the JSON metadata for the struct [Quote]
+type quoteJSON struct {
+	BaseCurrency      apijson.Field
+	QuoteCurrency     apijson.Field
 	QuoteRequestID    apijson.Field
-	RoutePolicy       apijson.Field
-	Symbol            apijson.Field
+	Timestamp         apijson.Field
+	ValidUntil        apijson.Field
+	AskPrice          apijson.Field
+	AskQuantity       apijson.Field
+	BidPrice          apijson.Field
+	BidQuantity       apijson.Field
+	ExchangeAccountID apijson.Field
+	ExchangeType      apijson.Field
 	raw               string
 	ExtraFields       map[string]apijson.Field
 }
 
-func (r *QuoteWithOrderCandidatesOrderCandidate) UnmarshalJSON(data []byte) (err error) {
+func (r *Quote) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r quoteWithOrderCandidatesOrderCandidateJSON) RawJSON() string {
+func (r quoteJSON) RawJSON() string {
 	return r.raw
 }
 
-// Order side
-type QuoteWithOrderCandidatesOrderCandidatesOrderSide string
+// Exchange type
+type QuoteExchangeType string
 
 const (
-	QuoteWithOrderCandidatesOrderCandidatesOrderSideBuy  QuoteWithOrderCandidatesOrderCandidatesOrderSide = "BUY"
-	QuoteWithOrderCandidatesOrderCandidatesOrderSideSell QuoteWithOrderCandidatesOrderCandidatesOrderSide = "SELL"
+	QuoteExchangeTypeBinance       QuoteExchangeType = "BINANCE"
+	QuoteExchangeTypeBinanceMargin QuoteExchangeType = "BINANCE_MARGIN"
+	QuoteExchangeTypeB2C2          QuoteExchangeType = "B2C2"
+	QuoteExchangeTypeWintermute    QuoteExchangeType = "WINTERMUTE"
+	QuoteExchangeTypeBlockfills    QuoteExchangeType = "BLOCKFILLS"
+	QuoteExchangeTypeStonex        QuoteExchangeType = "STONEX"
 )
 
-func (r QuoteWithOrderCandidatesOrderCandidatesOrderSide) IsKnown() bool {
+func (r QuoteExchangeType) IsKnown() bool {
 	switch r {
-	case QuoteWithOrderCandidatesOrderCandidatesOrderSideBuy, QuoteWithOrderCandidatesOrderCandidatesOrderSideSell:
-		return true
-	}
-	return false
-}
-
-// Order type
-type QuoteWithOrderCandidatesOrderCandidatesOrderType string
-
-const (
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeMarket          QuoteWithOrderCandidatesOrderCandidatesOrderType = "MARKET"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeLimit           QuoteWithOrderCandidatesOrderCandidatesOrderType = "LIMIT"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeStopLoss        QuoteWithOrderCandidatesOrderCandidatesOrderType = "STOP_LOSS"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeStopLossLimit   QuoteWithOrderCandidatesOrderCandidatesOrderType = "STOP_LOSS_LIMIT"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeTakeProfit      QuoteWithOrderCandidatesOrderCandidatesOrderType = "TAKE_PROFIT"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeTakeProfitLimit QuoteWithOrderCandidatesOrderCandidatesOrderType = "TAKE_PROFIT_LIMIT"
-	QuoteWithOrderCandidatesOrderCandidatesOrderTypeQuoted          QuoteWithOrderCandidatesOrderCandidatesOrderType = "QUOTED"
-)
-
-func (r QuoteWithOrderCandidatesOrderCandidatesOrderType) IsKnown() bool {
-	switch r {
-	case QuoteWithOrderCandidatesOrderCandidatesOrderTypeMarket, QuoteWithOrderCandidatesOrderCandidatesOrderTypeLimit, QuoteWithOrderCandidatesOrderCandidatesOrderTypeStopLoss, QuoteWithOrderCandidatesOrderCandidatesOrderTypeStopLossLimit, QuoteWithOrderCandidatesOrderCandidatesOrderTypeTakeProfit, QuoteWithOrderCandidatesOrderCandidatesOrderTypeTakeProfitLimit, QuoteWithOrderCandidatesOrderCandidatesOrderTypeQuoted:
-		return true
-	}
-	return false
-}
-
-// Route policy. For PRIORITY, the order request will be routed to the exchange
-// account with the highest priority. For QUOTE, the system will execute the
-// execution plan based on the quote. Order request with route policy QUOTE will
-// only accept two parameters, quoteRequestId and priceSlippageTolerance
-type QuoteWithOrderCandidatesOrderCandidatesRoutePolicy string
-
-const (
-	QuoteWithOrderCandidatesOrderCandidatesRoutePolicyPriority QuoteWithOrderCandidatesOrderCandidatesRoutePolicy = "PRIORITY"
-	QuoteWithOrderCandidatesOrderCandidatesRoutePolicyQuote    QuoteWithOrderCandidatesOrderCandidatesRoutePolicy = "QUOTE"
-)
-
-func (r QuoteWithOrderCandidatesOrderCandidatesRoutePolicy) IsKnown() bool {
-	switch r {
-	case QuoteWithOrderCandidatesOrderCandidatesRoutePolicyPriority, QuoteWithOrderCandidatesOrderCandidatesRoutePolicyQuote:
+	case QuoteExchangeTypeBinance, QuoteExchangeTypeBinanceMargin, QuoteExchangeTypeB2C2, QuoteExchangeTypeWintermute, QuoteExchangeTypeBlockfills, QuoteExchangeTypeStonex:
 		return true
 	}
 	return false
