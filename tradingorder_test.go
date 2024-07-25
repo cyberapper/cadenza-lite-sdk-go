@@ -26,23 +26,25 @@ func TestTradingOrderNewWithOptionalParams(t *testing.T) {
 		option.WithBearerToken("My Bearer Token"),
 	)
 	_, err := client.Trading.Order.New(context.TODO(), cadenzasdk.TradingOrderNewParams{
-		ExchangeAccountID:      cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Leverage:               cadenzasdk.F(int64(0)),
-		OrderSide:              cadenzasdk.F(cadenzasdk.TradingOrderNewParamsOrderSideBuy),
-		OrderType:              cadenzasdk.F(cadenzasdk.TradingOrderNewParamsOrderTypeMarket),
-		PositionID:             cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Price:                  cadenzasdk.F(0.000000),
-		PriceSlippageTolerance: cadenzasdk.F(0.000000),
-		Priority:               cadenzasdk.F([]string{"exchange_account_id_1", "exchange_account_id_2", "exchange_account_id_3"}),
-		Quantity:               cadenzasdk.F(0.000000),
-		QuoteID:                cadenzasdk.F("quoteId"),
-		QuoteQuantity:          cadenzasdk.F(0.000000),
-		QuoteRequestID:         cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		RoutePolicy:            cadenzasdk.F(cadenzasdk.TradingOrderNewParamsRoutePolicyPriority),
-		Symbol:                 cadenzasdk.F("BTC/USDT"),
-		TenantID:               cadenzasdk.F("tenantId"),
-		TimeInForce:            cadenzasdk.F(cadenzasdk.TradingOrderNewParamsTimeInForceDay),
-		IdempotencyKey:         cadenzasdk.F("my_idempotency_key"),
+		PlaceOrderRequest: cadenzasdk.PlaceOrderRequestParam{
+			QuoteRequestID:         cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ExchangeAccountID:      cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Leverage:               cadenzasdk.F(int64(0)),
+			OrderSide:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderSideBuy),
+			OrderType:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderTypeMarket),
+			PositionID:             cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Price:                  cadenzasdk.F(0.000000),
+			PriceSlippageTolerance: cadenzasdk.F(0.000000),
+			Quantity:               cadenzasdk.F(0.000000),
+			QuoteQuantity:          cadenzasdk.F(0.000000),
+			Symbol:                 cadenzasdk.F("BTC/USDT"),
+			TimeInForce:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestTimeInForceDay),
+			RoutePolicy:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestRoutePolicyPriority),
+			Priority:               cadenzasdk.F([]string{"exchange_account_id_1", "exchange_account_id_2", "exchange_account_id_3"}),
+			QuoteID:                cadenzasdk.F("quoteId"),
+			TenantID:               cadenzasdk.F("tenantId"),
+		},
+		IdempotencyKey: cadenzasdk.F("my_idempotency_key"),
 	})
 	if err != nil {
 		var apierr *cadenzasdk.Error
@@ -98,7 +100,9 @@ func TestTradingOrderCancel(t *testing.T) {
 		option.WithBearerToken("My Bearer Token"),
 	)
 	_, err := client.Trading.Order.Cancel(context.TODO(), cadenzasdk.TradingOrderCancelParams{
-		OrderID: cadenzasdk.F("orderId"),
+		CancelOrderRequest: cadenzasdk.CancelOrderRequestParam{
+			OrderID: cadenzasdk.F("orderId"),
+		},
 	})
 	if err != nil {
 		var apierr *cadenzasdk.Error

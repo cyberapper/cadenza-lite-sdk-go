@@ -143,7 +143,46 @@ func (r QuoteParam) MarshalJSON() (data []byte, err error) {
 
 func (r QuoteParam) implementsEventPayloadUnionParam() {}
 
-type TradingQuoteGetParams struct {
+type QuoteRequest struct {
+	// Base currency is the currency you want to buy or sell
+	BaseCurrency string `json:"baseCurrency,required"`
+	// Order side, BUY or SELL
+	OrderSide string `json:"orderSide,required"`
+	// Quote currency is the currency you want to pay or receive, and the price of the
+	// base currency is quoted in the quote currency
+	QuoteCurrency string `json:"quoteCurrency,required"`
+	// The identifier for the exchange account
+	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
+	// Amount of the base currency
+	Quantity float64 `json:"quantity"`
+	// Amount of the quote currency
+	QuoteQuantity float64          `json:"quoteQuantity"`
+	JSON          quoteRequestJSON `json:"-"`
+}
+
+// quoteRequestJSON contains the JSON metadata for the struct [QuoteRequest]
+type quoteRequestJSON struct {
+	BaseCurrency      apijson.Field
+	OrderSide         apijson.Field
+	QuoteCurrency     apijson.Field
+	ExchangeAccountID apijson.Field
+	Quantity          apijson.Field
+	QuoteQuantity     apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *QuoteRequest) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r quoteRequestJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r QuoteRequest) implementsEventPayload() {}
+
+type QuoteRequestParam struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
 	// Order side, BUY or SELL
@@ -159,6 +198,16 @@ type TradingQuoteGetParams struct {
 	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
 }
 
-func (r TradingQuoteGetParams) MarshalJSON() (data []byte, err error) {
+func (r QuoteRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
+}
+
+func (r QuoteRequestParam) implementsEventPayloadUnionParam() {}
+
+type TradingQuoteGetParams struct {
+	QuoteRequest QuoteRequestParam `json:"quoteRequest,required"`
+}
+
+func (r TradingQuoteGetParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.QuoteRequest)
 }
