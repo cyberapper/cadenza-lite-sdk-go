@@ -345,6 +345,11 @@ func (r OrderParam) MarshalJSON() (data []byte, err error) {
 func (r OrderParam) implementsEventPayloadUnionParam() {}
 
 type PlaceOrderRequest struct {
+	// Route policy. For PRIORITY, the order request will be routed to the exchange
+	// account with the highest priority. For QUOTE, the system will execute the
+	// execution plan based on the quote. Order request with route policy QUOTE will
+	// only accept two parameters, quoteRequestId and priceSlippageTolerance
+	RoutePolicy PlaceOrderRequestRoutePolicy `json:"routePolicy,required"`
 	// Exchange account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Levarage
@@ -371,11 +376,6 @@ type PlaceOrderRequest struct {
 	QuoteQuantity float64 `json:"quoteQuantity"`
 	// Quote request ID
 	QuoteRequestID string `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy PlaceOrderRequestRoutePolicy `json:"routePolicy"`
 	// Symbol
 	Symbol string `json:"symbol"`
 	// Tenant ID
@@ -388,6 +388,7 @@ type PlaceOrderRequest struct {
 // placeOrderRequestJSON contains the JSON metadata for the struct
 // [PlaceOrderRequest]
 type placeOrderRequestJSON struct {
+	RoutePolicy            apijson.Field
 	ExchangeAccountID      apijson.Field
 	Leverage               apijson.Field
 	OrderSide              apijson.Field
@@ -400,7 +401,6 @@ type placeOrderRequestJSON struct {
 	QuoteID                apijson.Field
 	QuoteQuantity          apijson.Field
 	QuoteRequestID         apijson.Field
-	RoutePolicy            apijson.Field
 	Symbol                 apijson.Field
 	TenantID               apijson.Field
 	TimeInForce            apijson.Field
@@ -417,6 +417,25 @@ func (r placeOrderRequestJSON) RawJSON() string {
 }
 
 func (r PlaceOrderRequest) implementsEventPayload() {}
+
+// Route policy. For PRIORITY, the order request will be routed to the exchange
+// account with the highest priority. For QUOTE, the system will execute the
+// execution plan based on the quote. Order request with route policy QUOTE will
+// only accept two parameters, quoteRequestId and priceSlippageTolerance
+type PlaceOrderRequestRoutePolicy string
+
+const (
+	PlaceOrderRequestRoutePolicyPriority PlaceOrderRequestRoutePolicy = "PRIORITY"
+	PlaceOrderRequestRoutePolicyQuote    PlaceOrderRequestRoutePolicy = "QUOTE"
+)
+
+func (r PlaceOrderRequestRoutePolicy) IsKnown() bool {
+	switch r {
+	case PlaceOrderRequestRoutePolicyPriority, PlaceOrderRequestRoutePolicyQuote:
+		return true
+	}
+	return false
+}
 
 // Order side
 type PlaceOrderRequestOrderSide string
@@ -455,25 +474,6 @@ func (r PlaceOrderRequestOrderType) IsKnown() bool {
 	return false
 }
 
-// Route policy. For PRIORITY, the order request will be routed to the exchange
-// account with the highest priority. For QUOTE, the system will execute the
-// execution plan based on the quote. Order request with route policy QUOTE will
-// only accept two parameters, quoteRequestId and priceSlippageTolerance
-type PlaceOrderRequestRoutePolicy string
-
-const (
-	PlaceOrderRequestRoutePolicyPriority PlaceOrderRequestRoutePolicy = "PRIORITY"
-	PlaceOrderRequestRoutePolicyQuote    PlaceOrderRequestRoutePolicy = "QUOTE"
-)
-
-func (r PlaceOrderRequestRoutePolicy) IsKnown() bool {
-	switch r {
-	case PlaceOrderRequestRoutePolicyPriority, PlaceOrderRequestRoutePolicyQuote:
-		return true
-	}
-	return false
-}
-
 // Time in force
 type PlaceOrderRequestTimeInForce string
 
@@ -503,6 +503,11 @@ func (r PlaceOrderRequestTimeInForce) IsKnown() bool {
 }
 
 type PlaceOrderRequestParam struct {
+	// Route policy. For PRIORITY, the order request will be routed to the exchange
+	// account with the highest priority. For QUOTE, the system will execute the
+	// execution plan based on the quote. Order request with route policy QUOTE will
+	// only accept two parameters, quoteRequestId and priceSlippageTolerance
+	RoutePolicy param.Field[PlaceOrderRequestRoutePolicy] `json:"routePolicy,required"`
 	// Exchange account ID
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
 	// Levarage
@@ -529,11 +534,6 @@ type PlaceOrderRequestParam struct {
 	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
 	// Quote request ID
 	QuoteRequestID param.Field[string] `json:"quoteRequestId" format:"uuid"`
-	// Route policy. For PRIORITY, the order request will be routed to the exchange
-	// account with the highest priority. For QUOTE, the system will execute the
-	// execution plan based on the quote. Order request with route policy QUOTE will
-	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[PlaceOrderRequestRoutePolicy] `json:"routePolicy"`
 	// Symbol
 	Symbol param.Field[string] `json:"symbol"`
 	// Tenant ID
