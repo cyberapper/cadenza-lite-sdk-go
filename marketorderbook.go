@@ -73,23 +73,6 @@ func (r orderbookJSON) RawJSON() string {
 	return r.raw
 }
 
-type OrderbookParam struct {
-	Asks param.Field[[][]float64] `json:"asks"`
-	Bids param.Field[[][]float64] `json:"bids"`
-	// UUID string
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	ExchangeType      param.Field[string] `json:"exchangeType"`
-	// Order book level
-	Level  param.Field[int64]  `json:"level"`
-	Symbol param.Field[string] `json:"symbol"`
-}
-
-func (r OrderbookParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r OrderbookParam) implementsEventPayloadUnionParam() {}
-
 type MarketOrderbookGetParams struct {
 	// Exchange type
 	ExchangeType param.Field[MarketOrderbookGetParamsExchangeType] `query:"exchangeType,required"`

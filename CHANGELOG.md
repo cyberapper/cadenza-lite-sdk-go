@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 (2024-07-25)
+
+Full Changelog: [v0.1.1...v0.2.0](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.1.1...v0.2.0)
+
+### Features
+
+* **api:** OpenAPI spec update via Stainless API ([#4](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/4)) ([3912e6f](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/3912e6f9b6b7b7a8be8224e1360e6289d1404ed1))
+* **api:** OpenAPI spec update via Stainless API ([#7](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/7)) ([c4879c3](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/c4879c3a81f6508c578ac86b50222c5c8b4d92e4))
+* **api:** OpenAPI spec update via Stainless API ([#8](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/8)) ([6ce80a8](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/6ce80a89a4a0a6e1bb6366a140997577a2075c87))
+* **api:** OpenAPI spec update via Stainless API ([#9](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/9)) ([c95fb87](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/c95fb87d0c88f36cafaaa670d1610797bdbaf2f1))
+
+
+### Chores
+
+* **tests:** update prism version ([#6](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/6)) ([0cb59e9](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/0cb59e9c76660e74a1a09f4348468ca59fdcc776))
+
 ## 0.1.1 (2024-07-23)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.1](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.0.1-alpha.0...v0.1.1)

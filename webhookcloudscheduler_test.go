@@ -13,7 +13,7 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
-func TestWebhookPubsubWithOptionalParams(t *testing.T) {
+func TestWebhookCloudSchedulerUpdatePortfolioRoutine(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,13 +25,7 @@ func TestWebhookPubsubWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Webhook.Pubsub(context.TODO(), cadenzasdk.WebhookPubsubParams{
-		Message: cadenzasdk.F(cadenzasdk.WebhookPubsubParamsMessage{
-			Data: cadenzasdk.F("U3RhaW5sZXNzIHJvY2tz"),
-			ID:   cadenzasdk.F("id"),
-		}),
-		Subscription: cadenzasdk.F("subscription"),
-	})
+	_, err := client.Webhook.CloudScheduler.UpdatePortfolioRoutine(context.TODO())
 	if err != nil {
 		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
