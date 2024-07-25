@@ -95,7 +95,7 @@ func (r cancelOrderRequestJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CancelOrderRequest) implementsGenericEventPayload() {}
+func (r CancelOrderRequest) implementsEventPayload() {}
 
 type CancelOrderRequestParam struct {
 	// Order ID
@@ -106,7 +106,7 @@ func (r CancelOrderRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r CancelOrderRequestParam) implementsGenericEventPayloadUnionParam() {}
+func (r CancelOrderRequestParam) implementsEventPayloadUnionParam() {}
 
 type Order struct {
 	// The total cost of this order.
@@ -185,7 +185,7 @@ func (r orderJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r Order) implementsGenericEventPayload() {}
+func (r Order) implementsEventPayload() {}
 
 // Exchange type
 type OrderExchangeType string
@@ -342,7 +342,7 @@ func (r OrderParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r OrderParam) implementsGenericEventPayloadUnionParam() {}
+func (r OrderParam) implementsEventPayloadUnionParam() {}
 
 type PlaceOrderRequest struct {
 	// Exchange account ID
@@ -416,7 +416,7 @@ func (r placeOrderRequestJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r PlaceOrderRequest) implementsGenericEventPayload() {}
+func (r PlaceOrderRequest) implementsEventPayload() {}
 
 // Order side
 type PlaceOrderRequestOrderSide string
@@ -546,7 +546,7 @@ func (r PlaceOrderRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r PlaceOrderRequestParam) implementsGenericEventPayloadUnionParam() {}
+func (r PlaceOrderRequestParam) implementsEventPayloadUnionParam() {}
 
 type TradingOrderNewParams struct {
 	PlaceOrderRequest PlaceOrderRequestParam `json:"placeOrderRequest,required"`
