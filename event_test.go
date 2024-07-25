@@ -13,6 +13,142 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
+func TestEventDropCopyExecutionReportWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.DropCopyExecutionReport(context.TODO(), cadenzasdk.EventDropCopyExecutionReportParams{
+		DropCopyExecutionReport: cadenzasdk.DropCopyExecutionReportParam{
+			EventID:   "eventId",
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
+			Source:    "source",
+			Timestamp: int64(1632933600000),
+			Payload: cadenzasdk.ExecutionReportParam{
+				ClOrdID:       cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				BaseCurrency:  cadenzasdk.F("BTC"),
+				QuoteCurrency: cadenzasdk.F("USDT"),
+				RoutePolicy:   cadenzasdk.F(cadenzasdk.ExecutionReportRoutePolicyPriority),
+				Order: cadenzasdk.F(cadenzasdk.OrderParam{
+					Cost:              cadenzasdk.F(0.000000),
+					CreatedAt:         cadenzasdk.F(int64(1703052635110)),
+					ExchangeType:      cadenzasdk.F(cadenzasdk.OrderExchangeTypeBinance),
+					ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Filled:            cadenzasdk.F(0.000000),
+					OrderID:           cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					OrderSide:         cadenzasdk.F(cadenzasdk.OrderOrderSideBuy),
+					OrderType:         cadenzasdk.F(cadenzasdk.OrderOrderTypeMarket),
+					PositionID:        cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Price:             cadenzasdk.F(0.000000),
+					Quantity:          cadenzasdk.F(0.000000),
+					QuoteQuantity:     cadenzasdk.F(0.000000),
+					Status:            cadenzasdk.F(cadenzasdk.OrderStatusSubmitted),
+					Symbol:            cadenzasdk.F("BTC/USDT"),
+					TimeInForce:       cadenzasdk.F(cadenzasdk.OrderTimeInForceDay),
+					UpdatedAt:         cadenzasdk.F(int64(1703052635111)),
+					UserID:            cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Fee:               cadenzasdk.F(0.000000),
+					FeeCurrency:       cadenzasdk.F("USDT"),
+					TenantID:          cadenzasdk.F("tenantId"),
+				}),
+				Filled: cadenzasdk.F(1.000000),
+				Cost:   cadenzasdk.F(42859.990000),
+				Fees: cadenzasdk.F([]cadenzasdk.ExecutionReportFeeParam{{
+					Asset:    cadenzasdk.F("asset"),
+					Quantity: cadenzasdk.F(0.000000),
+				}, {
+					Asset:    cadenzasdk.F("asset"),
+					Quantity: cadenzasdk.F(0.000000),
+				}, {
+					Asset:    cadenzasdk.F("asset"),
+					Quantity: cadenzasdk.F(0.000000),
+				}}),
+				Status:    cadenzasdk.F(cadenzasdk.ExecutionReportStatusSubmitted),
+				CreatedAt: cadenzasdk.F(int64(1632933600000)),
+				UpdatedAt: cadenzasdk.F(int64(1632933600000)),
+				Executions: cadenzasdk.F([]cadenzasdk.OrderParam{{
+					Cost:              cadenzasdk.F(0.000000),
+					CreatedAt:         cadenzasdk.F(int64(1703052635110)),
+					ExchangeType:      cadenzasdk.F(cadenzasdk.OrderExchangeTypeBinance),
+					ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Filled:            cadenzasdk.F(0.000000),
+					OrderID:           cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					OrderSide:         cadenzasdk.F(cadenzasdk.OrderOrderSideBuy),
+					OrderType:         cadenzasdk.F(cadenzasdk.OrderOrderTypeMarket),
+					PositionID:        cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Price:             cadenzasdk.F(0.000000),
+					Quantity:          cadenzasdk.F(0.000000),
+					QuoteQuantity:     cadenzasdk.F(0.000000),
+					Status:            cadenzasdk.F(cadenzasdk.OrderStatusSubmitted),
+					Symbol:            cadenzasdk.F("BTC/USDT"),
+					TimeInForce:       cadenzasdk.F(cadenzasdk.OrderTimeInForceDay),
+					UpdatedAt:         cadenzasdk.F(int64(1703052635111)),
+					UserID:            cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Fee:               cadenzasdk.F(0.000000),
+					FeeCurrency:       cadenzasdk.F("USDT"),
+					TenantID:          cadenzasdk.F("tenantId"),
+				}, {
+					Cost:              cadenzasdk.F(0.000000),
+					CreatedAt:         cadenzasdk.F(int64(1703052635110)),
+					ExchangeType:      cadenzasdk.F(cadenzasdk.OrderExchangeTypeBinance),
+					ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Filled:            cadenzasdk.F(0.000000),
+					OrderID:           cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					OrderSide:         cadenzasdk.F(cadenzasdk.OrderOrderSideBuy),
+					OrderType:         cadenzasdk.F(cadenzasdk.OrderOrderTypeMarket),
+					PositionID:        cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Price:             cadenzasdk.F(0.000000),
+					Quantity:          cadenzasdk.F(0.000000),
+					QuoteQuantity:     cadenzasdk.F(0.000000),
+					Status:            cadenzasdk.F(cadenzasdk.OrderStatusSubmitted),
+					Symbol:            cadenzasdk.F("BTC/USDT"),
+					TimeInForce:       cadenzasdk.F(cadenzasdk.OrderTimeInForceDay),
+					UpdatedAt:         cadenzasdk.F(int64(1703052635111)),
+					UserID:            cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Fee:               cadenzasdk.F(0.000000),
+					FeeCurrency:       cadenzasdk.F("USDT"),
+					TenantID:          cadenzasdk.F("tenantId"),
+				}, {
+					Cost:              cadenzasdk.F(0.000000),
+					CreatedAt:         cadenzasdk.F(int64(1703052635110)),
+					ExchangeType:      cadenzasdk.F(cadenzasdk.OrderExchangeTypeBinance),
+					ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Filled:            cadenzasdk.F(0.000000),
+					OrderID:           cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					OrderSide:         cadenzasdk.F(cadenzasdk.OrderOrderSideBuy),
+					OrderType:         cadenzasdk.F(cadenzasdk.OrderOrderTypeMarket),
+					PositionID:        cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Price:             cadenzasdk.F(0.000000),
+					Quantity:          cadenzasdk.F(0.000000),
+					QuoteQuantity:     cadenzasdk.F(0.000000),
+					Status:            cadenzasdk.F(cadenzasdk.OrderStatusSubmitted),
+					Symbol:            cadenzasdk.F("BTC/USDT"),
+					TimeInForce:       cadenzasdk.F(cadenzasdk.OrderTimeInForceDay),
+					UpdatedAt:         cadenzasdk.F(int64(1703052635111)),
+					UserID:            cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					Fee:               cadenzasdk.F(0.000000),
+					FeeCurrency:       cadenzasdk.F("USDT"),
+					TenantID:          cadenzasdk.F("tenantId"),
+				}}),
+			},
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestEventDropCopyOrderWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -28,29 +164,29 @@ func TestEventDropCopyOrderWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopyOrder(context.TODO(), cadenzasdk.EventDropCopyOrderParams{
 		DropCopyOrder: cadenzasdk.DropCopyOrderParam{
 			EventID:   "eventId",
-			EventType: cadenzasdk.EventEventTypeCadenzaDropCopyOrder,
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
 			Source:    "source",
 			Timestamp: int64(1632933600000),
-			Payload: cadenzasdk.PlaceOrderRequestParam{
-				Cost:              int64(0),
-				CreatedAt:         int64(1703052635110),
-				ExchangeType:      "BINANCE",
+			Payload: cadenzasdk.OrderParam{
+				Cost:              cadenzasdk.F(0.000000),
+				CreatedAt:         cadenzasdk.F(int64(1703052635110)),
+				ExchangeType:      cadenzasdk.F(cadenzasdk.OrderExchangeTypeBinance),
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				Filled:            int64(0),
-				OrderID:           "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-				OrderSide:         cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderSideBuy),
-				OrderType:         cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderTypeMarket),
+				Filled:            cadenzasdk.F(0.000000),
+				OrderID:           cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				OrderSide:         cadenzasdk.F(cadenzasdk.OrderOrderSideBuy),
+				OrderType:         cadenzasdk.F(cadenzasdk.OrderOrderTypeMarket),
 				PositionID:        cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 				Price:             cadenzasdk.F(0.000000),
 				Quantity:          cadenzasdk.F(0.000000),
 				QuoteQuantity:     cadenzasdk.F(0.000000),
-				Status:            "SUBMITTED",
+				Status:            cadenzasdk.F(cadenzasdk.OrderStatusSubmitted),
 				Symbol:            cadenzasdk.F("BTC/USDT"),
-				TimeInForce:       cadenzasdk.F(cadenzasdk.PlaceOrderRequestTimeInForceDay),
-				UpdatedAt:         int64(1703052635111),
-				UserID:            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-				Fee:               int64(0),
-				FeeCurrency:       "USDT",
+				TimeInForce:       cadenzasdk.F(cadenzasdk.OrderTimeInForceDay),
+				UpdatedAt:         cadenzasdk.F(int64(1703052635111)),
+				UserID:            cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Fee:               cadenzasdk.F(0.000000),
+				FeeCurrency:       cadenzasdk.F("USDT"),
 				TenantID:          cadenzasdk.F("tenantId"),
 			},
 		},
@@ -79,77 +215,69 @@ func TestEventDropCopyPortfolioWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopyPortfolio(context.TODO(), cadenzasdk.EventDropCopyPortfolioParams{
 		DropCopyPortfolio: cadenzasdk.DropCopyPortfolioParam{
 			EventID:   "eventId",
-			EventType: cadenzasdk.EventEventTypeCadenzaDropCopyPortfolio,
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
 			Source:    "source",
 			Timestamp: int64(1632933600000),
-			Payload: cadenzasdk.PlaceOrderRequestParam{
-				Payload: map[string]interface{}{
-					"exchangeAccountId": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-					"exchangeType":      "BINANCE",
-					"balances": map[string]interface{}{
-						"0": map[string]interface{}{
-							"asset":  "BTC",
-							"free":   int64(1),
-							"locked": int64(0),
-							"total":  int64(1),
-						},
-						"1": map[string]interface{}{
-							"asset":  "BTC",
-							"free":   int64(1),
-							"locked": int64(0),
-							"total":  int64(1),
-						},
-						"2": map[string]interface{}{
-							"asset":  "BTC",
-							"free":   int64(1),
-							"locked": int64(0),
-							"total":  int64(1),
-						},
-					},
-					"positions": map[string]interface{}{
-						"0": map[string]interface{}{
-							"amount":       int64(0),
-							"cost":         int64(0),
-							"entryPrice":   int64(0),
-							"positionSide": "LONG",
-							"status":       "OPEN",
-							"symbol":       "BTC/USDT",
-						},
-						"1": map[string]interface{}{
-							"amount":       int64(0),
-							"cost":         int64(0),
-							"entryPrice":   int64(0),
-							"positionSide": "LONG",
-							"status":       "OPEN",
-							"symbol":       "BTC/USDT",
-						},
-						"2": map[string]interface{}{
-							"amount":       int64(0),
-							"cost":         int64(0),
-							"entryPrice":   int64(0),
-							"positionSide": "LONG",
-							"status":       "OPEN",
-							"symbol":       "BTC/USDT",
-						},
-					},
-					"credit": map[string]interface{}{
-						"exchangeAccountId": "018e41a1-cebc-7b49-a729-ae2c1c41e297",
-						"exchangeType":      "BINANCE",
-						"accountType":       "SPOT",
-						"currency":          "USDT",
-						"leverage":          int64(1),
-						"credit":            int64(10000),
-						"margin":            int64(5000),
-						"marginLoan":        int64(3000),
-						"marginRequirement": int64(1500),
-						"marginUsage":       0.500000,
-						"marginLevel":       0.890000,
-						"riskExposure":      5677517.760000,
-						"maxRiskExposure":   int64(5000000),
-						"riskExposureRate":  0.890000,
-					},
-					"updatedAt": int64(1632933600000),
-				},
+			Payload: cadenzasdk.ExchangeAccountPortfolioParam{
+				Payload: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadParam{
+					ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					ExchangeType:      cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadExchangeTypeBinance),
+					Balances: cadenzasdk.F([]cadenzasdk.ExchangeAccountPortfolioPayloadBalanceParam{{
+						Asset:  cadenzasdk.F("BTC"),
+						Free:   cadenzasdk.F(1.000000),
+						Locked: cadenzasdk.F(0.000000),
+						Total:  cadenzasdk.F(1.000000),
+					}, {
+						Asset:  cadenzasdk.F("BTC"),
+						Free:   cadenzasdk.F(1.000000),
+						Locked: cadenzasdk.F(0.000000),
+						Total:  cadenzasdk.F(1.000000),
+					}, {
+						Asset:  cadenzasdk.F("BTC"),
+						Free:   cadenzasdk.F(1.000000),
+						Locked: cadenzasdk.F(0.000000),
+						Total:  cadenzasdk.F(1.000000),
+					}}),
+					Positions: cadenzasdk.F([]cadenzasdk.ExchangeAccountPortfolioPayloadPositionParam{{
+						Amount:       cadenzasdk.F(0.000000),
+						Cost:         cadenzasdk.F(0.000000),
+						EntryPrice:   cadenzasdk.F(0.000000),
+						PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsPositionSideLong),
+						Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsStatusOpen),
+						Symbol:       cadenzasdk.F("BTC/USDT"),
+					}, {
+						Amount:       cadenzasdk.F(0.000000),
+						Cost:         cadenzasdk.F(0.000000),
+						EntryPrice:   cadenzasdk.F(0.000000),
+						PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsPositionSideLong),
+						Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsStatusOpen),
+						Symbol:       cadenzasdk.F("BTC/USDT"),
+					}, {
+						Amount:       cadenzasdk.F(0.000000),
+						Cost:         cadenzasdk.F(0.000000),
+						EntryPrice:   cadenzasdk.F(0.000000),
+						PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsPositionSideLong),
+						Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPayloadPositionsStatusOpen),
+						Symbol:       cadenzasdk.F("BTC/USDT"),
+					}}),
+					Credit: cadenzasdk.F(cadenzasdk.ExchangeAccountCreditParam{
+						ExchangeAccountID: cadenzasdk.F("018e41a1-cebc-7b49-a729-ae2c1c41e297"),
+						ExchangeType:      cadenzasdk.F(cadenzasdk.ExchangeAccountCreditExchangeTypeBinance),
+						AccountType:       cadenzasdk.F(cadenzasdk.ExchangeAccountCreditAccountTypeSpot),
+						Currency:          cadenzasdk.F("USDT"),
+						Leverage:          cadenzasdk.F(int64(1)),
+						Credit:            cadenzasdk.F(10000.000000),
+						Margin:            cadenzasdk.F(5000.000000),
+						MarginLoan:        cadenzasdk.F(3000.000000),
+						MarginRequirement: cadenzasdk.F(1500.000000),
+						MarginUsage:       cadenzasdk.F(0.500000),
+						MarginLevel:       cadenzasdk.F(0.890000),
+						RiskExposure:      cadenzasdk.F(5677517.760000),
+						MaxRiskExposure:   cadenzasdk.F(5000000.000000),
+						RiskExposureRate:  cadenzasdk.F(0.890000),
+					}),
+					UpdatedAt: cadenzasdk.F(int64(1632933600000)),
+				}),
 			},
 		},
 	})
@@ -177,21 +305,21 @@ func TestEventDropCopyQuoteWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopyQuote(context.TODO(), cadenzasdk.EventDropCopyQuoteParams{
 		DropCopyQuote: cadenzasdk.DropCopyQuoteParam{
 			EventID:   "eventId",
-			EventType: cadenzasdk.EventEventTypeCadenzaDropCopyQuote,
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
 			Source:    "source",
 			Timestamp: int64(1632933600000),
-			Payload: cadenzasdk.PlaceOrderRequestParam{
+			Payload: cadenzasdk.QuoteParam{
 				QuoteRequestID:    cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				BaseCurrency:      "BTC",
-				QuoteCurrency:     "USDT",
-				AskPrice:          42859.990000,
-				AskQuantity:       int64(1),
-				BidPrice:          42859.710000,
-				BidQuantity:       int64(1),
-				Timestamp:         int64(1632933600000),
-				ValidUntil:        int64(1632933600000),
+				BaseCurrency:      cadenzasdk.F("BTC"),
+				QuoteCurrency:     cadenzasdk.F("USDT"),
+				AskPrice:          cadenzasdk.F(42859.990000),
+				AskQuantity:       cadenzasdk.F(1.000000),
+				BidPrice:          cadenzasdk.F(42859.710000),
+				BidQuantity:       cadenzasdk.F(1.000000),
+				Timestamp:         cadenzasdk.F(int64(1632933600000)),
+				ValidUntil:        cadenzasdk.F(int64(1632933600000)),
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				ExchangeType:      "BINANCE",
+				ExchangeType:      cadenzasdk.F(cadenzasdk.QuoteExchangeTypeBinance),
 			},
 		},
 	})
@@ -219,40 +347,36 @@ func TestEventMarketDataKlineWithOptionalParams(t *testing.T) {
 	_, err := client.Event.MarketDataKline(context.TODO(), cadenzasdk.EventMarketDataKlineParams{
 		MarketDataKline: cadenzasdk.MarketDataKlineParam{
 			EventID:   "eventId",
-			EventType: cadenzasdk.EventEventTypeCadenzaMarketDataKline,
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
 			Source:    "source",
 			Timestamp: int64(1632933600000),
-			Payload: cadenzasdk.PlaceOrderRequestParam{
+			Payload: cadenzasdk.MarketDataKlinePayloadParam{
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				ExchangeType:      "BINANCE",
+				ExchangeType:      cadenzasdk.F(cadenzasdk.MarketDataKlinePayloadExchangeTypeBinance),
 				Symbol:            cadenzasdk.F("symbol"),
-				Interval:          "1s",
-				Candles: map[string]interface{}{
-					"0": map[string]interface{}{
-						"c": int64(0),
-						"h": int64(0),
-						"l": int64(0),
-						"o": int64(0),
-						"t": int64(0),
-						"v": int64(0),
-					},
-					"1": map[string]interface{}{
-						"c": int64(0),
-						"h": int64(0),
-						"l": int64(0),
-						"o": int64(0),
-						"t": int64(0),
-						"v": int64(0),
-					},
-					"2": map[string]interface{}{
-						"c": int64(0),
-						"h": int64(0),
-						"l": int64(0),
-						"o": int64(0),
-						"t": int64(0),
-						"v": int64(0),
-					},
-				},
+				Interval:          cadenzasdk.F(cadenzasdk.MarketDataKlinePayloadInterval1s),
+				Candles: cadenzasdk.F([]cadenzasdk.OhlcvParam{{
+					C: cadenzasdk.F(0.000000),
+					H: cadenzasdk.F(0.000000),
+					L: cadenzasdk.F(0.000000),
+					O: cadenzasdk.F(0.000000),
+					T: cadenzasdk.F(int64(0)),
+					V: cadenzasdk.F(0.000000),
+				}, {
+					C: cadenzasdk.F(0.000000),
+					H: cadenzasdk.F(0.000000),
+					L: cadenzasdk.F(0.000000),
+					O: cadenzasdk.F(0.000000),
+					T: cadenzasdk.F(int64(0)),
+					V: cadenzasdk.F(0.000000),
+				}, {
+					C: cadenzasdk.F(0.000000),
+					H: cadenzasdk.F(0.000000),
+					L: cadenzasdk.F(0.000000),
+					O: cadenzasdk.F(0.000000),
+					T: cadenzasdk.F(int64(0)),
+					V: cadenzasdk.F(0.000000),
+				}}),
 			},
 		},
 	})
@@ -280,42 +404,169 @@ func TestEventMarketDataOrderBookWithOptionalParams(t *testing.T) {
 	_, err := client.Event.MarketDataOrderBook(context.TODO(), cadenzasdk.EventMarketDataOrderBookParams{
 		MarketDataOrderBook: cadenzasdk.MarketDataOrderBookParam{
 			EventID:   "eventId",
-			EventType: cadenzasdk.EventEventTypeCadenzaMarketDataOrderBook,
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
+			Source:    "source",
+			Timestamp: int64(1632933600000),
+			Payload: cadenzasdk.OrderbookParam{
+				Asks:              cadenzasdk.F([][]float64{{0.000000, 0.000000}, {0.000000, 0.000000}, {0.000000, 0.000000}}),
+				Bids:              cadenzasdk.F([][]float64{{0.000000, 0.000000}, {0.000000, 0.000000}, {0.000000, 0.000000}}),
+				ExchangeType:      cadenzasdk.F("exchangeType"),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Symbol:            cadenzasdk.F("symbol"),
+				Level:             cadenzasdk.F(int64(0)),
+			},
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestEventNewWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.New(context.TODO(), cadenzasdk.EventNewParams{
+		GenericEvent: cadenzasdk.GenericEventParam{
+			EventID:   "eventId",
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
+			Source:    "source",
+			Timestamp: int64(1632933600000),
+			Payload: cadenzasdk.QuoteRequestParam{
+				BaseCurrency:      cadenzasdk.F("baseCurrency"),
+				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+				OrderSide:         cadenzasdk.F("orderSide"),
+				Quantity:          cadenzasdk.F(0.000000),
+				QuoteQuantity:     cadenzasdk.F(0.000000),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			},
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestEventTaskCancelOrderRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.TaskCancelOrderRequestAck(context.TODO(), cadenzasdk.EventTaskCancelOrderRequestAckParams{
+		TaskCancelOrderRequestAck: cadenzasdk.TaskCancelOrderRequestAckParam{
+			EventID:   "eventId",
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
+			Source:    "source",
+			Timestamp: int64(1632933600000),
+			Payload: cadenzasdk.CancelOrderRequestParam{
+				OrderID: cadenzasdk.F("orderId"),
+			},
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestEventTaskPlaceOrderRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.TaskPlaceOrderRequestAck(context.TODO(), cadenzasdk.EventTaskPlaceOrderRequestAckParams{
+		TaskPlaceOrderRequestAck: cadenzasdk.TaskPlaceOrderRequestAckParam{
+			EventID:   "eventId",
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
 			Source:    "source",
 			Timestamp: int64(1632933600000),
 			Payload: cadenzasdk.PlaceOrderRequestParam{
-				Asks: map[string]interface{}{
-					"0": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-					"1": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-					"2": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-				},
-				Bids: map[string]interface{}{
-					"0": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-					"1": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-					"2": map[string]interface{}{
-						"0": int64(0),
-						"1": int64(0),
-					},
-				},
-				ExchangeType:      "exchangeType",
+				QuoteRequestID:         cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				ExchangeAccountID:      cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Leverage:               cadenzasdk.F(int64(0)),
+				OrderSide:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderSideBuy),
+				OrderType:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderTypeMarket),
+				PositionID:             cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Price:                  cadenzasdk.F(0.000000),
+				PriceSlippageTolerance: cadenzasdk.F(0.000000),
+				Quantity:               cadenzasdk.F(0.000000),
+				QuoteQuantity:          cadenzasdk.F(0.000000),
+				Symbol:                 cadenzasdk.F("BTC/USDT"),
+				TimeInForce:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestTimeInForceDay),
+				RoutePolicy:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestRoutePolicyPriority),
+				Priority:               cadenzasdk.F([]string{"exchange_account_id_1", "exchange_account_id_2", "exchange_account_id_3"}),
+				QuoteID:                cadenzasdk.F("quoteId"),
+				TenantID:               cadenzasdk.F("tenantId"),
+			},
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestEventTaskQuoteRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.TaskQuoteRequestAck(context.TODO(), cadenzasdk.EventTaskQuoteRequestAckParams{
+		TaskQuoteRequestAck: cadenzasdk.TaskQuoteRequestAckParam{
+			EventID:   "eventId",
+			EventType: cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck,
+			Source:    "source",
+			Timestamp: int64(1632933600000),
+			Payload: cadenzasdk.QuoteRequestParam{
+				BaseCurrency:      cadenzasdk.F("baseCurrency"),
+				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+				OrderSide:         cadenzasdk.F("orderSide"),
+				Quantity:          cadenzasdk.F(0.000000),
+				QuoteQuantity:     cadenzasdk.F(0.000000),
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				Symbol:            cadenzasdk.F("symbol"),
-				Level:             int64(0),
 			},
 		},
 	})
