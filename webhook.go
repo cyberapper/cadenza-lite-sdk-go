@@ -19,7 +19,8 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewWebhookService] method instead.
 type WebhookService struct {
-	Options []option.RequestOption
+	Options        []option.RequestOption
+	CloudScheduler *WebhookCloudSchedulerService
 }
 
 // NewWebhookService generates a new service that applies the given options to each
@@ -28,6 +29,7 @@ type WebhookService struct {
 func NewWebhookService(opts ...option.RequestOption) (r *WebhookService) {
 	r = &WebhookService{}
 	r.Options = opts
+	r.CloudScheduler = NewWebhookCloudSchedulerService(opts...)
 	return
 }
 
