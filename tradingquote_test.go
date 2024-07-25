@@ -13,7 +13,7 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
-func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
+func TestTradingQuoteGetWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,7 +25,7 @@ func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Trading.Quote.RequestForQuote(context.TODO(), cadenzasdk.TradingQuoteRequestForQuoteParams{
+	_, err := client.Trading.Quote.Get(context.TODO(), cadenzasdk.TradingQuoteGetParams{
 		BaseCurrency:      cadenzasdk.F("baseCurrency"),
 		OrderSide:         cadenzasdk.F("orderSide"),
 		QuoteCurrency:     cadenzasdk.F("quoteCurrency"),

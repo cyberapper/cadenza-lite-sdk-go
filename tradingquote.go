@@ -32,7 +32,7 @@ func NewTradingQuoteService(opts ...option.RequestOption) (r *TradingQuoteServic
 }
 
 // Quote will give the best quote from all available exchange accounts
-func (r *TradingQuoteService) RequestForQuote(ctx context.Context, body TradingQuoteRequestForQuoteParams, opts ...option.RequestOption) (res *[]Quote, err error) {
+func (r *TradingQuoteService) Get(ctx context.Context, body TradingQuoteGetParams, opts ...option.RequestOption) (res *[]Quote, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/trading/fetchQuotes"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
@@ -90,6 +90,8 @@ func (r quoteJSON) RawJSON() string {
 	return r.raw
 }
 
+func (r Quote) implementsEventPayload() {}
+
 // Exchange type
 type QuoteExchangeType string
 
@@ -110,7 +112,38 @@ func (r QuoteExchangeType) IsKnown() bool {
 	return false
 }
 
-type TradingQuoteRequestForQuoteParams struct {
+type QuoteParam struct {
+	// Base currency
+	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
+	// Quote currency
+	QuoteCurrency param.Field[string] `json:"quoteCurrency,required"`
+	// Quote request ID
+	QuoteRequestID param.Field[string] `json:"quoteRequestId,required" format:"uuid"`
+	// Create time of the quote
+	Timestamp param.Field[int64] `json:"timestamp,required"`
+	// Expiration time of the quote
+	ValidUntil param.Field[int64] `json:"validUntil,required"`
+	// Ask price
+	AskPrice param.Field[float64] `json:"askPrice"`
+	// Ask quantity
+	AskQuantity param.Field[float64] `json:"askQuantity"`
+	// Bid price
+	BidPrice param.Field[float64] `json:"bidPrice"`
+	// Bid quantity
+	BidQuantity param.Field[float64] `json:"bidQuantity"`
+	// Exchange Account ID
+	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
+	// Exchange type
+	ExchangeType param.Field[QuoteExchangeType] `json:"exchangeType"`
+}
+
+func (r QuoteParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r QuoteParam) implementsEventPayloadUnionParam() {}
+
+type TradingQuoteGetParams struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
 	// Order side, BUY or SELL
@@ -126,6 +159,6 @@ type TradingQuoteRequestForQuoteParams struct {
 	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
 }
 
-func (r TradingQuoteRequestForQuoteParams) MarshalJSON() (data []byte, err error) {
+func (r TradingQuoteGetParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
