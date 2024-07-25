@@ -58,6 +58,10 @@ Methods:
 
 ## Orderbook
 
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#OrderbookParam">OrderbookParam</a>
+
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Orderbook">Orderbook</a>
@@ -67,6 +71,10 @@ Methods:
 - <code title="get /api/v2/market/orderbook">client.Market.Orderbook.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#MarketOrderbookService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#MarketOrderbookGetParams">MarketOrderbookGetParams</a>) ([]<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Orderbook">Orderbook</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 ## Kline
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#OhlcvParam">OhlcvParam</a>
 
 Response Types:
 
@@ -81,6 +89,10 @@ Methods:
 
 ## Order
 
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#OrderParam">OrderParam</a>
+
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Order">Order</a>
@@ -93,15 +105,23 @@ Methods:
 
 ## Quote
 
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#QuoteParam">QuoteParam</a>
+
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Quote">Quote</a>
 
 Methods:
 
-- <code title="post /api/v2/trading/fetchQuotes">client.Trading.Quote.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteService.RequestForQuote">RequestForQuote</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteRequestForQuoteParams">TradingQuoteRequestForQuoteParams</a>) ([]<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Quote">Quote</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /api/v2/trading/fetchQuotes">client.Trading.Quote.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingQuoteGetParams">TradingQuoteGetParams</a>) ([]<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Quote">Quote</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 ## ExecutionReport
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#ExecutionReportParam">ExecutionReportParam</a>
 
 Response Types:
 
@@ -114,6 +134,10 @@ Methods:
 - <code title="get /api/v2/trading/getQuoteExecutionReport">client.Trading.ExecutionReport.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingExecutionReportService.GetQuoteExecutionReport">GetQuoteExecutionReport</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#TradingExecutionReportGetQuoteExecutionReportParams">TradingExecutionReportGetQuoteExecutionReportParams</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#QuoteExecutionReport">QuoteExecutionReport</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Portfolio
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#ExchangeAccountCreditParam">ExchangeAccountCreditParam</a>
 
 Response Types:
 
@@ -129,8 +153,13 @@ Methods:
 
 # Webhook
 
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#EventParam">EventParam</a>
+
 Response Types:
 
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Event">Event</a>
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookPubsubResponse">WebhookPubsubResponse</a>
 
 Methods:
@@ -146,3 +175,17 @@ Response Types:
 Methods:
 
 - <code title="post /api/v2/webhook/cloudScheduler/updatePortfolioRoutine">client.Webhook.CloudScheduler.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookCloudSchedulerService.UpdatePortfolioRoutine">UpdatePortfolioRoutine</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookCloudSchedulerUpdatePortfolioRoutineResponse">WebhookCloudSchedulerUpdatePortfolioRoutineResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+## Event
+
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#DropCopyQuoteParam">DropCopyQuoteParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#DropCopyQuote">DropCopyQuote</a>
+
+Methods:
+
+- <code title="post /api/v2/webhook/pubsub/dropCopy/quote">client.Webhook.Event.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookEventService.DropCopyQuote">DropCopyQuote</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookEventDropCopyQuoteParams">WebhookEventDropCopyQuoteParams</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#DropCopyQuote">DropCopyQuote</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
