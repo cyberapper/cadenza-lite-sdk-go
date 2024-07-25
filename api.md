@@ -164,3 +164,13 @@ Response Types:
 Methods:
 
 - <code title="post /api/v2/webhook/pubsub">client.Webhook.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookService.Pubsub">Pubsub</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookPubsubParams">WebhookPubsubParams</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookPubsubResponse">WebhookPubsubResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+## CloudScheduler
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookCloudSchedulerUpdatePortfolioRoutineResponse">WebhookCloudSchedulerUpdatePortfolioRoutineResponse</a>
+
+Methods:
+
+- <code title="post /api/v2/webhook/cloudScheduler/updatePortfolioRoutine">client.Webhook.CloudScheduler.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookCloudSchedulerService.UpdatePortfolioRoutine">UpdatePortfolioRoutine</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#WebhookCloudSchedulerUpdatePortfolioRoutineResponse">WebhookCloudSchedulerUpdatePortfolioRoutineResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
