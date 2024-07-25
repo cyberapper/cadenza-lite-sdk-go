@@ -46,9 +46,9 @@ type Quote struct {
 	QuoteCurrency string `json:"quoteCurrency,required"`
 	// Quote request ID
 	QuoteRequestID string `json:"quoteRequestId,required" format:"uuid"`
-	// Create time of the quote
+	// deprecated, alias of createdAt, Create time of the quote
 	Timestamp int64 `json:"timestamp,required"`
-	// Expiration time of the quote
+	// deprecated, alias of expiredAtExpiration time of the quote
 	ValidUntil int64 `json:"validUntil,required"`
 	// Ask price
 	AskPrice float64 `json:"askPrice"`
@@ -58,11 +58,15 @@ type Quote struct {
 	BidPrice float64 `json:"bidPrice"`
 	// Bid quantity
 	BidQuantity float64 `json:"bidQuantity"`
+	// Create time of the quote
+	CreatedAt int64 `json:"createdAt"`
 	// Exchange Account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
 	ExchangeType QuoteExchangeType `json:"exchangeType"`
-	JSON         quoteJSON         `json:"-"`
+	// Expiration time of the quote
+	ExpiredAt int64     `json:"expiredAt"`
+	JSON      quoteJSON `json:"-"`
 }
 
 // quoteJSON contains the JSON metadata for the struct [Quote]
@@ -76,8 +80,10 @@ type quoteJSON struct {
 	AskQuantity       apijson.Field
 	BidPrice          apijson.Field
 	BidQuantity       apijson.Field
+	CreatedAt         apijson.Field
 	ExchangeAccountID apijson.Field
 	ExchangeType      apijson.Field
+	ExpiredAt         apijson.Field
 	raw               string
 	ExtraFields       map[string]apijson.Field
 }
@@ -119,9 +125,9 @@ type QuoteParam struct {
 	QuoteCurrency param.Field[string] `json:"quoteCurrency,required"`
 	// Quote request ID
 	QuoteRequestID param.Field[string] `json:"quoteRequestId,required" format:"uuid"`
-	// Create time of the quote
+	// deprecated, alias of createdAt, Create time of the quote
 	Timestamp param.Field[int64] `json:"timestamp,required"`
-	// Expiration time of the quote
+	// deprecated, alias of expiredAtExpiration time of the quote
 	ValidUntil param.Field[int64] `json:"validUntil,required"`
 	// Ask price
 	AskPrice param.Field[float64] `json:"askPrice"`
@@ -131,10 +137,14 @@ type QuoteParam struct {
 	BidPrice param.Field[float64] `json:"bidPrice"`
 	// Bid quantity
 	BidQuantity param.Field[float64] `json:"bidQuantity"`
+	// Create time of the quote
+	CreatedAt param.Field[int64] `json:"createdAt"`
 	// Exchange Account ID
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
 	ExchangeType param.Field[QuoteExchangeType] `json:"exchangeType"`
+	// Expiration time of the quote
+	ExpiredAt param.Field[int64] `json:"expiredAt"`
 }
 
 func (r QuoteParam) MarshalJSON() (data []byte, err error) {

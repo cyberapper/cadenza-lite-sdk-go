@@ -24,9 +24,8 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	clientInfoGetResponse, err := client.Clients.Info.Get(context.TODO())
+	_, err := client.Health.Get(context.TODO())
 	if err != nil {
 		t.Error(err)
 	}
-	t.Logf("%+v\n", clientInfoGetResponse.ExchangeTypes)
 }
