@@ -26,20 +26,11 @@ func TestWebhookPubsubWithOptionalParams(t *testing.T) {
 		option.WithBearerToken("My Bearer Token"),
 	)
 	_, err := client.Webhook.Pubsub(context.TODO(), cadenzasdk.WebhookPubsubParams{
-		Event: cadenzasdk.EventParam{
-			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F("eventType"),
-			Source:    cadenzasdk.F("source"),
-			Timestamp: cadenzasdk.F(int64(1632933600000)),
-			Payload: cadenzasdk.F[cadenzasdk.EventPayloadUnionParam](cadenzasdk.EventPayloadQuoteRequestParam{
-				BaseCurrency:      cadenzasdk.F("baseCurrency"),
-				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
-				OrderSide:         cadenzasdk.F("orderSide"),
-				Quantity:          cadenzasdk.F(0.000000),
-				QuoteQuantity:     cadenzasdk.F(0.000000),
-				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			}),
-		},
+		Message: cadenzasdk.F(cadenzasdk.WebhookPubsubParamsMessage{
+			Data: cadenzasdk.F("U3RhaW5sZXNzIHJvY2tz"),
+			ID:   cadenzasdk.F("id"),
+		}),
+		Subscription: cadenzasdk.F("subscription"),
 	})
 	if err != nil {
 		var apierr *cadenzasdk.Error
