@@ -108,6 +108,8 @@ func (r executionReportJSON) RawJSON() string {
 	return r.raw
 }
 
+func (r ExecutionReport) implementsEventPayload() {}
+
 // Route policy. For PRIORITY, the order request will be routed to the exchange
 // account with the highest priority. For QUOTE, the system will execute the
 // execution plan based on the quote. Order request with route policy QUOTE will
@@ -176,6 +178,55 @@ func (r *ExecutionReportFee) UnmarshalJSON(data []byte) (err error) {
 
 func (r executionReportFeeJSON) RawJSON() string {
 	return r.raw
+}
+
+type ExecutionReportParam struct {
+	// Base currency
+	BaseCurrency param.Field[string] `json:"baseCurrency,required"`
+	// Cost, the total cost of the quote
+	Cost param.Field[float64] `json:"cost,required"`
+	// Create time of the quote
+	CreatedAt param.Field[int64] `json:"createdAt,required"`
+	// Filled quantity, the quantity of the base currency executed
+	Filled param.Field[float64] `json:"filled,required"`
+	// Quote currency
+	QuoteCurrency param.Field[string] `json:"quoteCurrency,required"`
+	// Route policy. For PRIORITY, the order request will be routed to the exchange
+	// account with the highest priority. For QUOTE, the system will execute the
+	// execution plan based on the quote. Order request with route policy QUOTE will
+	// only accept two parameters, quoteRequestId and priceSlippageTolerance
+	RoutePolicy param.Field[ExecutionReportRoutePolicy] `json:"routePolicy,required"`
+	// Status of the quote execution, should only have SUBMITTED, ACCEPTED,
+	// PARTIALLY_FILLED, FILLED, EXPIRED. the final status of the quote execution
+	// should be either FILLED or EXPIRED
+	Status param.Field[ExecutionReportStatus] `json:"status,required"`
+	// Last updated time of the quote execution
+	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
+	// Order request ID, Client Order ID
+	ClOrdID param.Field[string] `json:"clOrdId" format:"uuid"`
+	// List of executions to fulfill the order, the order status should only have
+	// FILLED, REJECTED, or EXPIRED
+	Executions param.Field[[]OrderParam] `json:"executions"`
+	// Fees
+	Fees  param.Field[[]ExecutionReportFeeParam] `json:"fees"`
+	Order param.Field[OrderParam]                `json:"order"`
+}
+
+func (r ExecutionReportParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r ExecutionReportParam) implementsEventPayloadUnionParam() {}
+
+type ExecutionReportFeeParam struct {
+	// Asset
+	Asset param.Field[string] `json:"asset"`
+	// Quantity
+	Quantity param.Field[float64] `json:"quantity"`
+}
+
+func (r ExecutionReportFeeParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
 type QuoteExecutionReport struct {

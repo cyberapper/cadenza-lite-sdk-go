@@ -212,6 +212,43 @@ func (r ExchangeAccountCreditExchangeType) IsKnown() bool {
 	return false
 }
 
+// Exchange Account Credit Info
+type ExchangeAccountCreditParam struct {
+	// Type of account (SPOT, MARGIN)
+	AccountType param.Field[ExchangeAccountCreditAccountType] `json:"accountType"`
+	// The amount of credit available to the account from the broker or exchange
+	Credit            param.Field[float64] `json:"credit"`
+	Currency          param.Field[string]  `json:"currency"`
+	ExchangeAccountID param.Field[string]  `json:"exchangeAccountId"`
+	// Exchange type
+	ExchangeType param.Field[ExchangeAccountCreditExchangeType] `json:"exchangeType"`
+	// The maximum leverage the account have
+	Leverage param.Field[int64] `json:"leverage"`
+	// The amount of collateral that the investor has deposited in the account to cover
+	// potential losses
+	Margin param.Field[float64] `json:"margin"`
+	// The rate between equity and margin requirement
+	MarginLevel param.Field[float64] `json:"marginLevel"`
+	// The amount of money borrowed from the broker to purchase securities
+	MarginLoan param.Field[float64] `json:"marginLoan"`
+	// The amount of collateral required to maintain the current positions
+	MarginRequirement param.Field[float64] `json:"marginRequirement"`
+	// The rate to which the available margin is being utilized
+	MarginUsage param.Field[float64] `json:"marginUsage"`
+	// The maximum value of risk exposure that the account can handle, set to manage
+	// risk and avoid excessive exposure to market volatility
+	MaxRiskExposure param.Field[float64] `json:"maxRiskExposure"`
+	// The total value of positions held in the account, indicating the level of market
+	// exposure
+	RiskExposure param.Field[float64] `json:"riskExposure"`
+	// The rate between risk exposure and max risk exposure
+	RiskExposureRate param.Field[float64] `json:"riskExposureRate"`
+}
+
+func (r ExchangeAccountCreditParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
 type ExchangeAccountPosition struct {
 	// Exchange account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`

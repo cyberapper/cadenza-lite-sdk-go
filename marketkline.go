@@ -77,6 +77,25 @@ func (r ohlcvJSON) RawJSON() string {
 	return r.raw
 }
 
+type OhlcvParam struct {
+	// Close price
+	C param.Field[float64] `json:"c"`
+	// High price
+	H param.Field[float64] `json:"h"`
+	// Low price
+	L param.Field[float64] `json:"l"`
+	// Open price
+	O param.Field[float64] `json:"o"`
+	// Start time (in unix milliseconds)
+	T param.Field[int64] `json:"t"`
+	// Volume
+	V param.Field[float64] `json:"v"`
+}
+
+func (r OhlcvParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
 type MarketKlineGetResponse struct {
 	Candles []Ohlcv `json:"candles"`
 	// The unique identifier for the account.
