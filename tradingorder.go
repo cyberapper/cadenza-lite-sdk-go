@@ -259,54 +259,6 @@ func (r OrderTimeInForce) IsKnown() bool {
 	return false
 }
 
-type OrderParam struct {
-	// The total cost of this order.
-	Cost param.Field[float64] `json:"cost,required"`
-	// Created timestamp
-	CreatedAt param.Field[int64] `json:"createdAt,required"`
-	// Exchange account ID
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[OrderExchangeType] `json:"exchangeType,required"`
-	// The quantity of this order that has been filled.
-	Filled param.Field[float64] `json:"filled,required"`
-	// Order side
-	OrderSide param.Field[OrderOrderSide] `json:"orderSide,required"`
-	// Order type
-	OrderType param.Field[OrderOrderType] `json:"orderType,required"`
-	// Quantity
-	Quantity param.Field[float64] `json:"quantity,required"`
-	// Order status
-	Status param.Field[OrderStatus] `json:"status,required"`
-	// Symbol
-	Symbol param.Field[string] `json:"symbol,required"`
-	// Time in force
-	TimeInForce param.Field[OrderTimeInForce] `json:"timeInForce,required"`
-	// Last updated timestamp
-	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
-	// Fee
-	Fee param.Field[float64] `json:"fee"`
-	// Fee currency
-	FeeCurrency param.Field[string] `json:"feeCurrency"`
-	OrderID     param.Field[string] `json:"orderId" format:"uuid"`
-	// Position ID
-	PositionID param.Field[string] `json:"positionId" format:"uuid"`
-	// Price
-	Price param.Field[float64] `json:"price"`
-	// Quote Quantity
-	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
-	// Tenant ID
-	TenantID param.Field[string] `json:"tenantId"`
-	// User ID
-	UserID param.Field[string] `json:"userId" format:"uuid"`
-}
-
-func (r OrderParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r OrderParam) implementsEventPayloadUnionParam() {}
-
 type TradingOrderNewParams struct {
 	// Exchange account ID
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
