@@ -90,7 +90,7 @@ func (r quoteJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r Quote) implementsGenericEventPayload() {}
+func (r Quote) implementsEventPayload() {}
 
 // Exchange type
 type QuoteExchangeType string
@@ -141,7 +141,7 @@ func (r QuoteParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r QuoteParam) implementsGenericEventPayloadUnionParam() {}
+func (r QuoteParam) implementsEventPayloadUnionParam() {}
 
 type QuoteRequest struct {
 	// Base currency is the currency you want to buy or sell
@@ -180,7 +180,7 @@ func (r quoteRequestJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r QuoteRequest) implementsGenericEventPayload() {}
+func (r QuoteRequest) implementsEventPayload() {}
 
 type QuoteRequestParam struct {
 	// Base currency is the currency you want to buy or sell
@@ -202,7 +202,7 @@ func (r QuoteRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r QuoteRequestParam) implementsGenericEventPayloadUnionParam() {}
+func (r QuoteRequestParam) implementsEventPayloadUnionParam() {}
 
 type TradingQuoteGetParams struct {
 	QuoteRequest QuoteRequestParam `json:"quoteRequest,required"`

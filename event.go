@@ -21,7 +21,10 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewEventService] method instead.
 type EventService struct {
-	Options []option.RequestOption
+	Options    []option.RequestOption
+	Task       *EventTaskService
+	DropCopy   *EventDropCopyService
+	MarketData *EventMarketDataService
 }
 
 // NewEventService generates a new service that applies the given options to each
@@ -30,235 +33,77 @@ type EventService struct {
 func NewEventService(opts ...option.RequestOption) (r *EventService) {
 	r = &EventService{}
 	r.Options = opts
-	return
-}
-
-// PubSub event handler for execution report drop copy event
-func (r *EventService) DropCopyExecutionReport(ctx context.Context, body EventDropCopyExecutionReportParams, opts ...option.RequestOption) (res *DropCopyExecutionReport, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/dropCopy/executionReport"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for order event
-func (r *EventService) DropCopyOrder(ctx context.Context, body EventDropCopyOrderParams, opts ...option.RequestOption) (res *DropCopyOrder, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/dropCopy/order"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for portfolio event
-func (r *EventService) DropCopyPortfolio(ctx context.Context, body EventDropCopyPortfolioParams, opts ...option.RequestOption) (res *DropCopyPortfolio, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/dropCopy/portfolio"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for quote event
-func (r *EventService) DropCopyQuote(ctx context.Context, body EventDropCopyQuoteParams, opts ...option.RequestOption) (res *DropCopyQuote, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/dropCopy/quote"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for kline event
-func (r *EventService) MarketDataKline(ctx context.Context, body EventMarketDataKlineParams, opts ...option.RequestOption) (res *MarketDataKline, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/marketData/kline"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for order book event
-func (r *EventService) MarketDataOrderBook(ctx context.Context, body EventMarketDataOrderBookParams, opts ...option.RequestOption) (res *MarketDataOrderBook, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/marketData/orderBook"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	r.Task = NewEventTaskService(opts...)
+	r.DropCopy = NewEventDropCopyService(opts...)
+	r.MarketData = NewEventMarketDataService(opts...)
 	return
 }
 
 // PubSub event handler placeholder
-func (r *EventService) New(ctx context.Context, body EventNewParams, opts ...option.RequestOption) (res *GenericEvent, err error) {
+func (r *EventService) New(ctx context.Context, body EventNewParams, opts ...option.RequestOption) (res *Event, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/webhook/pubsub/event"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
-// PubSub event handler placeholder for cancel order request acknowledgment event
-func (r *EventService) TaskCancelOrderRequestAck(ctx context.Context, body EventTaskCancelOrderRequestAckParams, opts ...option.RequestOption) (res *TaskCancelOrderRequestAck, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/cancelOrderRequestAck"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for place order request acknowledgment event
-func (r *EventService) TaskPlaceOrderRequestAck(ctx context.Context, body EventTaskPlaceOrderRequestAckParams, opts ...option.RequestOption) (res *TaskPlaceOrderRequestAck, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/placeOrderRequestAck"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for quote request acknowledgment event
-func (r *EventService) TaskQuoteRequestAck(ctx context.Context, body EventTaskQuoteRequestAckParams, opts ...option.RequestOption) (res *TaskQuoteRequestAck, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/quoteRequestAck"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-type DropCopyExecutionReport struct {
-	Payload ExecutionReport             `json:"payload"`
-	JSON    dropCopyExecutionReportJSON `json:"-"`
-	Event
-}
-
-// dropCopyExecutionReportJSON contains the JSON metadata for the struct
-// [DropCopyExecutionReport]
-type dropCopyExecutionReportJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DropCopyExecutionReport) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r dropCopyExecutionReportJSON) RawJSON() string {
-	return r.raw
-}
-
-type DropCopyExecutionReportParam struct {
-	Payload param.Field[ExecutionReportParam] `json:"payload"`
-	EventParam
-}
-
-func (r DropCopyExecutionReportParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type DropCopyOrder struct {
-	Payload Order             `json:"payload"`
-	JSON    dropCopyOrderJSON `json:"-"`
-	Event
-}
-
-// dropCopyOrderJSON contains the JSON metadata for the struct [DropCopyOrder]
-type dropCopyOrderJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DropCopyOrder) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r dropCopyOrderJSON) RawJSON() string {
-	return r.raw
-}
-
-type DropCopyOrderParam struct {
-	Payload param.Field[OrderParam] `json:"payload"`
-	EventParam
-}
-
-func (r DropCopyOrderParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type DropCopyPortfolio struct {
-	Payload ExchangeAccountPortfolio `json:"payload"`
-	JSON    dropCopyPortfolioJSON    `json:"-"`
-	Event
-}
-
-// dropCopyPortfolioJSON contains the JSON metadata for the struct
-// [DropCopyPortfolio]
-type dropCopyPortfolioJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DropCopyPortfolio) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r dropCopyPortfolioJSON) RawJSON() string {
-	return r.raw
-}
-
-type DropCopyPortfolioParam struct {
-	Payload param.Field[ExchangeAccountPortfolioParam] `json:"payload"`
-	EventParam
-}
-
-func (r DropCopyPortfolioParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type DropCopyQuote struct {
-	Payload Quote             `json:"payload"`
-	JSON    dropCopyQuoteJSON `json:"-"`
-	Event
-}
-
-// dropCopyQuoteJSON contains the JSON metadata for the struct [DropCopyQuote]
-type dropCopyQuoteJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DropCopyQuote) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r dropCopyQuoteJSON) RawJSON() string {
-	return r.raw
-}
-
-type DropCopyQuoteParam struct {
-	Payload param.Field[QuoteParam] `json:"payload"`
-	EventParam
-}
-
-func (r DropCopyQuoteParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type GenericEvent struct {
+type Event struct {
+	// A unique identifier for the event.
+	EventID string `json:"eventId,required"`
+	// Event Type
+	EventType EventEventType `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp int64 `json:"timestamp,required"`
 	// The actual data of the event, which varies based on the event type.
-	Payload GenericEventPayload `json:"payload"`
-	JSON    genericEventJSON    `json:"-"`
-	Event
+	Payload EventPayload `json:"payload"`
+	// The source system or module that generated the event.
+	Source string    `json:"source"`
+	JSON   eventJSON `json:"-"`
 }
 
-// genericEventJSON contains the JSON metadata for the struct [GenericEvent]
-type genericEventJSON struct {
+// eventJSON contains the JSON metadata for the struct [Event]
+type eventJSON struct {
+	EventID     apijson.Field
+	EventType   apijson.Field
+	Timestamp   apijson.Field
 	Payload     apijson.Field
+	Source      apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *GenericEvent) UnmarshalJSON(data []byte) (err error) {
+func (r *Event) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r genericEventJSON) RawJSON() string {
+func (r eventJSON) RawJSON() string {
 	return r.raw
+}
+
+// Event Type
+type EventEventType string
+
+const (
+	EventEventTypeCadenzaTaskQuoteRequestAck       EventEventType = "cadenza.task.quoteRequestAck"
+	EventEventTypeCadenzaTaskPlaceOrderRequestAck  EventEventType = "cadenza.task.placeOrderRequestAck"
+	EventEventTypeCadenzaTaskCancelOrderRequestAck EventEventType = "cadenza.task.cancelOrderRequestAck"
+	EventEventTypeCadenzaDropCopyQuote             EventEventType = "cadenza.dropCopy.quote"
+	EventEventTypeCadenzaDropCopyOrder             EventEventType = "cadenza.dropCopy.order"
+	EventEventTypeCadenzaDropCopyPortfolio         EventEventType = "cadenza.dropCopy.portfolio"
+	EventEventTypeCadenzaMarketDataOrderBook       EventEventType = "cadenza.marketData.orderBook"
+	EventEventTypeCadenzaMarketDataKline           EventEventType = "cadenza.marketData.kline"
+)
+
+func (r EventEventType) IsKnown() bool {
+	switch r {
+	case EventEventTypeCadenzaTaskQuoteRequestAck, EventEventTypeCadenzaTaskPlaceOrderRequestAck, EventEventTypeCadenzaTaskCancelOrderRequestAck, EventEventTypeCadenzaDropCopyQuote, EventEventTypeCadenzaDropCopyOrder, EventEventTypeCadenzaDropCopyPortfolio, EventEventTypeCadenzaMarketDataOrderBook, EventEventTypeCadenzaMarketDataKline:
+		return true
+	}
+	return false
 }
 
 // The actual data of the event, which varies based on the event type.
-type GenericEventPayload struct {
+type EventPayload struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency string `json:"baseCurrency"`
 	// Quote currency is the currency you want to pay or receive, and the price of the
@@ -277,7 +122,7 @@ type GenericEventPayload struct {
 	// Levarage
 	Leverage int64 `json:"leverage"`
 	// Order type
-	OrderType GenericEventPayloadOrderType `json:"orderType"`
+	OrderType EventPayloadOrderType `json:"orderType"`
 	// Position ID for closing position in margin trading
 	PositionID string `json:"positionId" format:"uuid"`
 	// Price
@@ -287,12 +132,12 @@ type GenericEventPayload struct {
 	// Symbol
 	Symbol string `json:"symbol"`
 	// Time in force
-	TimeInForce GenericEventPayloadTimeInForce `json:"timeInForce"`
+	TimeInForce EventPayloadTimeInForce `json:"timeInForce"`
 	// Route policy. For PRIORITY, the order request will be routed to the exchange
 	// account with the highest priority. For QUOTE, the system will execute the
 	// execution plan based on the quote. Order request with route policy QUOTE will
 	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy GenericEventPayloadRoutePolicy `json:"routePolicy"`
+	RoutePolicy EventPayloadRoutePolicy `json:"routePolicy"`
 	// This field can have the runtime type of [[]string].
 	Priority interface{} `json:"priority,required"`
 	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
@@ -323,7 +168,7 @@ type GenericEventPayload struct {
 	// The quantity of this order that has been filled.
 	Filled float64 `json:"filled"`
 	// Order status
-	Status GenericEventPayloadStatus `json:"status"`
+	Status EventPayloadStatus `json:"status"`
 	// Last updated timestamp
 	UpdatedAt int64 `json:"updatedAt"`
 	// User ID
@@ -346,17 +191,16 @@ type GenericEventPayload struct {
 	// This field can have the runtime type of [[][]float64].
 	Bids interface{} `json:"bids,required"`
 	// Order book level
-	Level    int64                       `json:"level"`
-	Interval GenericEventPayloadInterval `json:"interval"`
+	Level    int64                `json:"level"`
+	Interval EventPayloadInterval `json:"interval"`
 	// This field can have the runtime type of [[]Ohlcv].
-	Candles interface{}             `json:"candles,required"`
-	JSON    genericEventPayloadJSON `json:"-"`
-	union   GenericEventPayloadUnion
+	Candles interface{}      `json:"candles,required"`
+	JSON    eventPayloadJSON `json:"-"`
+	union   EventPayloadUnion
 }
 
-// genericEventPayloadJSON contains the JSON metadata for the struct
-// [GenericEventPayload]
-type genericEventPayloadJSON struct {
+// eventPayloadJSON contains the JSON metadata for the struct [EventPayload]
+type eventPayloadJSON struct {
 	BaseCurrency           apijson.Field
 	QuoteCurrency          apijson.Field
 	OrderSide              apijson.Field
@@ -405,12 +249,12 @@ type genericEventPayloadJSON struct {
 	ExtraFields            map[string]apijson.Field
 }
 
-func (r genericEventPayloadJSON) RawJSON() string {
+func (r eventPayloadJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r *GenericEventPayload) UnmarshalJSON(data []byte) (err error) {
-	*r = GenericEventPayload{}
+func (r *EventPayload) UnmarshalJSON(data []byte) (err error) {
+	*r = EventPayload{}
 	err = apijson.UnmarshalRoot(data, &r.union)
 	if err != nil {
 		return err
@@ -418,13 +262,13 @@ func (r *GenericEventPayload) UnmarshalJSON(data []byte) (err error) {
 	return apijson.Port(r.union, &r)
 }
 
-// AsUnion returns a [GenericEventPayloadUnion] interface which you can cast to the
+// AsUnion returns a [EventPayloadUnion] interface which you can cast to the
 // specific types for more type safety.
 //
 // Possible runtime types of the union are [QuoteRequest], [PlaceOrderRequest],
 // [CancelOrderRequest], [Quote], [Order], [ExecutionReport],
-// [ExchangeAccountPortfolio], [Orderbook], [GenericEventPayloadKline].
-func (r GenericEventPayload) AsUnion() GenericEventPayloadUnion {
+// [ExchangeAccountPortfolio], [Orderbook], [EventPayloadKline].
+func (r EventPayload) AsUnion() EventPayloadUnion {
 	return r.union
 }
 
@@ -432,14 +276,14 @@ func (r GenericEventPayload) AsUnion() GenericEventPayloadUnion {
 //
 // Union satisfied by [QuoteRequest], [PlaceOrderRequest], [CancelOrderRequest],
 // [Quote], [Order], [ExecutionReport], [ExchangeAccountPortfolio], [Orderbook] or
-// [GenericEventPayloadKline].
-type GenericEventPayloadUnion interface {
-	implementsGenericEventPayload()
+// [EventPayloadKline].
+type EventPayloadUnion interface {
+	implementsEventPayload()
 }
 
 func init() {
 	apijson.RegisterUnion(
-		reflect.TypeOf((*GenericEventPayloadUnion)(nil)).Elem(),
+		reflect.TypeOf((*EventPayloadUnion)(nil)).Elem(),
 		"",
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
@@ -475,25 +319,25 @@ func init() {
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(GenericEventPayloadKline{}),
+			Type:       reflect.TypeOf(EventPayloadKline{}),
 		},
 	)
 }
 
-type GenericEventPayloadKline struct {
+type EventPayloadKline struct {
 	Candles []Ohlcv `json:"candles"`
 	// The unique identifier for the account.
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
-	ExchangeType GenericEventPayloadKlineExchangeType `json:"exchangeType"`
-	Interval     GenericEventPayloadKlineInterval     `json:"interval"`
-	Symbol       string                               `json:"symbol"`
-	JSON         genericEventPayloadKlineJSON         `json:"-"`
+	ExchangeType EventPayloadKlineExchangeType `json:"exchangeType"`
+	Interval     EventPayloadKlineInterval     `json:"interval"`
+	Symbol       string                        `json:"symbol"`
+	JSON         eventPayloadKlineJSON         `json:"-"`
 }
 
-// genericEventPayloadKlineJSON contains the JSON metadata for the struct
-// [GenericEventPayloadKline]
-type genericEventPayloadKlineJSON struct {
+// eventPayloadKlineJSON contains the JSON metadata for the struct
+// [EventPayloadKline]
+type eventPayloadKlineJSON struct {
 	Candles           apijson.Field
 	ExchangeAccountID apijson.Field
 	ExchangeType      apijson.Field
@@ -503,102 +347,102 @@ type genericEventPayloadKlineJSON struct {
 	ExtraFields       map[string]apijson.Field
 }
 
-func (r *GenericEventPayloadKline) UnmarshalJSON(data []byte) (err error) {
+func (r *EventPayloadKline) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r genericEventPayloadKlineJSON) RawJSON() string {
+func (r eventPayloadKlineJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r GenericEventPayloadKline) implementsGenericEventPayload() {}
+func (r EventPayloadKline) implementsEventPayload() {}
 
 // Exchange type
-type GenericEventPayloadKlineExchangeType string
+type EventPayloadKlineExchangeType string
 
 const (
-	GenericEventPayloadKlineExchangeTypeBinance       GenericEventPayloadKlineExchangeType = "BINANCE"
-	GenericEventPayloadKlineExchangeTypeBinanceMargin GenericEventPayloadKlineExchangeType = "BINANCE_MARGIN"
-	GenericEventPayloadKlineExchangeTypeB2C2          GenericEventPayloadKlineExchangeType = "B2C2"
-	GenericEventPayloadKlineExchangeTypeWintermute    GenericEventPayloadKlineExchangeType = "WINTERMUTE"
-	GenericEventPayloadKlineExchangeTypeBlockfills    GenericEventPayloadKlineExchangeType = "BLOCKFILLS"
-	GenericEventPayloadKlineExchangeTypeStonex        GenericEventPayloadKlineExchangeType = "STONEX"
+	EventPayloadKlineExchangeTypeBinance       EventPayloadKlineExchangeType = "BINANCE"
+	EventPayloadKlineExchangeTypeBinanceMargin EventPayloadKlineExchangeType = "BINANCE_MARGIN"
+	EventPayloadKlineExchangeTypeB2C2          EventPayloadKlineExchangeType = "B2C2"
+	EventPayloadKlineExchangeTypeWintermute    EventPayloadKlineExchangeType = "WINTERMUTE"
+	EventPayloadKlineExchangeTypeBlockfills    EventPayloadKlineExchangeType = "BLOCKFILLS"
+	EventPayloadKlineExchangeTypeStonex        EventPayloadKlineExchangeType = "STONEX"
 )
 
-func (r GenericEventPayloadKlineExchangeType) IsKnown() bool {
+func (r EventPayloadKlineExchangeType) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadKlineExchangeTypeBinance, GenericEventPayloadKlineExchangeTypeBinanceMargin, GenericEventPayloadKlineExchangeTypeB2C2, GenericEventPayloadKlineExchangeTypeWintermute, GenericEventPayloadKlineExchangeTypeBlockfills, GenericEventPayloadKlineExchangeTypeStonex:
+	case EventPayloadKlineExchangeTypeBinance, EventPayloadKlineExchangeTypeBinanceMargin, EventPayloadKlineExchangeTypeB2C2, EventPayloadKlineExchangeTypeWintermute, EventPayloadKlineExchangeTypeBlockfills, EventPayloadKlineExchangeTypeStonex:
 		return true
 	}
 	return false
 }
 
-type GenericEventPayloadKlineInterval string
+type EventPayloadKlineInterval string
 
 const (
-	GenericEventPayloadKlineInterval1s  GenericEventPayloadKlineInterval = "1s"
-	GenericEventPayloadKlineInterval1m  GenericEventPayloadKlineInterval = "1m"
-	GenericEventPayloadKlineInterval5m  GenericEventPayloadKlineInterval = "5m"
-	GenericEventPayloadKlineInterval15m GenericEventPayloadKlineInterval = "15m"
-	GenericEventPayloadKlineInterval30m GenericEventPayloadKlineInterval = "30m"
-	GenericEventPayloadKlineInterval1h  GenericEventPayloadKlineInterval = "1h"
-	GenericEventPayloadKlineInterval2h  GenericEventPayloadKlineInterval = "2h"
-	GenericEventPayloadKlineInterval1d  GenericEventPayloadKlineInterval = "1d"
-	GenericEventPayloadKlineInterval1w  GenericEventPayloadKlineInterval = "1w"
+	EventPayloadKlineInterval1s  EventPayloadKlineInterval = "1s"
+	EventPayloadKlineInterval1m  EventPayloadKlineInterval = "1m"
+	EventPayloadKlineInterval5m  EventPayloadKlineInterval = "5m"
+	EventPayloadKlineInterval15m EventPayloadKlineInterval = "15m"
+	EventPayloadKlineInterval30m EventPayloadKlineInterval = "30m"
+	EventPayloadKlineInterval1h  EventPayloadKlineInterval = "1h"
+	EventPayloadKlineInterval2h  EventPayloadKlineInterval = "2h"
+	EventPayloadKlineInterval1d  EventPayloadKlineInterval = "1d"
+	EventPayloadKlineInterval1w  EventPayloadKlineInterval = "1w"
 )
 
-func (r GenericEventPayloadKlineInterval) IsKnown() bool {
+func (r EventPayloadKlineInterval) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadKlineInterval1s, GenericEventPayloadKlineInterval1m, GenericEventPayloadKlineInterval5m, GenericEventPayloadKlineInterval15m, GenericEventPayloadKlineInterval30m, GenericEventPayloadKlineInterval1h, GenericEventPayloadKlineInterval2h, GenericEventPayloadKlineInterval1d, GenericEventPayloadKlineInterval1w:
+	case EventPayloadKlineInterval1s, EventPayloadKlineInterval1m, EventPayloadKlineInterval5m, EventPayloadKlineInterval15m, EventPayloadKlineInterval30m, EventPayloadKlineInterval1h, EventPayloadKlineInterval2h, EventPayloadKlineInterval1d, EventPayloadKlineInterval1w:
 		return true
 	}
 	return false
 }
 
 // Order type
-type GenericEventPayloadOrderType string
+type EventPayloadOrderType string
 
 const (
-	GenericEventPayloadOrderTypeMarket          GenericEventPayloadOrderType = "MARKET"
-	GenericEventPayloadOrderTypeLimit           GenericEventPayloadOrderType = "LIMIT"
-	GenericEventPayloadOrderTypeStopLoss        GenericEventPayloadOrderType = "STOP_LOSS"
-	GenericEventPayloadOrderTypeStopLossLimit   GenericEventPayloadOrderType = "STOP_LOSS_LIMIT"
-	GenericEventPayloadOrderTypeTakeProfit      GenericEventPayloadOrderType = "TAKE_PROFIT"
-	GenericEventPayloadOrderTypeTakeProfitLimit GenericEventPayloadOrderType = "TAKE_PROFIT_LIMIT"
-	GenericEventPayloadOrderTypeQuoted          GenericEventPayloadOrderType = "QUOTED"
+	EventPayloadOrderTypeMarket          EventPayloadOrderType = "MARKET"
+	EventPayloadOrderTypeLimit           EventPayloadOrderType = "LIMIT"
+	EventPayloadOrderTypeStopLoss        EventPayloadOrderType = "STOP_LOSS"
+	EventPayloadOrderTypeStopLossLimit   EventPayloadOrderType = "STOP_LOSS_LIMIT"
+	EventPayloadOrderTypeTakeProfit      EventPayloadOrderType = "TAKE_PROFIT"
+	EventPayloadOrderTypeTakeProfitLimit EventPayloadOrderType = "TAKE_PROFIT_LIMIT"
+	EventPayloadOrderTypeQuoted          EventPayloadOrderType = "QUOTED"
 )
 
-func (r GenericEventPayloadOrderType) IsKnown() bool {
+func (r EventPayloadOrderType) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadOrderTypeMarket, GenericEventPayloadOrderTypeLimit, GenericEventPayloadOrderTypeStopLoss, GenericEventPayloadOrderTypeStopLossLimit, GenericEventPayloadOrderTypeTakeProfit, GenericEventPayloadOrderTypeTakeProfitLimit, GenericEventPayloadOrderTypeQuoted:
+	case EventPayloadOrderTypeMarket, EventPayloadOrderTypeLimit, EventPayloadOrderTypeStopLoss, EventPayloadOrderTypeStopLossLimit, EventPayloadOrderTypeTakeProfit, EventPayloadOrderTypeTakeProfitLimit, EventPayloadOrderTypeQuoted:
 		return true
 	}
 	return false
 }
 
 // Time in force
-type GenericEventPayloadTimeInForce string
+type EventPayloadTimeInForce string
 
 const (
-	GenericEventPayloadTimeInForceDay GenericEventPayloadTimeInForce = "DAY"
-	GenericEventPayloadTimeInForceGtc GenericEventPayloadTimeInForce = "GTC"
-	GenericEventPayloadTimeInForceGtx GenericEventPayloadTimeInForce = "GTX"
-	GenericEventPayloadTimeInForceGtd GenericEventPayloadTimeInForce = "GTD"
-	GenericEventPayloadTimeInForceOpg GenericEventPayloadTimeInForce = "OPG"
-	GenericEventPayloadTimeInForceCls GenericEventPayloadTimeInForce = "CLS"
-	GenericEventPayloadTimeInForceIoc GenericEventPayloadTimeInForce = "IOC"
-	GenericEventPayloadTimeInForceFok GenericEventPayloadTimeInForce = "FOK"
-	GenericEventPayloadTimeInForceGfa GenericEventPayloadTimeInForce = "GFA"
-	GenericEventPayloadTimeInForceGfs GenericEventPayloadTimeInForce = "GFS"
-	GenericEventPayloadTimeInForceGtm GenericEventPayloadTimeInForce = "GTM"
-	GenericEventPayloadTimeInForceMoo GenericEventPayloadTimeInForce = "MOO"
-	GenericEventPayloadTimeInForceMoc GenericEventPayloadTimeInForce = "MOC"
-	GenericEventPayloadTimeInForceExt GenericEventPayloadTimeInForce = "EXT"
+	EventPayloadTimeInForceDay EventPayloadTimeInForce = "DAY"
+	EventPayloadTimeInForceGtc EventPayloadTimeInForce = "GTC"
+	EventPayloadTimeInForceGtx EventPayloadTimeInForce = "GTX"
+	EventPayloadTimeInForceGtd EventPayloadTimeInForce = "GTD"
+	EventPayloadTimeInForceOpg EventPayloadTimeInForce = "OPG"
+	EventPayloadTimeInForceCls EventPayloadTimeInForce = "CLS"
+	EventPayloadTimeInForceIoc EventPayloadTimeInForce = "IOC"
+	EventPayloadTimeInForceFok EventPayloadTimeInForce = "FOK"
+	EventPayloadTimeInForceGfa EventPayloadTimeInForce = "GFA"
+	EventPayloadTimeInForceGfs EventPayloadTimeInForce = "GFS"
+	EventPayloadTimeInForceGtm EventPayloadTimeInForce = "GTM"
+	EventPayloadTimeInForceMoo EventPayloadTimeInForce = "MOO"
+	EventPayloadTimeInForceMoc EventPayloadTimeInForce = "MOC"
+	EventPayloadTimeInForceExt EventPayloadTimeInForce = "EXT"
 )
 
-func (r GenericEventPayloadTimeInForce) IsKnown() bool {
+func (r EventPayloadTimeInForce) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadTimeInForceDay, GenericEventPayloadTimeInForceGtc, GenericEventPayloadTimeInForceGtx, GenericEventPayloadTimeInForceGtd, GenericEventPayloadTimeInForceOpg, GenericEventPayloadTimeInForceCls, GenericEventPayloadTimeInForceIoc, GenericEventPayloadTimeInForceFok, GenericEventPayloadTimeInForceGfa, GenericEventPayloadTimeInForceGfs, GenericEventPayloadTimeInForceGtm, GenericEventPayloadTimeInForceMoo, GenericEventPayloadTimeInForceMoc, GenericEventPayloadTimeInForceExt:
+	case EventPayloadTimeInForceDay, EventPayloadTimeInForceGtc, EventPayloadTimeInForceGtx, EventPayloadTimeInForceGtd, EventPayloadTimeInForceOpg, EventPayloadTimeInForceCls, EventPayloadTimeInForceIoc, EventPayloadTimeInForceFok, EventPayloadTimeInForceGfa, EventPayloadTimeInForceGfs, EventPayloadTimeInForceGtm, EventPayloadTimeInForceMoo, EventPayloadTimeInForceMoc, EventPayloadTimeInForceExt:
 		return true
 	}
 	return false
@@ -608,79 +452,86 @@ func (r GenericEventPayloadTimeInForce) IsKnown() bool {
 // account with the highest priority. For QUOTE, the system will execute the
 // execution plan based on the quote. Order request with route policy QUOTE will
 // only accept two parameters, quoteRequestId and priceSlippageTolerance
-type GenericEventPayloadRoutePolicy string
+type EventPayloadRoutePolicy string
 
 const (
-	GenericEventPayloadRoutePolicyPriority GenericEventPayloadRoutePolicy = "PRIORITY"
-	GenericEventPayloadRoutePolicyQuote    GenericEventPayloadRoutePolicy = "QUOTE"
+	EventPayloadRoutePolicyPriority EventPayloadRoutePolicy = "PRIORITY"
+	EventPayloadRoutePolicyQuote    EventPayloadRoutePolicy = "QUOTE"
 )
 
-func (r GenericEventPayloadRoutePolicy) IsKnown() bool {
+func (r EventPayloadRoutePolicy) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadRoutePolicyPriority, GenericEventPayloadRoutePolicyQuote:
+	case EventPayloadRoutePolicyPriority, EventPayloadRoutePolicyQuote:
 		return true
 	}
 	return false
 }
 
 // Order status
-type GenericEventPayloadStatus string
+type EventPayloadStatus string
 
 const (
-	GenericEventPayloadStatusSubmitted       GenericEventPayloadStatus = "SUBMITTED"
-	GenericEventPayloadStatusAccepted        GenericEventPayloadStatus = "ACCEPTED"
-	GenericEventPayloadStatusOpen            GenericEventPayloadStatus = "OPEN"
-	GenericEventPayloadStatusPartiallyFilled GenericEventPayloadStatus = "PARTIALLY_FILLED"
-	GenericEventPayloadStatusFilled          GenericEventPayloadStatus = "FILLED"
-	GenericEventPayloadStatusCanceled        GenericEventPayloadStatus = "CANCELED"
-	GenericEventPayloadStatusPendingCancel   GenericEventPayloadStatus = "PENDING_CANCEL"
-	GenericEventPayloadStatusRejected        GenericEventPayloadStatus = "REJECTED"
-	GenericEventPayloadStatusExpired         GenericEventPayloadStatus = "EXPIRED"
-	GenericEventPayloadStatusRevoked         GenericEventPayloadStatus = "REVOKED"
+	EventPayloadStatusSubmitted       EventPayloadStatus = "SUBMITTED"
+	EventPayloadStatusAccepted        EventPayloadStatus = "ACCEPTED"
+	EventPayloadStatusOpen            EventPayloadStatus = "OPEN"
+	EventPayloadStatusPartiallyFilled EventPayloadStatus = "PARTIALLY_FILLED"
+	EventPayloadStatusFilled          EventPayloadStatus = "FILLED"
+	EventPayloadStatusCanceled        EventPayloadStatus = "CANCELED"
+	EventPayloadStatusPendingCancel   EventPayloadStatus = "PENDING_CANCEL"
+	EventPayloadStatusRejected        EventPayloadStatus = "REJECTED"
+	EventPayloadStatusExpired         EventPayloadStatus = "EXPIRED"
+	EventPayloadStatusRevoked         EventPayloadStatus = "REVOKED"
 )
 
-func (r GenericEventPayloadStatus) IsKnown() bool {
+func (r EventPayloadStatus) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadStatusSubmitted, GenericEventPayloadStatusAccepted, GenericEventPayloadStatusOpen, GenericEventPayloadStatusPartiallyFilled, GenericEventPayloadStatusFilled, GenericEventPayloadStatusCanceled, GenericEventPayloadStatusPendingCancel, GenericEventPayloadStatusRejected, GenericEventPayloadStatusExpired, GenericEventPayloadStatusRevoked:
+	case EventPayloadStatusSubmitted, EventPayloadStatusAccepted, EventPayloadStatusOpen, EventPayloadStatusPartiallyFilled, EventPayloadStatusFilled, EventPayloadStatusCanceled, EventPayloadStatusPendingCancel, EventPayloadStatusRejected, EventPayloadStatusExpired, EventPayloadStatusRevoked:
 		return true
 	}
 	return false
 }
 
-type GenericEventPayloadInterval string
+type EventPayloadInterval string
 
 const (
-	GenericEventPayloadInterval1s  GenericEventPayloadInterval = "1s"
-	GenericEventPayloadInterval1m  GenericEventPayloadInterval = "1m"
-	GenericEventPayloadInterval5m  GenericEventPayloadInterval = "5m"
-	GenericEventPayloadInterval15m GenericEventPayloadInterval = "15m"
-	GenericEventPayloadInterval30m GenericEventPayloadInterval = "30m"
-	GenericEventPayloadInterval1h  GenericEventPayloadInterval = "1h"
-	GenericEventPayloadInterval2h  GenericEventPayloadInterval = "2h"
-	GenericEventPayloadInterval1d  GenericEventPayloadInterval = "1d"
-	GenericEventPayloadInterval1w  GenericEventPayloadInterval = "1w"
+	EventPayloadInterval1s  EventPayloadInterval = "1s"
+	EventPayloadInterval1m  EventPayloadInterval = "1m"
+	EventPayloadInterval5m  EventPayloadInterval = "5m"
+	EventPayloadInterval15m EventPayloadInterval = "15m"
+	EventPayloadInterval30m EventPayloadInterval = "30m"
+	EventPayloadInterval1h  EventPayloadInterval = "1h"
+	EventPayloadInterval2h  EventPayloadInterval = "2h"
+	EventPayloadInterval1d  EventPayloadInterval = "1d"
+	EventPayloadInterval1w  EventPayloadInterval = "1w"
 )
 
-func (r GenericEventPayloadInterval) IsKnown() bool {
+func (r EventPayloadInterval) IsKnown() bool {
 	switch r {
-	case GenericEventPayloadInterval1s, GenericEventPayloadInterval1m, GenericEventPayloadInterval5m, GenericEventPayloadInterval15m, GenericEventPayloadInterval30m, GenericEventPayloadInterval1h, GenericEventPayloadInterval2h, GenericEventPayloadInterval1d, GenericEventPayloadInterval1w:
+	case EventPayloadInterval1s, EventPayloadInterval1m, EventPayloadInterval5m, EventPayloadInterval15m, EventPayloadInterval30m, EventPayloadInterval1h, EventPayloadInterval2h, EventPayloadInterval1d, EventPayloadInterval1w:
 		return true
 	}
 	return false
 }
 
-type GenericEventParam struct {
+type EventParam struct {
+	// A unique identifier for the event.
+	EventID param.Field[string] `json:"eventId,required"`
+	// Event Type
+	EventType param.Field[EventEventType] `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp param.Field[int64] `json:"timestamp,required"`
 	// The actual data of the event, which varies based on the event type.
-	Payload param.Field[GenericEventPayloadUnionParam] `json:"payload"`
-	EventParam
+	Payload param.Field[EventPayloadUnionParam] `json:"payload"`
+	// The source system or module that generated the event.
+	Source param.Field[string] `json:"source"`
 }
 
-func (r GenericEventParam) MarshalJSON() (data []byte, err error) {
+func (r EventParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
 // The actual data of the event, which varies based on the event type.
-type GenericEventPayloadParam struct {
+type EventPayloadParam struct {
 	// Base currency is the currency you want to buy or sell
 	BaseCurrency param.Field[string] `json:"baseCurrency"`
 	// Quote currency is the currency you want to pay or receive, and the price of the
@@ -699,7 +550,7 @@ type GenericEventPayloadParam struct {
 	// Levarage
 	Leverage param.Field[int64] `json:"leverage"`
 	// Order type
-	OrderType param.Field[GenericEventPayloadOrderType] `json:"orderType"`
+	OrderType param.Field[EventPayloadOrderType] `json:"orderType"`
 	// Position ID for closing position in margin trading
 	PositionID param.Field[string] `json:"positionId" format:"uuid"`
 	// Price
@@ -709,13 +560,13 @@ type GenericEventPayloadParam struct {
 	// Symbol
 	Symbol param.Field[string] `json:"symbol"`
 	// Time in force
-	TimeInForce param.Field[GenericEventPayloadTimeInForce] `json:"timeInForce"`
+	TimeInForce param.Field[EventPayloadTimeInForce] `json:"timeInForce"`
 	// Route policy. For PRIORITY, the order request will be routed to the exchange
 	// account with the highest priority. For QUOTE, the system will execute the
 	// execution plan based on the quote. Order request with route policy QUOTE will
 	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[GenericEventPayloadRoutePolicy] `json:"routePolicy"`
-	Priority    param.Field[interface{}]                    `json:"priority,required"`
+	RoutePolicy param.Field[EventPayloadRoutePolicy] `json:"routePolicy"`
+	Priority    param.Field[interface{}]             `json:"priority,required"`
 	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
 	// QUOTED order
 	QuoteID param.Field[string] `json:"quoteId"`
@@ -744,7 +595,7 @@ type GenericEventPayloadParam struct {
 	// The quantity of this order that has been filled.
 	Filled param.Field[float64] `json:"filled"`
 	// Order status
-	Status param.Field[GenericEventPayloadStatus] `json:"status"`
+	Status param.Field[EventPayloadStatus] `json:"status"`
 	// Last updated timestamp
 	UpdatedAt param.Field[int64] `json:"updatedAt"`
 	// User ID
@@ -762,360 +613,47 @@ type GenericEventPayloadParam struct {
 	Asks       param.Field[interface{}] `json:"asks,required"`
 	Bids       param.Field[interface{}] `json:"bids,required"`
 	// Order book level
-	Level    param.Field[int64]                       `json:"level"`
-	Interval param.Field[GenericEventPayloadInterval] `json:"interval"`
-	Candles  param.Field[interface{}]                 `json:"candles,required"`
+	Level    param.Field[int64]                `json:"level"`
+	Interval param.Field[EventPayloadInterval] `json:"interval"`
+	Candles  param.Field[interface{}]          `json:"candles,required"`
 }
 
-func (r GenericEventPayloadParam) MarshalJSON() (data []byte, err error) {
+func (r EventPayloadParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r GenericEventPayloadParam) implementsGenericEventPayloadUnionParam() {}
+func (r EventPayloadParam) implementsEventPayloadUnionParam() {}
 
 // The actual data of the event, which varies based on the event type.
 //
 // Satisfied by [QuoteRequestParam], [PlaceOrderRequestParam],
 // [CancelOrderRequestParam], [QuoteParam], [OrderParam], [ExecutionReportParam],
-// [ExchangeAccountPortfolioParam], [OrderbookParam],
-// [GenericEventPayloadKlineParam], [GenericEventPayloadParam].
-type GenericEventPayloadUnionParam interface {
-	implementsGenericEventPayloadUnionParam()
+// [ExchangeAccountPortfolioParam], [OrderbookParam], [EventPayloadKlineParam],
+// [EventPayloadParam].
+type EventPayloadUnionParam interface {
+	implementsEventPayloadUnionParam()
 }
 
-type GenericEventPayloadKlineParam struct {
+type EventPayloadKlineParam struct {
 	Candles param.Field[[]OhlcvParam] `json:"candles"`
 	// The unique identifier for the account.
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
-	ExchangeType param.Field[GenericEventPayloadKlineExchangeType] `json:"exchangeType"`
-	Interval     param.Field[GenericEventPayloadKlineInterval]     `json:"interval"`
-	Symbol       param.Field[string]                               `json:"symbol"`
+	ExchangeType param.Field[EventPayloadKlineExchangeType] `json:"exchangeType"`
+	Interval     param.Field[EventPayloadKlineInterval]     `json:"interval"`
+	Symbol       param.Field[string]                        `json:"symbol"`
 }
 
-func (r GenericEventPayloadKlineParam) MarshalJSON() (data []byte, err error) {
+func (r EventPayloadKlineParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r GenericEventPayloadKlineParam) implementsGenericEventPayloadUnionParam() {}
-
-type MarketDataKline struct {
-	Payload MarketDataKlinePayload `json:"payload"`
-	JSON    marketDataKlineJSON    `json:"-"`
-	Event
-}
-
-// marketDataKlineJSON contains the JSON metadata for the struct [MarketDataKline]
-type marketDataKlineJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *MarketDataKline) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r marketDataKlineJSON) RawJSON() string {
-	return r.raw
-}
-
-type MarketDataKlinePayload struct {
-	Candles []Ohlcv `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType MarketDataKlinePayloadExchangeType `json:"exchangeType"`
-	Interval     MarketDataKlinePayloadInterval     `json:"interval"`
-	Symbol       string                             `json:"symbol"`
-	JSON         marketDataKlinePayloadJSON         `json:"-"`
-}
-
-// marketDataKlinePayloadJSON contains the JSON metadata for the struct
-// [MarketDataKlinePayload]
-type marketDataKlinePayloadJSON struct {
-	Candles           apijson.Field
-	ExchangeAccountID apijson.Field
-	ExchangeType      apijson.Field
-	Interval          apijson.Field
-	Symbol            apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *MarketDataKlinePayload) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r marketDataKlinePayloadJSON) RawJSON() string {
-	return r.raw
-}
-
-// Exchange type
-type MarketDataKlinePayloadExchangeType string
-
-const (
-	MarketDataKlinePayloadExchangeTypeBinance       MarketDataKlinePayloadExchangeType = "BINANCE"
-	MarketDataKlinePayloadExchangeTypeBinanceMargin MarketDataKlinePayloadExchangeType = "BINANCE_MARGIN"
-	MarketDataKlinePayloadExchangeTypeB2C2          MarketDataKlinePayloadExchangeType = "B2C2"
-	MarketDataKlinePayloadExchangeTypeWintermute    MarketDataKlinePayloadExchangeType = "WINTERMUTE"
-	MarketDataKlinePayloadExchangeTypeBlockfills    MarketDataKlinePayloadExchangeType = "BLOCKFILLS"
-	MarketDataKlinePayloadExchangeTypeStonex        MarketDataKlinePayloadExchangeType = "STONEX"
-)
-
-func (r MarketDataKlinePayloadExchangeType) IsKnown() bool {
-	switch r {
-	case MarketDataKlinePayloadExchangeTypeBinance, MarketDataKlinePayloadExchangeTypeBinanceMargin, MarketDataKlinePayloadExchangeTypeB2C2, MarketDataKlinePayloadExchangeTypeWintermute, MarketDataKlinePayloadExchangeTypeBlockfills, MarketDataKlinePayloadExchangeTypeStonex:
-		return true
-	}
-	return false
-}
-
-type MarketDataKlinePayloadInterval string
-
-const (
-	MarketDataKlinePayloadInterval1s  MarketDataKlinePayloadInterval = "1s"
-	MarketDataKlinePayloadInterval1m  MarketDataKlinePayloadInterval = "1m"
-	MarketDataKlinePayloadInterval5m  MarketDataKlinePayloadInterval = "5m"
-	MarketDataKlinePayloadInterval15m MarketDataKlinePayloadInterval = "15m"
-	MarketDataKlinePayloadInterval30m MarketDataKlinePayloadInterval = "30m"
-	MarketDataKlinePayloadInterval1h  MarketDataKlinePayloadInterval = "1h"
-	MarketDataKlinePayloadInterval2h  MarketDataKlinePayloadInterval = "2h"
-	MarketDataKlinePayloadInterval1d  MarketDataKlinePayloadInterval = "1d"
-	MarketDataKlinePayloadInterval1w  MarketDataKlinePayloadInterval = "1w"
-)
-
-func (r MarketDataKlinePayloadInterval) IsKnown() bool {
-	switch r {
-	case MarketDataKlinePayloadInterval1s, MarketDataKlinePayloadInterval1m, MarketDataKlinePayloadInterval5m, MarketDataKlinePayloadInterval15m, MarketDataKlinePayloadInterval30m, MarketDataKlinePayloadInterval1h, MarketDataKlinePayloadInterval2h, MarketDataKlinePayloadInterval1d, MarketDataKlinePayloadInterval1w:
-		return true
-	}
-	return false
-}
-
-type MarketDataKlineParam struct {
-	Payload param.Field[MarketDataKlinePayloadParam] `json:"payload"`
-	EventParam
-}
-
-func (r MarketDataKlineParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type MarketDataKlinePayloadParam struct {
-	Candles param.Field[[]OhlcvParam] `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[MarketDataKlinePayloadExchangeType] `json:"exchangeType"`
-	Interval     param.Field[MarketDataKlinePayloadInterval]     `json:"interval"`
-	Symbol       param.Field[string]                             `json:"symbol"`
-}
-
-func (r MarketDataKlinePayloadParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type MarketDataOrderBook struct {
-	Payload Orderbook               `json:"payload"`
-	JSON    marketDataOrderBookJSON `json:"-"`
-	Event
-}
-
-// marketDataOrderBookJSON contains the JSON metadata for the struct
-// [MarketDataOrderBook]
-type marketDataOrderBookJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *MarketDataOrderBook) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r marketDataOrderBookJSON) RawJSON() string {
-	return r.raw
-}
-
-type MarketDataOrderBookParam struct {
-	Payload param.Field[OrderbookParam] `json:"payload"`
-	EventParam
-}
-
-func (r MarketDataOrderBookParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type TaskCancelOrderRequestAck struct {
-	Payload CancelOrderRequest            `json:"payload"`
-	JSON    taskCancelOrderRequestAckJSON `json:"-"`
-	Event
-}
-
-// taskCancelOrderRequestAckJSON contains the JSON metadata for the struct
-// [TaskCancelOrderRequestAck]
-type taskCancelOrderRequestAckJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TaskCancelOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r taskCancelOrderRequestAckJSON) RawJSON() string {
-	return r.raw
-}
-
-type TaskCancelOrderRequestAckParam struct {
-	Payload param.Field[CancelOrderRequestParam] `json:"payload"`
-	EventParam
-}
-
-func (r TaskCancelOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type TaskPlaceOrderRequestAck struct {
-	Payload PlaceOrderRequest            `json:"payload"`
-	JSON    taskPlaceOrderRequestAckJSON `json:"-"`
-	Event
-}
-
-// taskPlaceOrderRequestAckJSON contains the JSON metadata for the struct
-// [TaskPlaceOrderRequestAck]
-type taskPlaceOrderRequestAckJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TaskPlaceOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r taskPlaceOrderRequestAckJSON) RawJSON() string {
-	return r.raw
-}
-
-type TaskPlaceOrderRequestAckParam struct {
-	Payload param.Field[PlaceOrderRequestParam] `json:"payload"`
-	EventParam
-}
-
-func (r TaskPlaceOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type TaskQuoteRequestAck struct {
-	Payload QuoteRequest            `json:"payload"`
-	JSON    taskQuoteRequestAckJSON `json:"-"`
-	Event
-}
-
-// taskQuoteRequestAckJSON contains the JSON metadata for the struct
-// [TaskQuoteRequestAck]
-type taskQuoteRequestAckJSON struct {
-	Payload     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TaskQuoteRequestAck) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r taskQuoteRequestAckJSON) RawJSON() string {
-	return r.raw
-}
-
-type TaskQuoteRequestAckParam struct {
-	Payload param.Field[QuoteRequestParam] `json:"payload"`
-	EventParam
-}
-
-func (r TaskQuoteRequestAckParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type EventDropCopyExecutionReportParams struct {
-	DropCopyExecutionReport DropCopyExecutionReportParam `json:"dropCopyExecutionReport,required"`
-}
-
-func (r EventDropCopyExecutionReportParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.DropCopyExecutionReport)
-}
-
-type EventDropCopyOrderParams struct {
-	DropCopyOrder DropCopyOrderParam `json:"dropCopyOrder,required"`
-}
-
-func (r EventDropCopyOrderParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.DropCopyOrder)
-}
-
-type EventDropCopyPortfolioParams struct {
-	DropCopyPortfolio DropCopyPortfolioParam `json:"dropCopyPortfolio,required"`
-}
-
-func (r EventDropCopyPortfolioParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.DropCopyPortfolio)
-}
-
-type EventDropCopyQuoteParams struct {
-	DropCopyQuote DropCopyQuoteParam `json:"dropCopyQuote,required"`
-}
-
-func (r EventDropCopyQuoteParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.DropCopyQuote)
-}
-
-type EventMarketDataKlineParams struct {
-	MarketDataKline MarketDataKlineParam `json:"marketDataKline,required"`
-}
-
-func (r EventMarketDataKlineParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.MarketDataKline)
-}
-
-type EventMarketDataOrderBookParams struct {
-	MarketDataOrderBook MarketDataOrderBookParam `json:"marketDataOrderBook,required"`
-}
-
-func (r EventMarketDataOrderBookParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.MarketDataOrderBook)
-}
+func (r EventPayloadKlineParam) implementsEventPayloadUnionParam() {}
 
 type EventNewParams struct {
-	GenericEvent GenericEventParam `json:"genericEvent,required"`
+	Event EventParam `json:"event,required"`
 }
 
 func (r EventNewParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.GenericEvent)
-}
-
-type EventTaskCancelOrderRequestAckParams struct {
-	TaskCancelOrderRequestAck TaskCancelOrderRequestAckParam `json:"taskCancelOrderRequestAck,required"`
-}
-
-func (r EventTaskCancelOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskCancelOrderRequestAck)
-}
-
-type EventTaskPlaceOrderRequestAckParams struct {
-	TaskPlaceOrderRequestAck TaskPlaceOrderRequestAckParam `json:"taskPlaceOrderRequestAck,required"`
-}
-
-func (r EventTaskPlaceOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskPlaceOrderRequestAck)
-}
-
-type EventTaskQuoteRequestAckParams struct {
-	TaskQuoteRequestAck TaskQuoteRequestAckParam `json:"taskQuoteRequestAck,required"`
-}
-
-func (r EventTaskQuoteRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskQuoteRequestAck)
+	return apijson.MarshalRoot(r.Event)
 }
