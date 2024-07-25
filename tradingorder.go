@@ -73,6 +73,41 @@ func (r *TradingOrderService) Cancel(ctx context.Context, body TradingOrderCance
 	return
 }
 
+type CancelOrderRequest struct {
+	// Order ID
+	OrderID string                 `json:"orderId,required"`
+	JSON    cancelOrderRequestJSON `json:"-"`
+}
+
+// cancelOrderRequestJSON contains the JSON metadata for the struct
+// [CancelOrderRequest]
+type cancelOrderRequestJSON struct {
+	OrderID     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CancelOrderRequest) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r cancelOrderRequestJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CancelOrderRequest) implementsEventPayload() {}
+
+type CancelOrderRequestParam struct {
+	// Order ID
+	OrderID param.Field[string] `json:"orderId,required"`
+}
+
+func (r CancelOrderRequestParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r CancelOrderRequestParam) implementsEventPayloadUnionParam() {}
+
 type Order struct {
 	// The total cost of this order.
 	Cost float64 `json:"cost,required"`
@@ -309,15 +344,173 @@ func (r OrderParam) MarshalJSON() (data []byte, err error) {
 
 func (r OrderParam) implementsEventPayloadUnionParam() {}
 
-type TradingOrderNewParams struct {
+type PlaceOrderRequest struct {
+	// Exchange account ID
+	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
+	// Levarage
+	Leverage int64 `json:"leverage"`
+	// Order side
+	OrderSide PlaceOrderRequestOrderSide `json:"orderSide"`
+	// Order type
+	OrderType PlaceOrderRequestOrderType `json:"orderType"`
+	// Position ID for closing position in margin trading
+	PositionID string `json:"positionId" format:"uuid"`
+	// Price
+	Price float64 `json:"price"`
+	// Price slippage tolerance, range: [0, 0.1] with 2 decimal places
+	PriceSlippageTolerance float64 `json:"priceSlippageTolerance"`
+	// Priority list of exchange account ID in descending order
+	Priority []string `json:"priority"`
+	// Quantity. One of quantity or quoteQuantity must be provided. If both is
+	// provided, only quantity will be used.
+	Quantity float64 `json:"quantity"`
+	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
+	// QUOTED order
+	QuoteID string `json:"quoteId"`
+	// Quote Quantity
+	QuoteQuantity float64 `json:"quoteQuantity"`
+	// Quote request ID
+	QuoteRequestID string `json:"quoteRequestId" format:"uuid"`
+	// Route policy. For PRIORITY, the order request will be routed to the exchange
+	// account with the highest priority. For QUOTE, the system will execute the
+	// execution plan based on the quote. Order request with route policy QUOTE will
+	// only accept two parameters, quoteRequestId and priceSlippageTolerance
+	RoutePolicy PlaceOrderRequestRoutePolicy `json:"routePolicy"`
+	// Symbol
+	Symbol string `json:"symbol"`
+	// Tenant ID
+	TenantID string `json:"tenantId"`
+	// Time in force
+	TimeInForce PlaceOrderRequestTimeInForce `json:"timeInForce"`
+	JSON        placeOrderRequestJSON        `json:"-"`
+}
+
+// placeOrderRequestJSON contains the JSON metadata for the struct
+// [PlaceOrderRequest]
+type placeOrderRequestJSON struct {
+	ExchangeAccountID      apijson.Field
+	Leverage               apijson.Field
+	OrderSide              apijson.Field
+	OrderType              apijson.Field
+	PositionID             apijson.Field
+	Price                  apijson.Field
+	PriceSlippageTolerance apijson.Field
+	Priority               apijson.Field
+	Quantity               apijson.Field
+	QuoteID                apijson.Field
+	QuoteQuantity          apijson.Field
+	QuoteRequestID         apijson.Field
+	RoutePolicy            apijson.Field
+	Symbol                 apijson.Field
+	TenantID               apijson.Field
+	TimeInForce            apijson.Field
+	raw                    string
+	ExtraFields            map[string]apijson.Field
+}
+
+func (r *PlaceOrderRequest) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r placeOrderRequestJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r PlaceOrderRequest) implementsEventPayload() {}
+
+// Order side
+type PlaceOrderRequestOrderSide string
+
+const (
+	PlaceOrderRequestOrderSideBuy  PlaceOrderRequestOrderSide = "BUY"
+	PlaceOrderRequestOrderSideSell PlaceOrderRequestOrderSide = "SELL"
+)
+
+func (r PlaceOrderRequestOrderSide) IsKnown() bool {
+	switch r {
+	case PlaceOrderRequestOrderSideBuy, PlaceOrderRequestOrderSideSell:
+		return true
+	}
+	return false
+}
+
+// Order type
+type PlaceOrderRequestOrderType string
+
+const (
+	PlaceOrderRequestOrderTypeMarket          PlaceOrderRequestOrderType = "MARKET"
+	PlaceOrderRequestOrderTypeLimit           PlaceOrderRequestOrderType = "LIMIT"
+	PlaceOrderRequestOrderTypeStopLoss        PlaceOrderRequestOrderType = "STOP_LOSS"
+	PlaceOrderRequestOrderTypeStopLossLimit   PlaceOrderRequestOrderType = "STOP_LOSS_LIMIT"
+	PlaceOrderRequestOrderTypeTakeProfit      PlaceOrderRequestOrderType = "TAKE_PROFIT"
+	PlaceOrderRequestOrderTypeTakeProfitLimit PlaceOrderRequestOrderType = "TAKE_PROFIT_LIMIT"
+	PlaceOrderRequestOrderTypeQuoted          PlaceOrderRequestOrderType = "QUOTED"
+)
+
+func (r PlaceOrderRequestOrderType) IsKnown() bool {
+	switch r {
+	case PlaceOrderRequestOrderTypeMarket, PlaceOrderRequestOrderTypeLimit, PlaceOrderRequestOrderTypeStopLoss, PlaceOrderRequestOrderTypeStopLossLimit, PlaceOrderRequestOrderTypeTakeProfit, PlaceOrderRequestOrderTypeTakeProfitLimit, PlaceOrderRequestOrderTypeQuoted:
+		return true
+	}
+	return false
+}
+
+// Route policy. For PRIORITY, the order request will be routed to the exchange
+// account with the highest priority. For QUOTE, the system will execute the
+// execution plan based on the quote. Order request with route policy QUOTE will
+// only accept two parameters, quoteRequestId and priceSlippageTolerance
+type PlaceOrderRequestRoutePolicy string
+
+const (
+	PlaceOrderRequestRoutePolicyPriority PlaceOrderRequestRoutePolicy = "PRIORITY"
+	PlaceOrderRequestRoutePolicyQuote    PlaceOrderRequestRoutePolicy = "QUOTE"
+)
+
+func (r PlaceOrderRequestRoutePolicy) IsKnown() bool {
+	switch r {
+	case PlaceOrderRequestRoutePolicyPriority, PlaceOrderRequestRoutePolicyQuote:
+		return true
+	}
+	return false
+}
+
+// Time in force
+type PlaceOrderRequestTimeInForce string
+
+const (
+	PlaceOrderRequestTimeInForceDay PlaceOrderRequestTimeInForce = "DAY"
+	PlaceOrderRequestTimeInForceGtc PlaceOrderRequestTimeInForce = "GTC"
+	PlaceOrderRequestTimeInForceGtx PlaceOrderRequestTimeInForce = "GTX"
+	PlaceOrderRequestTimeInForceGtd PlaceOrderRequestTimeInForce = "GTD"
+	PlaceOrderRequestTimeInForceOpg PlaceOrderRequestTimeInForce = "OPG"
+	PlaceOrderRequestTimeInForceCls PlaceOrderRequestTimeInForce = "CLS"
+	PlaceOrderRequestTimeInForceIoc PlaceOrderRequestTimeInForce = "IOC"
+	PlaceOrderRequestTimeInForceFok PlaceOrderRequestTimeInForce = "FOK"
+	PlaceOrderRequestTimeInForceGfa PlaceOrderRequestTimeInForce = "GFA"
+	PlaceOrderRequestTimeInForceGfs PlaceOrderRequestTimeInForce = "GFS"
+	PlaceOrderRequestTimeInForceGtm PlaceOrderRequestTimeInForce = "GTM"
+	PlaceOrderRequestTimeInForceMoo PlaceOrderRequestTimeInForce = "MOO"
+	PlaceOrderRequestTimeInForceMoc PlaceOrderRequestTimeInForce = "MOC"
+	PlaceOrderRequestTimeInForceExt PlaceOrderRequestTimeInForce = "EXT"
+)
+
+func (r PlaceOrderRequestTimeInForce) IsKnown() bool {
+	switch r {
+	case PlaceOrderRequestTimeInForceDay, PlaceOrderRequestTimeInForceGtc, PlaceOrderRequestTimeInForceGtx, PlaceOrderRequestTimeInForceGtd, PlaceOrderRequestTimeInForceOpg, PlaceOrderRequestTimeInForceCls, PlaceOrderRequestTimeInForceIoc, PlaceOrderRequestTimeInForceFok, PlaceOrderRequestTimeInForceGfa, PlaceOrderRequestTimeInForceGfs, PlaceOrderRequestTimeInForceGtm, PlaceOrderRequestTimeInForceMoo, PlaceOrderRequestTimeInForceMoc, PlaceOrderRequestTimeInForceExt:
+		return true
+	}
+	return false
+}
+
+type PlaceOrderRequestParam struct {
 	// Exchange account ID
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
 	// Levarage
 	Leverage param.Field[int64] `json:"leverage"`
 	// Order side
-	OrderSide param.Field[TradingOrderNewParamsOrderSide] `json:"orderSide"`
+	OrderSide param.Field[PlaceOrderRequestOrderSide] `json:"orderSide"`
 	// Order type
-	OrderType param.Field[TradingOrderNewParamsOrderType] `json:"orderType"`
+	OrderType param.Field[PlaceOrderRequestOrderType] `json:"orderType"`
 	// Position ID for closing position in margin trading
 	PositionID param.Field[string] `json:"positionId" format:"uuid"`
 	// Price
@@ -340,102 +533,28 @@ type TradingOrderNewParams struct {
 	// account with the highest priority. For QUOTE, the system will execute the
 	// execution plan based on the quote. Order request with route policy QUOTE will
 	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[TradingOrderNewParamsRoutePolicy] `json:"routePolicy"`
+	RoutePolicy param.Field[PlaceOrderRequestRoutePolicy] `json:"routePolicy"`
 	// Symbol
 	Symbol param.Field[string] `json:"symbol"`
 	// Tenant ID
 	TenantID param.Field[string] `json:"tenantId"`
 	// Time in force
-	TimeInForce    param.Field[TradingOrderNewParamsTimeInForce] `json:"timeInForce"`
-	IdempotencyKey param.Field[string]                           `header:"Idempotency-Key"`
+	TimeInForce param.Field[PlaceOrderRequestTimeInForce] `json:"timeInForce"`
 }
 
-func (r TradingOrderNewParams) MarshalJSON() (data []byte, err error) {
+func (r PlaceOrderRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-// Order side
-type TradingOrderNewParamsOrderSide string
+func (r PlaceOrderRequestParam) implementsEventPayloadUnionParam() {}
 
-const (
-	TradingOrderNewParamsOrderSideBuy  TradingOrderNewParamsOrderSide = "BUY"
-	TradingOrderNewParamsOrderSideSell TradingOrderNewParamsOrderSide = "SELL"
-)
-
-func (r TradingOrderNewParamsOrderSide) IsKnown() bool {
-	switch r {
-	case TradingOrderNewParamsOrderSideBuy, TradingOrderNewParamsOrderSideSell:
-		return true
-	}
-	return false
+type TradingOrderNewParams struct {
+	PlaceOrderRequest PlaceOrderRequestParam `json:"placeOrderRequest,required"`
+	IdempotencyKey    param.Field[string]    `header:"Idempotency-Key"`
 }
 
-// Order type
-type TradingOrderNewParamsOrderType string
-
-const (
-	TradingOrderNewParamsOrderTypeMarket          TradingOrderNewParamsOrderType = "MARKET"
-	TradingOrderNewParamsOrderTypeLimit           TradingOrderNewParamsOrderType = "LIMIT"
-	TradingOrderNewParamsOrderTypeStopLoss        TradingOrderNewParamsOrderType = "STOP_LOSS"
-	TradingOrderNewParamsOrderTypeStopLossLimit   TradingOrderNewParamsOrderType = "STOP_LOSS_LIMIT"
-	TradingOrderNewParamsOrderTypeTakeProfit      TradingOrderNewParamsOrderType = "TAKE_PROFIT"
-	TradingOrderNewParamsOrderTypeTakeProfitLimit TradingOrderNewParamsOrderType = "TAKE_PROFIT_LIMIT"
-	TradingOrderNewParamsOrderTypeQuoted          TradingOrderNewParamsOrderType = "QUOTED"
-)
-
-func (r TradingOrderNewParamsOrderType) IsKnown() bool {
-	switch r {
-	case TradingOrderNewParamsOrderTypeMarket, TradingOrderNewParamsOrderTypeLimit, TradingOrderNewParamsOrderTypeStopLoss, TradingOrderNewParamsOrderTypeStopLossLimit, TradingOrderNewParamsOrderTypeTakeProfit, TradingOrderNewParamsOrderTypeTakeProfitLimit, TradingOrderNewParamsOrderTypeQuoted:
-		return true
-	}
-	return false
-}
-
-// Route policy. For PRIORITY, the order request will be routed to the exchange
-// account with the highest priority. For QUOTE, the system will execute the
-// execution plan based on the quote. Order request with route policy QUOTE will
-// only accept two parameters, quoteRequestId and priceSlippageTolerance
-type TradingOrderNewParamsRoutePolicy string
-
-const (
-	TradingOrderNewParamsRoutePolicyPriority TradingOrderNewParamsRoutePolicy = "PRIORITY"
-	TradingOrderNewParamsRoutePolicyQuote    TradingOrderNewParamsRoutePolicy = "QUOTE"
-)
-
-func (r TradingOrderNewParamsRoutePolicy) IsKnown() bool {
-	switch r {
-	case TradingOrderNewParamsRoutePolicyPriority, TradingOrderNewParamsRoutePolicyQuote:
-		return true
-	}
-	return false
-}
-
-// Time in force
-type TradingOrderNewParamsTimeInForce string
-
-const (
-	TradingOrderNewParamsTimeInForceDay TradingOrderNewParamsTimeInForce = "DAY"
-	TradingOrderNewParamsTimeInForceGtc TradingOrderNewParamsTimeInForce = "GTC"
-	TradingOrderNewParamsTimeInForceGtx TradingOrderNewParamsTimeInForce = "GTX"
-	TradingOrderNewParamsTimeInForceGtd TradingOrderNewParamsTimeInForce = "GTD"
-	TradingOrderNewParamsTimeInForceOpg TradingOrderNewParamsTimeInForce = "OPG"
-	TradingOrderNewParamsTimeInForceCls TradingOrderNewParamsTimeInForce = "CLS"
-	TradingOrderNewParamsTimeInForceIoc TradingOrderNewParamsTimeInForce = "IOC"
-	TradingOrderNewParamsTimeInForceFok TradingOrderNewParamsTimeInForce = "FOK"
-	TradingOrderNewParamsTimeInForceGfa TradingOrderNewParamsTimeInForce = "GFA"
-	TradingOrderNewParamsTimeInForceGfs TradingOrderNewParamsTimeInForce = "GFS"
-	TradingOrderNewParamsTimeInForceGtm TradingOrderNewParamsTimeInForce = "GTM"
-	TradingOrderNewParamsTimeInForceMoo TradingOrderNewParamsTimeInForce = "MOO"
-	TradingOrderNewParamsTimeInForceMoc TradingOrderNewParamsTimeInForce = "MOC"
-	TradingOrderNewParamsTimeInForceExt TradingOrderNewParamsTimeInForce = "EXT"
-)
-
-func (r TradingOrderNewParamsTimeInForce) IsKnown() bool {
-	switch r {
-	case TradingOrderNewParamsTimeInForceDay, TradingOrderNewParamsTimeInForceGtc, TradingOrderNewParamsTimeInForceGtx, TradingOrderNewParamsTimeInForceGtd, TradingOrderNewParamsTimeInForceOpg, TradingOrderNewParamsTimeInForceCls, TradingOrderNewParamsTimeInForceIoc, TradingOrderNewParamsTimeInForceFok, TradingOrderNewParamsTimeInForceGfa, TradingOrderNewParamsTimeInForceGfs, TradingOrderNewParamsTimeInForceGtm, TradingOrderNewParamsTimeInForceMoo, TradingOrderNewParamsTimeInForceMoc, TradingOrderNewParamsTimeInForceExt:
-		return true
-	}
-	return false
+func (r TradingOrderNewParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.PlaceOrderRequest)
 }
 
 type TradingOrderListParams struct {
@@ -492,10 +611,9 @@ func (r TradingOrderListParamsOrderStatus) IsKnown() bool {
 }
 
 type TradingOrderCancelParams struct {
-	// Order ID
-	OrderID param.Field[string] `json:"orderId,required"`
+	CancelOrderRequest CancelOrderRequestParam `json:"cancelOrderRequest,required"`
 }
 
 func (r TradingOrderCancelParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
+	return apijson.MarshalRoot(r.CancelOrderRequest)
 }

@@ -23,6 +23,7 @@ type Client struct {
 	Trading          *TradingService
 	Portfolio        *PortfolioService
 	Webhook          *WebhookService
+	Event            *EventService
 }
 
 // NewClient generates a new client with the default option read from the
@@ -45,6 +46,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Trading = NewTradingService(opts...)
 	r.Portfolio = NewPortfolioService(opts...)
 	r.Webhook = NewWebhookService(opts...)
+	r.Event = NewEventService(opts...)
 
 	return
 }
