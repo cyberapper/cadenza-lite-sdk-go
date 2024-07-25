@@ -110,14 +110,6 @@ func (r executionReportJSON) RawJSON() string {
 
 func (r ExecutionReport) implementsEventPayload() {}
 
-func (r ExecutionReport) implementsOrder() {}
-
-func (r ExecutionReport) implementsExchangeAccountPortfolio() {}
-
-func (r ExecutionReport) implementsQuote() {}
-
-func (r ExecutionReport) implementsOrderbook() {}
-
 // Route policy. For PRIORITY, the order request will be routed to the exchange
 // account with the highest priority. For QUOTE, the system will execute the
 // execution plan based on the quote. Order request with route policy QUOTE will
@@ -224,15 +216,7 @@ func (r ExecutionReportParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-func (r ExecutionReportParam) implementsOrderUnionParam() {}
-
-func (r ExecutionReportParam) implementsExchangeAccountPortfolioUnionParam() {}
-
-func (r ExecutionReportParam) implementsQuoteUnionParam() {}
-
-func (r ExecutionReportParam) implementsEventMarketDataKlineParamsPayloadUnion() {}
-
-func (r ExecutionReportParam) implementsOrderbookUnionParam() {}
+func (r ExecutionReportParam) implementsEventPayloadUnionParam() {}
 
 type ExecutionReportFeeParam struct {
 	// Asset
