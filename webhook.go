@@ -611,7 +611,26 @@ func (r EventPayloadInterval) IsKnown() bool {
 	return false
 }
 
-type WebhookPubsubResponse = interface{}
+type WebhookPubsubResponse struct {
+	Data string                    `json:"data"`
+	JSON webhookPubsubResponseJSON `json:"-"`
+}
+
+// webhookPubsubResponseJSON contains the JSON metadata for the struct
+// [WebhookPubsubResponse]
+type webhookPubsubResponseJSON struct {
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WebhookPubsubResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r webhookPubsubResponseJSON) RawJSON() string {
+	return r.raw
+}
 
 type WebhookPubsubParams struct {
 	Event EventParam `json:"event,required"`
