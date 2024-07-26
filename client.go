@@ -15,14 +15,14 @@ import (
 // interacting with the cadenza API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options          []option.RequestOption
-	Health           *HealthService
-	ExchangeAccounts *ExchangeAccountService
-	Market           *MarketService
-	Trading          *TradingService
-	Portfolio        *PortfolioService
-	Webhook          *WebhookService
-	Event            *EventService
+	Options         []option.RequestOption
+	Utility         *UtilityService
+	ExchangeAccount *ExchangeAccountService
+	Market          *MarketService
+	Trading         *TradingService
+	Portfolio       *PortfolioService
+	Webhook         *WebhookService
+	Event           *EventService
 }
 
 // NewClient generates a new client with the default option read from the
@@ -38,8 +38,8 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 
 	r = &Client{Options: opts}
 
-	r.Health = NewHealthService(opts...)
-	r.ExchangeAccounts = NewExchangeAccountService(opts...)
+	r.Utility = NewUtilityService(opts...)
+	r.ExchangeAccount = NewExchangeAccountService(opts...)
 	r.Market = NewMarketService(opts...)
 	r.Trading = NewTradingService(opts...)
 	r.Portfolio = NewPortfolioService(opts...)
