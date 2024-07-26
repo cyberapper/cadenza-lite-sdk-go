@@ -65,9 +65,64 @@ func (r *PortfolioService) ListPositions(ctx context.Context, query PortfolioLis
 	return
 }
 
+type BalanceEntry struct {
+	// Asset
+	Asset string `json:"asset,required"`
+	// Borrowed balance from exchange
+	Borrowed float64 `json:"borrowed,required"`
+	// Free balance
+	Free float64 `json:"free,required"`
+	// Locked balance
+	Locked float64 `json:"locked,required"`
+	// Net Balance, net = total - borrowed
+	Net float64 `json:"net,required"`
+	// Total available balance
+	Total float64          `json:"total,required"`
+	JSON  balanceEntryJSON `json:"-"`
+}
+
+// balanceEntryJSON contains the JSON metadata for the struct [BalanceEntry]
+type balanceEntryJSON struct {
+	Asset       apijson.Field
+	Borrowed    apijson.Field
+	Free        apijson.Field
+	Locked      apijson.Field
+	Net         apijson.Field
+	Total       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *BalanceEntry) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r balanceEntryJSON) RawJSON() string {
+	return r.raw
+}
+
+type BalanceEntryParam struct {
+	// Asset
+	Asset param.Field[string] `json:"asset,required"`
+	// Borrowed balance from exchange
+	Borrowed param.Field[float64] `json:"borrowed,required"`
+	// Free balance
+	Free param.Field[float64] `json:"free,required"`
+	// Locked balance
+	Locked param.Field[float64] `json:"locked,required"`
+	// Net Balance, net = total - borrowed
+	Net param.Field[float64] `json:"net,required"`
+	// Total available balance
+	Total param.Field[float64] `json:"total,required"`
+}
+
+func (r BalanceEntryParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
 type ExchangeAccountBalance struct {
 	// List of balances
-	Balances []ExchangeAccountBalanceBalance `json:"balances,required"`
+	Balances []BalanceEntry `json:"balances,required"`
 	// Exchange account ID
 	ExchangeAccountID string                     `json:"exchangeAccountId,required" format:"uuid"`
 	JSON              exchangeAccountBalanceJSON `json:"-"`
@@ -87,43 +142,6 @@ func (r *ExchangeAccountBalance) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r exchangeAccountBalanceJSON) RawJSON() string {
-	return r.raw
-}
-
-type ExchangeAccountBalanceBalance struct {
-	// Asset
-	Asset string `json:"asset,required"`
-	// Borrowed balance from exchange
-	Borrowed float64 `json:"borrowed,required"`
-	// Free balance
-	Free float64 `json:"free,required"`
-	// Locked balance
-	Locked float64 `json:"locked,required"`
-	// Net Balance, net = total - borrowed
-	Net float64 `json:"net,required"`
-	// Total available balance
-	Total float64                           `json:"total,required"`
-	JSON  exchangeAccountBalanceBalanceJSON `json:"-"`
-}
-
-// exchangeAccountBalanceBalanceJSON contains the JSON metadata for the struct
-// [ExchangeAccountBalanceBalance]
-type exchangeAccountBalanceBalanceJSON struct {
-	Asset       apijson.Field
-	Borrowed    apijson.Field
-	Free        apijson.Field
-	Locked      apijson.Field
-	Net         apijson.Field
-	Total       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ExchangeAccountBalanceBalance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r exchangeAccountBalanceBalanceJSON) RawJSON() string {
 	return r.raw
 }
 
@@ -271,10 +289,10 @@ type ExchangeAccountPortfolio struct {
 	// Exchange type
 	ExchangeType ExchangeAccountPortfolioExchangeType `json:"exchangeType,required"`
 	// The timestamp when the portfolio information was updated.
-	UpdatedAt int64                              `json:"updatedAt,required"`
-	Balances  []ExchangeAccountPortfolioBalance  `json:"balances"`
-	Positions []ExchangeAccountPortfolioPosition `json:"positions"`
-	JSON      exchangeAccountPortfolioJSON       `json:"-"`
+	UpdatedAt int64                        `json:"updatedAt,required"`
+	Balances  []BalanceEntry               `json:"balances"`
+	Positions []PositionEntry              `json:"positions"`
+	JSON      exchangeAccountPortfolioJSON `json:"-"`
 }
 
 // exchangeAccountPortfolioJSON contains the JSON metadata for the struct
@@ -320,111 +338,6 @@ func (r ExchangeAccountPortfolioExchangeType) IsKnown() bool {
 	return false
 }
 
-type ExchangeAccountPortfolioBalance struct {
-	// Asset
-	Asset string `json:"asset,required"`
-	// Borrowed balance from exchange
-	Borrowed float64 `json:"borrowed,required"`
-	// Free balance
-	Free float64 `json:"free,required"`
-	// Locked balance
-	Locked float64 `json:"locked,required"`
-	// Net Balance, net = total - borrowed
-	Net float64 `json:"net,required"`
-	// Total available balance
-	Total float64                             `json:"total,required"`
-	JSON  exchangeAccountPortfolioBalanceJSON `json:"-"`
-}
-
-// exchangeAccountPortfolioBalanceJSON contains the JSON metadata for the struct
-// [ExchangeAccountPortfolioBalance]
-type exchangeAccountPortfolioBalanceJSON struct {
-	Asset       apijson.Field
-	Borrowed    apijson.Field
-	Free        apijson.Field
-	Locked      apijson.Field
-	Net         apijson.Field
-	Total       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ExchangeAccountPortfolioBalance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r exchangeAccountPortfolioBalanceJSON) RawJSON() string {
-	return r.raw
-}
-
-type ExchangeAccountPortfolioPosition struct {
-	// Amount
-	Amount float64 `json:"amount,required"`
-	// Position side
-	PositionSide ExchangeAccountPortfolioPositionsPositionSide `json:"positionSide,required"`
-	// Status
-	Status ExchangeAccountPortfolioPositionsStatus `json:"status,required"`
-	// Symbol
-	Symbol string `json:"symbol,required"`
-	// Cost
-	Cost float64 `json:"cost"`
-	// Entry price
-	EntryPrice float64                              `json:"entryPrice"`
-	JSON       exchangeAccountPortfolioPositionJSON `json:"-"`
-}
-
-// exchangeAccountPortfolioPositionJSON contains the JSON metadata for the struct
-// [ExchangeAccountPortfolioPosition]
-type exchangeAccountPortfolioPositionJSON struct {
-	Amount       apijson.Field
-	PositionSide apijson.Field
-	Status       apijson.Field
-	Symbol       apijson.Field
-	Cost         apijson.Field
-	EntryPrice   apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *ExchangeAccountPortfolioPosition) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r exchangeAccountPortfolioPositionJSON) RawJSON() string {
-	return r.raw
-}
-
-// Position side
-type ExchangeAccountPortfolioPositionsPositionSide string
-
-const (
-	ExchangeAccountPortfolioPositionsPositionSideLong  ExchangeAccountPortfolioPositionsPositionSide = "LONG"
-	ExchangeAccountPortfolioPositionsPositionSideShort ExchangeAccountPortfolioPositionsPositionSide = "SHORT"
-)
-
-func (r ExchangeAccountPortfolioPositionsPositionSide) IsKnown() bool {
-	switch r {
-	case ExchangeAccountPortfolioPositionsPositionSideLong, ExchangeAccountPortfolioPositionsPositionSideShort:
-		return true
-	}
-	return false
-}
-
-// Status
-type ExchangeAccountPortfolioPositionsStatus string
-
-const (
-	ExchangeAccountPortfolioPositionsStatusOpen ExchangeAccountPortfolioPositionsStatus = "OPEN"
-)
-
-func (r ExchangeAccountPortfolioPositionsStatus) IsKnown() bool {
-	switch r {
-	case ExchangeAccountPortfolioPositionsStatusOpen:
-		return true
-	}
-	return false
-}
-
 type ExchangeAccountPortfolioParam struct {
 	// Exchange Account Credit Info
 	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
@@ -433,9 +346,9 @@ type ExchangeAccountPortfolioParam struct {
 	// Exchange type
 	ExchangeType param.Field[ExchangeAccountPortfolioExchangeType] `json:"exchangeType,required"`
 	// The timestamp when the portfolio information was updated.
-	UpdatedAt param.Field[int64]                                   `json:"updatedAt,required"`
-	Balances  param.Field[[]ExchangeAccountPortfolioBalanceParam]  `json:"balances"`
-	Positions param.Field[[]ExchangeAccountPortfolioPositionParam] `json:"positions"`
+	UpdatedAt param.Field[int64]                `json:"updatedAt,required"`
+	Balances  param.Field[[]BalanceEntryParam]  `json:"balances"`
+	Positions param.Field[[]PositionEntryParam] `json:"positions"`
 }
 
 func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
@@ -444,50 +357,12 @@ func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
 
 func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
 
-type ExchangeAccountPortfolioBalanceParam struct {
-	// Asset
-	Asset param.Field[string] `json:"asset,required"`
-	// Borrowed balance from exchange
-	Borrowed param.Field[float64] `json:"borrowed,required"`
-	// Free balance
-	Free param.Field[float64] `json:"free,required"`
-	// Locked balance
-	Locked param.Field[float64] `json:"locked,required"`
-	// Net Balance, net = total - borrowed
-	Net param.Field[float64] `json:"net,required"`
-	// Total available balance
-	Total param.Field[float64] `json:"total,required"`
-}
-
-func (r ExchangeAccountPortfolioBalanceParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type ExchangeAccountPortfolioPositionParam struct {
-	// Amount
-	Amount param.Field[float64] `json:"amount,required"`
-	// Position side
-	PositionSide param.Field[ExchangeAccountPortfolioPositionsPositionSide] `json:"positionSide,required"`
-	// Status
-	Status param.Field[ExchangeAccountPortfolioPositionsStatus] `json:"status,required"`
-	// Symbol
-	Symbol param.Field[string] `json:"symbol,required"`
-	// Cost
-	Cost param.Field[float64] `json:"cost"`
-	// Entry price
-	EntryPrice param.Field[float64] `json:"entryPrice"`
-}
-
-func (r ExchangeAccountPortfolioPositionParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
 type ExchangeAccountPosition struct {
 	// Exchange account ID
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// List of positions
-	Positions []ExchangeAccountPositionPosition `json:"positions"`
-	JSON      exchangeAccountPositionJSON       `json:"-"`
+	Positions []PositionEntry             `json:"positions"`
+	JSON      exchangeAccountPositionJSON `json:"-"`
 }
 
 // exchangeAccountPositionJSON contains the JSON metadata for the struct
@@ -507,26 +382,24 @@ func (r exchangeAccountPositionJSON) RawJSON() string {
 	return r.raw
 }
 
-// List of positions
-type ExchangeAccountPositionPosition struct {
+type PositionEntry struct {
 	// Amount
 	Amount float64 `json:"amount,required"`
 	// Position side
-	PositionSide ExchangeAccountPositionPositionsPositionSide `json:"positionSide,required"`
+	PositionSide PositionEntryPositionSide `json:"positionSide,required"`
 	// Status
-	Status ExchangeAccountPositionPositionsStatus `json:"status,required"`
+	Status PositionEntryStatus `json:"status,required"`
 	// Symbol
 	Symbol string `json:"symbol,required"`
 	// Cost
 	Cost float64 `json:"cost"`
 	// Entry price
-	EntryPrice float64                             `json:"entryPrice"`
-	JSON       exchangeAccountPositionPositionJSON `json:"-"`
+	EntryPrice float64           `json:"entryPrice"`
+	JSON       positionEntryJSON `json:"-"`
 }
 
-// exchangeAccountPositionPositionJSON contains the JSON metadata for the struct
-// [ExchangeAccountPositionPosition]
-type exchangeAccountPositionPositionJSON struct {
+// positionEntryJSON contains the JSON metadata for the struct [PositionEntry]
+type positionEntryJSON struct {
 	Amount       apijson.Field
 	PositionSide apijson.Field
 	Status       apijson.Field
@@ -537,43 +410,62 @@ type exchangeAccountPositionPositionJSON struct {
 	ExtraFields  map[string]apijson.Field
 }
 
-func (r *ExchangeAccountPositionPosition) UnmarshalJSON(data []byte) (err error) {
+func (r *PositionEntry) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r exchangeAccountPositionPositionJSON) RawJSON() string {
+func (r positionEntryJSON) RawJSON() string {
 	return r.raw
 }
 
 // Position side
-type ExchangeAccountPositionPositionsPositionSide string
+type PositionEntryPositionSide string
 
 const (
-	ExchangeAccountPositionPositionsPositionSideLong  ExchangeAccountPositionPositionsPositionSide = "LONG"
-	ExchangeAccountPositionPositionsPositionSideShort ExchangeAccountPositionPositionsPositionSide = "SHORT"
+	PositionEntryPositionSideLong  PositionEntryPositionSide = "LONG"
+	PositionEntryPositionSideShort PositionEntryPositionSide = "SHORT"
 )
 
-func (r ExchangeAccountPositionPositionsPositionSide) IsKnown() bool {
+func (r PositionEntryPositionSide) IsKnown() bool {
 	switch r {
-	case ExchangeAccountPositionPositionsPositionSideLong, ExchangeAccountPositionPositionsPositionSideShort:
+	case PositionEntryPositionSideLong, PositionEntryPositionSideShort:
 		return true
 	}
 	return false
 }
 
 // Status
-type ExchangeAccountPositionPositionsStatus string
+type PositionEntryStatus string
 
 const (
-	ExchangeAccountPositionPositionsStatusOpen ExchangeAccountPositionPositionsStatus = "OPEN"
+	PositionEntryStatusOpen PositionEntryStatus = "OPEN"
 )
 
-func (r ExchangeAccountPositionPositionsStatus) IsKnown() bool {
+func (r PositionEntryStatus) IsKnown() bool {
 	switch r {
-	case ExchangeAccountPositionPositionsStatusOpen:
+	case PositionEntryStatusOpen:
 		return true
 	}
 	return false
+}
+
+type PositionEntryParam struct {
+	// Amount
+	Amount param.Field[float64] `json:"amount,required"`
+	// Position side
+	PositionSide param.Field[PositionEntryPositionSide] `json:"positionSide,required"`
+	// Status
+	Status param.Field[PositionEntryStatus] `json:"status,required"`
+	// Symbol
+	Symbol param.Field[string] `json:"symbol,required"`
+	// Cost
+	Cost param.Field[float64] `json:"cost"`
+	// Entry price
+	EntryPrice param.Field[float64] `json:"entryPrice"`
+}
+
+func (r PositionEntryParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
 type PortfolioListParams struct {

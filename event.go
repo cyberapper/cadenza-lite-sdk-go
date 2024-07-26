@@ -186,9 +186,9 @@ type EventPayload struct {
 	Fees interface{} `json:"fees,required"`
 	// This field can have the runtime type of [[]Order].
 	Executions interface{} `json:"executions,required"`
-	// This field can have the runtime type of [[]ExchangeAccountPortfolioBalance].
+	// This field can have the runtime type of [[]BalanceEntry].
 	Balances interface{} `json:"balances,required"`
-	// This field can have the runtime type of [[]ExchangeAccountPortfolioPosition].
+	// This field can have the runtime type of [[]PositionEntry].
 	Positions interface{} `json:"positions,required"`
 	// Exchange Account Credit Info
 	Credit ExchangeAccountCredit `json:"credit"`
@@ -199,10 +199,9 @@ type EventPayload struct {
 	// Order book level
 	Level    int64                `json:"level"`
 	Interval EventPayloadInterval `json:"interval"`
-	// This field can have the runtime type of [[]Ohlcv].
-	Candles interface{}      `json:"candles,required"`
-	JSON    eventPayloadJSON `json:"-"`
-	union   EventPayloadUnion
+	Candles  Candles              `json:"candles"`
+	JSON     eventPayloadJSON     `json:"-"`
+	union    EventPayloadUnion
 }
 
 // eventPayloadJSON contains the JSON metadata for the struct [EventPayload]
@@ -276,7 +275,7 @@ func (r *EventPayload) UnmarshalJSON(data []byte) (err error) {
 //
 // Possible runtime types of the union are [QuoteRequest], [PlaceOrderRequest],
 // [CancelOrderRequest], [Quote], [Order], [ExecutionReport],
-// [ExchangeAccountPortfolio], [Orderbook], [EventPayloadKline].
+// [ExchangeAccountPortfolio], [Orderbook], [Kline].
 func (r EventPayload) AsUnion() EventPayloadUnion {
 	return r.union
 }
@@ -285,7 +284,7 @@ func (r EventPayload) AsUnion() EventPayloadUnion {
 //
 // Union satisfied by [QuoteRequest], [PlaceOrderRequest], [CancelOrderRequest],
 // [Quote], [Order], [ExecutionReport], [ExchangeAccountPortfolio], [Orderbook] or
-// [EventPayloadKline].
+// [Kline].
 type EventPayloadUnion interface {
 	implementsEventPayload()
 }
@@ -328,84 +327,9 @@ func init() {
 		},
 		apijson.UnionVariant{
 			TypeFilter: gjson.JSON,
-			Type:       reflect.TypeOf(EventPayloadKline{}),
+			Type:       reflect.TypeOf(Kline{}),
 		},
 	)
-}
-
-type EventPayloadKline struct {
-	Candles []Ohlcv `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType EventPayloadKlineExchangeType `json:"exchangeType"`
-	Interval     EventPayloadKlineInterval     `json:"interval"`
-	Symbol       string                        `json:"symbol"`
-	JSON         eventPayloadKlineJSON         `json:"-"`
-}
-
-// eventPayloadKlineJSON contains the JSON metadata for the struct
-// [EventPayloadKline]
-type eventPayloadKlineJSON struct {
-	Candles           apijson.Field
-	ExchangeAccountID apijson.Field
-	ExchangeType      apijson.Field
-	Interval          apijson.Field
-	Symbol            apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *EventPayloadKline) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r eventPayloadKlineJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r EventPayloadKline) implementsEventPayload() {}
-
-// Exchange type
-type EventPayloadKlineExchangeType string
-
-const (
-	EventPayloadKlineExchangeTypeBinance       EventPayloadKlineExchangeType = "BINANCE"
-	EventPayloadKlineExchangeTypeBinanceMargin EventPayloadKlineExchangeType = "BINANCE_MARGIN"
-	EventPayloadKlineExchangeTypeB2C2          EventPayloadKlineExchangeType = "B2C2"
-	EventPayloadKlineExchangeTypeWintermute    EventPayloadKlineExchangeType = "WINTERMUTE"
-	EventPayloadKlineExchangeTypeBlockfills    EventPayloadKlineExchangeType = "BLOCKFILLS"
-	EventPayloadKlineExchangeTypeStonex        EventPayloadKlineExchangeType = "STONEX"
-)
-
-func (r EventPayloadKlineExchangeType) IsKnown() bool {
-	switch r {
-	case EventPayloadKlineExchangeTypeBinance, EventPayloadKlineExchangeTypeBinanceMargin, EventPayloadKlineExchangeTypeB2C2, EventPayloadKlineExchangeTypeWintermute, EventPayloadKlineExchangeTypeBlockfills, EventPayloadKlineExchangeTypeStonex:
-		return true
-	}
-	return false
-}
-
-type EventPayloadKlineInterval string
-
-const (
-	EventPayloadKlineInterval1s  EventPayloadKlineInterval = "1s"
-	EventPayloadKlineInterval1m  EventPayloadKlineInterval = "1m"
-	EventPayloadKlineInterval5m  EventPayloadKlineInterval = "5m"
-	EventPayloadKlineInterval15m EventPayloadKlineInterval = "15m"
-	EventPayloadKlineInterval30m EventPayloadKlineInterval = "30m"
-	EventPayloadKlineInterval1h  EventPayloadKlineInterval = "1h"
-	EventPayloadKlineInterval2h  EventPayloadKlineInterval = "2h"
-	EventPayloadKlineInterval1d  EventPayloadKlineInterval = "1d"
-	EventPayloadKlineInterval1w  EventPayloadKlineInterval = "1w"
-)
-
-func (r EventPayloadKlineInterval) IsKnown() bool {
-	switch r {
-	case EventPayloadKlineInterval1s, EventPayloadKlineInterval1m, EventPayloadKlineInterval5m, EventPayloadKlineInterval15m, EventPayloadKlineInterval30m, EventPayloadKlineInterval1h, EventPayloadKlineInterval2h, EventPayloadKlineInterval1d, EventPayloadKlineInterval1w:
-		return true
-	}
-	return false
 }
 
 // Order type
@@ -629,7 +553,7 @@ type EventPayloadParam struct {
 	// Order book level
 	Level    param.Field[int64]                `json:"level"`
 	Interval param.Field[EventPayloadInterval] `json:"interval"`
-	Candles  param.Field[interface{}]          `json:"candles,required"`
+	Candles  param.Field[CandlesParam]         `json:"candles"`
 }
 
 func (r EventPayloadParam) MarshalJSON() (data []byte, err error) {
@@ -642,27 +566,11 @@ func (r EventPayloadParam) implementsEventPayloadUnionParam() {}
 //
 // Satisfied by [QuoteRequestParam], [PlaceOrderRequestParam],
 // [CancelOrderRequestParam], [QuoteParam], [OrderParam], [ExecutionReportParam],
-// [ExchangeAccountPortfolioParam], [OrderbookParam], [EventPayloadKlineParam],
+// [ExchangeAccountPortfolioParam], [OrderbookParam], [KlineParam],
 // [EventPayloadParam].
 type EventPayloadUnionParam interface {
 	implementsEventPayloadUnionParam()
 }
-
-type EventPayloadKlineParam struct {
-	Candles param.Field[[]OhlcvParam] `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[EventPayloadKlineExchangeType] `json:"exchangeType"`
-	Interval     param.Field[EventPayloadKlineInterval]     `json:"interval"`
-	Symbol       param.Field[string]                        `json:"symbol"`
-}
-
-func (r EventPayloadKlineParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-func (r EventPayloadKlineParam) implementsEventPayloadUnionParam() {}
 
 type EventNewParams struct {
 	Event EventParam `json:"event,required"`
