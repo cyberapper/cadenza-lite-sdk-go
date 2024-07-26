@@ -28,7 +28,7 @@ func TestEventNewWithOptionalParams(t *testing.T) {
 	_, err := client.Event.New(context.TODO(), cadenzasdk.EventNewParams{
 		Event: cadenzasdk.EventParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.EventEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.EventEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F[cadenzasdk.EventPayloadUnionParam](cadenzasdk.QuoteRequestParam{

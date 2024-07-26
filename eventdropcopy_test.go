@@ -28,7 +28,7 @@ func TestEventDropCopyDropCopyExecutionReportWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopy.DropCopyExecutionReport(context.TODO(), cadenzasdk.EventDropCopyDropCopyExecutionReportParams{
 		DropCopyExecutionReport: cadenzasdk.DropCopyExecutionReportParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.DropCopyExecutionReportEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyExecutionReportEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.ExecutionReportParam{
@@ -164,7 +164,7 @@ func TestEventDropCopyDropCopyOrderWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopy.DropCopyOrder(context.TODO(), cadenzasdk.EventDropCopyDropCopyOrderParams{
 		DropCopyOrder: cadenzasdk.DropCopyOrderParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.DropCopyOrderEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyOrderEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.OrderParam{
@@ -215,7 +215,7 @@ func TestEventDropCopyDropCopyPortfolioWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopy.DropCopyPortfolio(context.TODO(), cadenzasdk.EventDropCopyDropCopyPortfolioParams{
 		DropCopyPortfolio: cadenzasdk.DropCopyPortfolioParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.DropCopyPortfolioEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyPortfolioEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioParam{
@@ -309,7 +309,7 @@ func TestEventDropCopyDropCopyQuoteWithOptionalParams(t *testing.T) {
 	_, err := client.Event.DropCopy.DropCopyQuote(context.TODO(), cadenzasdk.EventDropCopyDropCopyQuoteParams{
 		DropCopyQuote: cadenzasdk.DropCopyQuoteParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.DropCopyQuoteEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyQuoteEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.QuoteParam{
