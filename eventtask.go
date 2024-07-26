@@ -97,6 +97,7 @@ const (
 	TaskCancelOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskCancelOrderRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
 	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyQuote             TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.quote"
 	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyOrder             TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.order"
+	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
 	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio         TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
 	TaskCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook       TaskCancelOrderRequestAckEventType = "cadenza.marketData.orderBook"
 	TaskCancelOrderRequestAckEventTypeCadenzaMarketDataKline           TaskCancelOrderRequestAckEventType = "cadenza.marketData.kline"
@@ -104,7 +105,7 @@ const (
 
 func (r TaskCancelOrderRequestAckEventType) IsKnown() bool {
 	switch r {
-	case TaskCancelOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataKline:
+	case TaskCancelOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
@@ -168,6 +169,7 @@ const (
 	TaskPlaceOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskPlaceOrderRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
 	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote             TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.quote"
 	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder             TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.order"
+	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
 	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio         TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
 	TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook       TaskPlaceOrderRequestAckEventType = "cadenza.marketData.orderBook"
 	TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataKline           TaskPlaceOrderRequestAckEventType = "cadenza.marketData.kline"
@@ -175,7 +177,7 @@ const (
 
 func (r TaskPlaceOrderRequestAckEventType) IsKnown() bool {
 	switch r {
-	case TaskPlaceOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataKline:
+	case TaskPlaceOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
@@ -239,6 +241,7 @@ const (
 	TaskQuoteRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskQuoteRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
 	TaskQuoteRequestAckEventTypeCadenzaDropCopyQuote             TaskQuoteRequestAckEventType = "cadenza.dropCopy.quote"
 	TaskQuoteRequestAckEventTypeCadenzaDropCopyOrder             TaskQuoteRequestAckEventType = "cadenza.dropCopy.order"
+	TaskQuoteRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskQuoteRequestAckEventType = "cadenza.dropCopy.executionReport"
 	TaskQuoteRequestAckEventTypeCadenzaDropCopyPortfolio         TaskQuoteRequestAckEventType = "cadenza.dropCopy.portfolio"
 	TaskQuoteRequestAckEventTypeCadenzaMarketDataOrderBook       TaskQuoteRequestAckEventType = "cadenza.marketData.orderBook"
 	TaskQuoteRequestAckEventTypeCadenzaMarketDataKline           TaskQuoteRequestAckEventType = "cadenza.marketData.kline"
@@ -246,7 +249,7 @@ const (
 
 func (r TaskQuoteRequestAckEventType) IsKnown() bool {
 	switch r {
-	case TaskQuoteRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaDropCopyQuote, TaskQuoteRequestAckEventTypeCadenzaDropCopyOrder, TaskQuoteRequestAckEventTypeCadenzaDropCopyPortfolio, TaskQuoteRequestAckEventTypeCadenzaMarketDataOrderBook, TaskQuoteRequestAckEventTypeCadenzaMarketDataKline:
+	case TaskQuoteRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaDropCopyQuote, TaskQuoteRequestAckEventTypeCadenzaDropCopyOrder, TaskQuoteRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskQuoteRequestAckEventTypeCadenzaDropCopyPortfolio, TaskQuoteRequestAckEventTypeCadenzaMarketDataOrderBook, TaskQuoteRequestAckEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
