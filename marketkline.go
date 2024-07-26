@@ -130,8 +130,6 @@ func (r klineJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r Kline) implementsEventPayload() {}
-
 // Exchange type
 type KlineExchangeType string
 
@@ -187,8 +185,6 @@ type KlineParam struct {
 func (r KlineParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
-
-func (r KlineParam) implementsEventPayloadUnionParam() {}
 
 type MarketKlineGetParams struct {
 	// Exchange type

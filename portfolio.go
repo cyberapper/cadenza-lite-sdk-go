@@ -316,8 +316,6 @@ func (r exchangeAccountPortfolioJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r ExchangeAccountPortfolio) implementsEventPayload() {}
-
 // Exchange type
 type ExchangeAccountPortfolioExchangeType string
 
@@ -354,8 +352,6 @@ type ExchangeAccountPortfolioParam struct {
 func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
-
-func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
 
 type ExchangeAccountPosition struct {
 	// Exchange account ID
