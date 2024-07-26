@@ -28,7 +28,7 @@ func TestEventMarketDataMarketDataKlineWithOptionalParams(t *testing.T) {
 	_, err := client.Event.MarketData.MarketDataKline(context.TODO(), cadenzasdk.EventMarketDataMarketDataKlineParams{
 		MarketDataKline: cadenzasdk.MarketDataKlineParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.MarketDataKlineEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.MarketDataKlineEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.KlineParam{
@@ -85,7 +85,7 @@ func TestEventMarketDataMarketDataOrderBookWithOptionalParams(t *testing.T) {
 	_, err := client.Event.MarketData.MarketDataOrderBook(context.TODO(), cadenzasdk.EventMarketDataMarketDataOrderBookParams{
 		MarketDataOrderBook: cadenzasdk.MarketDataOrderBookParam{
 			EventID:   cadenzasdk.F("eventId"),
-			EventType: cadenzasdk.F(cadenzasdk.MarketDataOrderBookEventTypeCadenzaTaskQuoteRequestAck),
+			EventType: cadenzasdk.F(cadenzasdk.MarketDataOrderBookEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.OrderbookParam{
