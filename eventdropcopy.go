@@ -31,6 +31,14 @@ func NewEventDropCopyService(opts ...option.RequestOption) (r *EventDropCopyServ
 	return
 }
 
+// PubSub event handler placeholder for cancel order request acknowledgment event
+func (r *EventDropCopyService) DropCopyCancelOrderRequestAck(ctx context.Context, body EventDropCopyDropCopyCancelOrderRequestAckParams, opts ...option.RequestOption) (res *DropCopyCancelOrderRequestAck, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "api/v2/webhook/pubsub/dropCopy/cancelOrderRequestAck"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
 // PubSub event handler for execution report drop copy event
 func (r *EventDropCopyService) DropCopyExecutionReport(ctx context.Context, body EventDropCopyDropCopyExecutionReportParams, opts ...option.RequestOption) (res *DropCopyExecutionReport, err error) {
 	opts = append(r.Options[:], opts...)
@@ -43,6 +51,14 @@ func (r *EventDropCopyService) DropCopyExecutionReport(ctx context.Context, body
 func (r *EventDropCopyService) DropCopyOrder(ctx context.Context, body EventDropCopyDropCopyOrderParams, opts ...option.RequestOption) (res *DropCopyOrder, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/webhook/pubsub/dropCopy/order"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+// PubSub event handler placeholder for place order request acknowledgment event
+func (r *EventDropCopyService) DropCopyPlaceOrderRequestAck(ctx context.Context, body EventDropCopyDropCopyPlaceOrderRequestAckParams, opts ...option.RequestOption) (res *DropCopyPlaceOrderRequestAck, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "api/v2/webhook/pubsub/dropCopy/placeOrderRequestAck"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
@@ -61,6 +77,87 @@ func (r *EventDropCopyService) DropCopyQuote(ctx context.Context, body EventDrop
 	path := "api/v2/webhook/pubsub/dropCopy/quote"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
+}
+
+// PubSub event handler placeholder for quote request acknowledgment event
+func (r *EventDropCopyService) DropCopyQuoteRequestAck(ctx context.Context, body EventDropCopyDropCopyQuoteRequestAckParams, opts ...option.RequestOption) (res *DropCopyRequestAck, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "api/v2/webhook/pubsub/dropCopy/quoteRequestAck"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+type DropCopyCancelOrderRequestAck struct {
+	// A unique identifier for the event.
+	EventID string `json:"eventId,required"`
+	// Event Type
+	EventType DropCopyCancelOrderRequestAckEventType `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp int64              `json:"timestamp,required"`
+	Payload   CancelOrderRequest `json:"payload"`
+	// The source system or module that generated the event.
+	Source string                            `json:"source"`
+	JSON   dropCopyCancelOrderRequestAckJSON `json:"-"`
+}
+
+// dropCopyCancelOrderRequestAckJSON contains the JSON metadata for the struct
+// [DropCopyCancelOrderRequestAck]
+type dropCopyCancelOrderRequestAckJSON struct {
+	EventID     apijson.Field
+	EventType   apijson.Field
+	Timestamp   apijson.Field
+	Payload     apijson.Field
+	Source      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DropCopyCancelOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r dropCopyCancelOrderRequestAckJSON) RawJSON() string {
+	return r.raw
+}
+
+// Event Type
+type DropCopyCancelOrderRequestAckEventType string
+
+const (
+	DropCopyCancelOrderRequestAckEventTypeCadenzaTaskQuote                     DropCopyCancelOrderRequestAckEventType = "cadenza.task.quote"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyQuote                 DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.quote"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyOrder                 DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.order"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport       DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio             DropCopyCancelOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook           DropCopyCancelOrderRequestAckEventType = "cadenza.marketData.orderBook"
+	DropCopyCancelOrderRequestAckEventTypeCadenzaMarketDataKline               DropCopyCancelOrderRequestAckEventType = "cadenza.marketData.kline"
+)
+
+func (r DropCopyCancelOrderRequestAckEventType) IsKnown() bool {
+	switch r {
+	case DropCopyCancelOrderRequestAckEventTypeCadenzaTaskQuote, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyQuote, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyOrder, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, DropCopyCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio, DropCopyCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook, DropCopyCancelOrderRequestAckEventTypeCadenzaMarketDataKline:
+		return true
+	}
+	return false
+}
+
+type DropCopyCancelOrderRequestAckParam struct {
+	// A unique identifier for the event.
+	EventID param.Field[string] `json:"eventId,required"`
+	// Event Type
+	EventType param.Field[DropCopyCancelOrderRequestAckEventType] `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp param.Field[int64]                   `json:"timestamp,required"`
+	Payload   param.Field[CancelOrderRequestParam] `json:"payload"`
+	// The source system or module that generated the event.
+	Source param.Field[string] `json:"source"`
+}
+
+func (r DropCopyCancelOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
 type DropCopyExecutionReport struct {
@@ -205,6 +302,79 @@ type DropCopyOrderParam struct {
 }
 
 func (r DropCopyOrderParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type DropCopyPlaceOrderRequestAck struct {
+	// A unique identifier for the event.
+	EventID string `json:"eventId,required"`
+	// Event Type
+	EventType DropCopyPlaceOrderRequestAckEventType `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp int64             `json:"timestamp,required"`
+	Payload   PlaceOrderRequest `json:"payload"`
+	// The source system or module that generated the event.
+	Source string                           `json:"source"`
+	JSON   dropCopyPlaceOrderRequestAckJSON `json:"-"`
+}
+
+// dropCopyPlaceOrderRequestAckJSON contains the JSON metadata for the struct
+// [DropCopyPlaceOrderRequestAck]
+type dropCopyPlaceOrderRequestAckJSON struct {
+	EventID     apijson.Field
+	EventType   apijson.Field
+	Timestamp   apijson.Field
+	Payload     apijson.Field
+	Source      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DropCopyPlaceOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r dropCopyPlaceOrderRequestAckJSON) RawJSON() string {
+	return r.raw
+}
+
+// Event Type
+type DropCopyPlaceOrderRequestAckEventType string
+
+const (
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaTaskQuote                     DropCopyPlaceOrderRequestAckEventType = "cadenza.task.quote"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote                 DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.quote"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder                 DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.order"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport       DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio             DropCopyPlaceOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook           DropCopyPlaceOrderRequestAckEventType = "cadenza.marketData.orderBook"
+	DropCopyPlaceOrderRequestAckEventTypeCadenzaMarketDataKline               DropCopyPlaceOrderRequestAckEventType = "cadenza.marketData.kline"
+)
+
+func (r DropCopyPlaceOrderRequestAckEventType) IsKnown() bool {
+	switch r {
+	case DropCopyPlaceOrderRequestAckEventTypeCadenzaTaskQuote, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, DropCopyPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio, DropCopyPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook, DropCopyPlaceOrderRequestAckEventTypeCadenzaMarketDataKline:
+		return true
+	}
+	return false
+}
+
+type DropCopyPlaceOrderRequestAckParam struct {
+	// A unique identifier for the event.
+	EventID param.Field[string] `json:"eventId,required"`
+	// Event Type
+	EventType param.Field[DropCopyPlaceOrderRequestAckEventType] `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp param.Field[int64]                  `json:"timestamp,required"`
+	Payload   param.Field[PlaceOrderRequestParam] `json:"payload"`
+	// The source system or module that generated the event.
+	Source param.Field[string] `json:"source"`
+}
+
+func (r DropCopyPlaceOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
@@ -353,6 +523,87 @@ func (r DropCopyQuoteParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
+type DropCopyRequestAck struct {
+	// A unique identifier for the event.
+	EventID string `json:"eventId,required"`
+	// Event Type
+	EventType DropCopyRequestAckEventType `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp int64        `json:"timestamp,required"`
+	Payload   QuoteRequest `json:"payload"`
+	// The source system or module that generated the event.
+	Source string                 `json:"source"`
+	JSON   dropCopyRequestAckJSON `json:"-"`
+}
+
+// dropCopyRequestAckJSON contains the JSON metadata for the struct
+// [DropCopyRequestAck]
+type dropCopyRequestAckJSON struct {
+	EventID     apijson.Field
+	EventType   apijson.Field
+	Timestamp   apijson.Field
+	Payload     apijson.Field
+	Source      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DropCopyRequestAck) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r dropCopyRequestAckJSON) RawJSON() string {
+	return r.raw
+}
+
+// Event Type
+type DropCopyRequestAckEventType string
+
+const (
+	DropCopyRequestAckEventTypeCadenzaTaskQuote                     DropCopyRequestAckEventType = "cadenza.task.quote"
+	DropCopyRequestAckEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyRequestAckEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyRequestAckEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyRequestAckEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyRequestAckEventTypeCadenzaDropCopyQuote                 DropCopyRequestAckEventType = "cadenza.dropCopy.quote"
+	DropCopyRequestAckEventTypeCadenzaDropCopyOrder                 DropCopyRequestAckEventType = "cadenza.dropCopy.order"
+	DropCopyRequestAckEventTypeCadenzaDropCopyExecutionReport       DropCopyRequestAckEventType = "cadenza.dropCopy.executionReport"
+	DropCopyRequestAckEventTypeCadenzaDropCopyPortfolio             DropCopyRequestAckEventType = "cadenza.dropCopy.portfolio"
+	DropCopyRequestAckEventTypeCadenzaMarketDataOrderBook           DropCopyRequestAckEventType = "cadenza.marketData.orderBook"
+	DropCopyRequestAckEventTypeCadenzaMarketDataKline               DropCopyRequestAckEventType = "cadenza.marketData.kline"
+)
+
+func (r DropCopyRequestAckEventType) IsKnown() bool {
+	switch r {
+	case DropCopyRequestAckEventTypeCadenzaTaskQuote, DropCopyRequestAckEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyRequestAckEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyRequestAckEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyRequestAckEventTypeCadenzaDropCopyQuote, DropCopyRequestAckEventTypeCadenzaDropCopyOrder, DropCopyRequestAckEventTypeCadenzaDropCopyExecutionReport, DropCopyRequestAckEventTypeCadenzaDropCopyPortfolio, DropCopyRequestAckEventTypeCadenzaMarketDataOrderBook, DropCopyRequestAckEventTypeCadenzaMarketDataKline:
+		return true
+	}
+	return false
+}
+
+type DropCopyRequestAckParam struct {
+	// A unique identifier for the event.
+	EventID param.Field[string] `json:"eventId,required"`
+	// Event Type
+	EventType param.Field[DropCopyRequestAckEventType] `json:"eventType,required"`
+	// Unix timestamp in milliseconds when the event was generated.
+	Timestamp param.Field[int64]             `json:"timestamp,required"`
+	Payload   param.Field[QuoteRequestParam] `json:"payload"`
+	// The source system or module that generated the event.
+	Source param.Field[string] `json:"source"`
+}
+
+func (r DropCopyRequestAckParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type EventDropCopyDropCopyCancelOrderRequestAckParams struct {
+	DropCopyCancelOrderRequestAck DropCopyCancelOrderRequestAckParam `json:"dropCopyCancelOrderRequestAck,required"`
+}
+
+func (r EventDropCopyDropCopyCancelOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.DropCopyCancelOrderRequestAck)
+}
+
 type EventDropCopyDropCopyExecutionReportParams struct {
 	DropCopyExecutionReport DropCopyExecutionReportParam `json:"dropCopyExecutionReport,required"`
 }
@@ -369,6 +620,14 @@ func (r EventDropCopyDropCopyOrderParams) MarshalJSON() (data []byte, err error)
 	return apijson.MarshalRoot(r.DropCopyOrder)
 }
 
+type EventDropCopyDropCopyPlaceOrderRequestAckParams struct {
+	DropCopyPlaceOrderRequestAck DropCopyPlaceOrderRequestAckParam `json:"dropCopyPlaceOrderRequestAck,required"`
+}
+
+func (r EventDropCopyDropCopyPlaceOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.DropCopyPlaceOrderRequestAck)
+}
+
 type EventDropCopyDropCopyPortfolioParams struct {
 	DropCopyPortfolio DropCopyPortfolioParam `json:"dropCopyPortfolio,required"`
 }
@@ -383,4 +642,12 @@ type EventDropCopyDropCopyQuoteParams struct {
 
 func (r EventDropCopyDropCopyQuoteParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r.DropCopyQuote)
+}
+
+type EventDropCopyDropCopyQuoteRequestAckParams struct {
+	DropCopyRequestAck DropCopyRequestAckParam `json:"dropCopyRequestAck,required"`
+}
+
+func (r EventDropCopyDropCopyQuoteRequestAckParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.DropCopyRequestAck)
 }
