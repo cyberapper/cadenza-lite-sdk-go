@@ -94,15 +94,15 @@ type ExchangeAccountBalanceBalance struct {
 	// Asset
 	Asset string `json:"asset,required"`
 	// Borrowed balance from exchange
-	Borrowed float64 `json:"borrowed"`
+	Borrowed float64 `json:"borrowed,required"`
 	// Free balance
-	Free float64 `json:"free"`
+	Free float64 `json:"free,required"`
 	// Locked balance
-	Locked float64 `json:"locked"`
+	Locked float64 `json:"locked,required"`
 	// Net Balance, net = total - borrowed
-	Net float64 `json:"net"`
+	Net float64 `json:"net,required"`
 	// Total available balance
-	Total float64                           `json:"total"`
+	Total float64                           `json:"total,required"`
 	JSON  exchangeAccountBalanceBalanceJSON `json:"-"`
 }
 
@@ -324,15 +324,15 @@ type ExchangeAccountPortfolioBalance struct {
 	// Asset
 	Asset string `json:"asset,required"`
 	// Borrowed balance from exchange
-	Borrowed float64 `json:"borrowed"`
+	Borrowed float64 `json:"borrowed,required"`
 	// Free balance
-	Free float64 `json:"free"`
+	Free float64 `json:"free,required"`
 	// Locked balance
-	Locked float64 `json:"locked"`
+	Locked float64 `json:"locked,required"`
 	// Net Balance, net = total - borrowed
-	Net float64 `json:"net"`
+	Net float64 `json:"net,required"`
 	// Total available balance
-	Total float64                             `json:"total"`
+	Total float64                             `json:"total,required"`
 	JSON  exchangeAccountPortfolioBalanceJSON `json:"-"`
 }
 
@@ -448,15 +448,15 @@ type ExchangeAccountPortfolioBalanceParam struct {
 	// Asset
 	Asset param.Field[string] `json:"asset,required"`
 	// Borrowed balance from exchange
-	Borrowed param.Field[float64] `json:"borrowed"`
+	Borrowed param.Field[float64] `json:"borrowed,required"`
 	// Free balance
-	Free param.Field[float64] `json:"free"`
+	Free param.Field[float64] `json:"free,required"`
 	// Locked balance
-	Locked param.Field[float64] `json:"locked"`
+	Locked param.Field[float64] `json:"locked,required"`
 	// Net Balance, net = total - borrowed
-	Net param.Field[float64] `json:"net"`
+	Net param.Field[float64] `json:"net,required"`
 	// Total available balance
-	Total param.Field[float64] `json:"total"`
+	Total param.Field[float64] `json:"total,required"`
 }
 
 func (r ExchangeAccountPortfolioBalanceParam) MarshalJSON() (data []byte, err error) {
