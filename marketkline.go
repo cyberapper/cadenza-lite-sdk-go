@@ -34,14 +34,16 @@ func NewMarketKlineService(opts ...option.RequestOption) (r *MarketKlineService)
 }
 
 // Get historical kline data
-func (r *MarketKlineService) Get(ctx context.Context, query MarketKlineGetParams, opts ...option.RequestOption) (res *MarketKlineGetResponse, err error) {
+func (r *MarketKlineService) Get(ctx context.Context, query MarketKlineGetParams, opts ...option.RequestOption) (res *Kline, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/market/kline"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return
 }
 
-type Ohlcv struct {
+type Candles []CandlesItem
+
+type CandlesItem struct {
 	// Close price
 	C float64 `json:"c"`
 	// High price
@@ -53,12 +55,12 @@ type Ohlcv struct {
 	// Start time (in unix milliseconds)
 	T int64 `json:"t"`
 	// Volume
-	V    float64   `json:"v"`
-	JSON ohlcvJSON `json:"-"`
+	V    float64         `json:"v"`
+	JSON candlesItemJSON `json:"-"`
 }
 
-// ohlcvJSON contains the JSON metadata for the struct [Ohlcv]
-type ohlcvJSON struct {
+// candlesItemJSON contains the JSON metadata for the struct [CandlesItem]
+type candlesItemJSON struct {
 	C           apijson.Field
 	H           apijson.Field
 	L           apijson.Field
@@ -69,15 +71,17 @@ type ohlcvJSON struct {
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *Ohlcv) UnmarshalJSON(data []byte) (err error) {
+func (r *CandlesItem) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r ohlcvJSON) RawJSON() string {
+func (r candlesItemJSON) RawJSON() string {
 	return r.raw
 }
 
-type OhlcvParam struct {
+type CandlesParam []CandlesItemParam
+
+type CandlesItemParam struct {
 	// Close price
 	C param.Field[float64] `json:"c"`
 	// High price
@@ -92,24 +96,23 @@ type OhlcvParam struct {
 	V param.Field[float64] `json:"v"`
 }
 
-func (r OhlcvParam) MarshalJSON() (data []byte, err error) {
+func (r CandlesItemParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type MarketKlineGetResponse struct {
-	Candles []Ohlcv `json:"candles"`
+type Kline struct {
+	Candles Candles `json:"candles"`
 	// The unique identifier for the account.
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
-	ExchangeType MarketKlineGetResponseExchangeType `json:"exchangeType"`
-	Interval     MarketKlineGetResponseInterval     `json:"interval"`
-	Symbol       string                             `json:"symbol"`
-	JSON         marketKlineGetResponseJSON         `json:"-"`
+	ExchangeType KlineExchangeType `json:"exchangeType"`
+	Interval     KlineInterval     `json:"interval"`
+	Symbol       string            `json:"symbol"`
+	JSON         klineJSON         `json:"-"`
 }
 
-// marketKlineGetResponseJSON contains the JSON metadata for the struct
-// [MarketKlineGetResponse]
-type marketKlineGetResponseJSON struct {
+// klineJSON contains the JSON metadata for the struct [Kline]
+type klineJSON struct {
 	Candles           apijson.Field
 	ExchangeAccountID apijson.Field
 	ExchangeType      apijson.Field
@@ -119,55 +122,73 @@ type marketKlineGetResponseJSON struct {
 	ExtraFields       map[string]apijson.Field
 }
 
-func (r *MarketKlineGetResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *Kline) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r marketKlineGetResponseJSON) RawJSON() string {
+func (r klineJSON) RawJSON() string {
 	return r.raw
 }
 
+func (r Kline) implementsEventPayload() {}
+
 // Exchange type
-type MarketKlineGetResponseExchangeType string
+type KlineExchangeType string
 
 const (
-	MarketKlineGetResponseExchangeTypeBinance       MarketKlineGetResponseExchangeType = "BINANCE"
-	MarketKlineGetResponseExchangeTypeBinanceMargin MarketKlineGetResponseExchangeType = "BINANCE_MARGIN"
-	MarketKlineGetResponseExchangeTypeB2C2          MarketKlineGetResponseExchangeType = "B2C2"
-	MarketKlineGetResponseExchangeTypeWintermute    MarketKlineGetResponseExchangeType = "WINTERMUTE"
-	MarketKlineGetResponseExchangeTypeBlockfills    MarketKlineGetResponseExchangeType = "BLOCKFILLS"
-	MarketKlineGetResponseExchangeTypeStonex        MarketKlineGetResponseExchangeType = "STONEX"
+	KlineExchangeTypeBinance       KlineExchangeType = "BINANCE"
+	KlineExchangeTypeBinanceMargin KlineExchangeType = "BINANCE_MARGIN"
+	KlineExchangeTypeB2C2          KlineExchangeType = "B2C2"
+	KlineExchangeTypeWintermute    KlineExchangeType = "WINTERMUTE"
+	KlineExchangeTypeBlockfills    KlineExchangeType = "BLOCKFILLS"
+	KlineExchangeTypeStonex        KlineExchangeType = "STONEX"
 )
 
-func (r MarketKlineGetResponseExchangeType) IsKnown() bool {
+func (r KlineExchangeType) IsKnown() bool {
 	switch r {
-	case MarketKlineGetResponseExchangeTypeBinance, MarketKlineGetResponseExchangeTypeBinanceMargin, MarketKlineGetResponseExchangeTypeB2C2, MarketKlineGetResponseExchangeTypeWintermute, MarketKlineGetResponseExchangeTypeBlockfills, MarketKlineGetResponseExchangeTypeStonex:
+	case KlineExchangeTypeBinance, KlineExchangeTypeBinanceMargin, KlineExchangeTypeB2C2, KlineExchangeTypeWintermute, KlineExchangeTypeBlockfills, KlineExchangeTypeStonex:
 		return true
 	}
 	return false
 }
 
-type MarketKlineGetResponseInterval string
+type KlineInterval string
 
 const (
-	MarketKlineGetResponseInterval1s  MarketKlineGetResponseInterval = "1s"
-	MarketKlineGetResponseInterval1m  MarketKlineGetResponseInterval = "1m"
-	MarketKlineGetResponseInterval5m  MarketKlineGetResponseInterval = "5m"
-	MarketKlineGetResponseInterval15m MarketKlineGetResponseInterval = "15m"
-	MarketKlineGetResponseInterval30m MarketKlineGetResponseInterval = "30m"
-	MarketKlineGetResponseInterval1h  MarketKlineGetResponseInterval = "1h"
-	MarketKlineGetResponseInterval2h  MarketKlineGetResponseInterval = "2h"
-	MarketKlineGetResponseInterval1d  MarketKlineGetResponseInterval = "1d"
-	MarketKlineGetResponseInterval1w  MarketKlineGetResponseInterval = "1w"
+	KlineInterval1s  KlineInterval = "1s"
+	KlineInterval1m  KlineInterval = "1m"
+	KlineInterval5m  KlineInterval = "5m"
+	KlineInterval15m KlineInterval = "15m"
+	KlineInterval30m KlineInterval = "30m"
+	KlineInterval1h  KlineInterval = "1h"
+	KlineInterval2h  KlineInterval = "2h"
+	KlineInterval1d  KlineInterval = "1d"
+	KlineInterval1w  KlineInterval = "1w"
 )
 
-func (r MarketKlineGetResponseInterval) IsKnown() bool {
+func (r KlineInterval) IsKnown() bool {
 	switch r {
-	case MarketKlineGetResponseInterval1s, MarketKlineGetResponseInterval1m, MarketKlineGetResponseInterval5m, MarketKlineGetResponseInterval15m, MarketKlineGetResponseInterval30m, MarketKlineGetResponseInterval1h, MarketKlineGetResponseInterval2h, MarketKlineGetResponseInterval1d, MarketKlineGetResponseInterval1w:
+	case KlineInterval1s, KlineInterval1m, KlineInterval5m, KlineInterval15m, KlineInterval30m, KlineInterval1h, KlineInterval2h, KlineInterval1d, KlineInterval1w:
 		return true
 	}
 	return false
 }
+
+type KlineParam struct {
+	Candles param.Field[CandlesParam] `json:"candles"`
+	// The unique identifier for the account.
+	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
+	// Exchange type
+	ExchangeType param.Field[KlineExchangeType] `json:"exchangeType"`
+	Interval     param.Field[KlineInterval]     `json:"interval"`
+	Symbol       param.Field[string]            `json:"symbol"`
+}
+
+func (r KlineParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r KlineParam) implementsEventPayloadUnionParam() {}
 
 type MarketKlineGetParams struct {
 	// Exchange type

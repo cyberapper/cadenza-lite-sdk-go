@@ -221,7 +221,7 @@ func TestEventDropCopyDropCopyPortfolioWithOptionalParams(t *testing.T) {
 			Payload: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioParam{
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 				ExchangeType:      cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioExchangeTypeBinance),
-				Balances: cadenzasdk.F([]cadenzasdk.ExchangeAccountPortfolioBalanceParam{{
+				Balances: cadenzasdk.F([]cadenzasdk.BalanceEntryParam{{
 					Asset:    cadenzasdk.F("BTC"),
 					Free:     cadenzasdk.F(1.000000),
 					Locked:   cadenzasdk.F(0.000000),
@@ -243,26 +243,26 @@ func TestEventDropCopyDropCopyPortfolioWithOptionalParams(t *testing.T) {
 					Net:      cadenzasdk.F(-2.000000),
 					Total:    cadenzasdk.F(1.000000),
 				}}),
-				Positions: cadenzasdk.F([]cadenzasdk.ExchangeAccountPortfolioPositionParam{{
+				Positions: cadenzasdk.F([]cadenzasdk.PositionEntryParam{{
 					Amount:       cadenzasdk.F(0.000000),
 					Cost:         cadenzasdk.F(0.000000),
 					EntryPrice:   cadenzasdk.F(0.000000),
-					PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsPositionSideLong),
-					Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsStatusOpen),
+					PositionSide: cadenzasdk.F(cadenzasdk.PositionEntryPositionSideLong),
+					Status:       cadenzasdk.F(cadenzasdk.PositionEntryStatusOpen),
 					Symbol:       cadenzasdk.F("BTC/USDT"),
 				}, {
 					Amount:       cadenzasdk.F(0.000000),
 					Cost:         cadenzasdk.F(0.000000),
 					EntryPrice:   cadenzasdk.F(0.000000),
-					PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsPositionSideLong),
-					Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsStatusOpen),
+					PositionSide: cadenzasdk.F(cadenzasdk.PositionEntryPositionSideLong),
+					Status:       cadenzasdk.F(cadenzasdk.PositionEntryStatusOpen),
 					Symbol:       cadenzasdk.F("BTC/USDT"),
 				}, {
 					Amount:       cadenzasdk.F(0.000000),
 					Cost:         cadenzasdk.F(0.000000),
 					EntryPrice:   cadenzasdk.F(0.000000),
-					PositionSide: cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsPositionSideLong),
-					Status:       cadenzasdk.F(cadenzasdk.ExchangeAccountPortfolioPositionsStatusOpen),
+					PositionSide: cadenzasdk.F(cadenzasdk.PositionEntryPositionSideLong),
+					Status:       cadenzasdk.F(cadenzasdk.PositionEntryStatusOpen),
 					Symbol:       cadenzasdk.F("BTC/USDT"),
 				}}),
 				Credit: cadenzasdk.F(cadenzasdk.ExchangeAccountCreditParam{
