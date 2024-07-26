@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 (2024-07-26)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **api:** OpenAPI spec update via Stainless API ([#50](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/50)) ([60e5064](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/60e50643be7047d36f5b966cbf2e4153f12920f9))
+
 ## 0.15.0 (2024-07-26)
 
 Full Changelog: [v0.14.0...v0.15.0](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.14.0...v0.15.0)
