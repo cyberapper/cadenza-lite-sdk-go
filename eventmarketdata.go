@@ -53,8 +53,8 @@ type MarketDataKline struct {
 	// Event Type
 	EventType MarketDataKlineEventType `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp int64                  `json:"timestamp,required"`
-	Payload   MarketDataKlinePayload `json:"payload"`
+	Timestamp int64 `json:"timestamp,required"`
+	Payload   Kline `json:"payload"`
 	// The source system or module that generated the event.
 	Source string              `json:"source"`
 	JSON   marketDataKlineJSON `json:"-"`
@@ -101,106 +101,19 @@ func (r MarketDataKlineEventType) IsKnown() bool {
 	return false
 }
 
-type MarketDataKlinePayload struct {
-	Candles []Ohlcv `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType MarketDataKlinePayloadExchangeType `json:"exchangeType"`
-	Interval     MarketDataKlinePayloadInterval     `json:"interval"`
-	Symbol       string                             `json:"symbol"`
-	JSON         marketDataKlinePayloadJSON         `json:"-"`
-}
-
-// marketDataKlinePayloadJSON contains the JSON metadata for the struct
-// [MarketDataKlinePayload]
-type marketDataKlinePayloadJSON struct {
-	Candles           apijson.Field
-	ExchangeAccountID apijson.Field
-	ExchangeType      apijson.Field
-	Interval          apijson.Field
-	Symbol            apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *MarketDataKlinePayload) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r marketDataKlinePayloadJSON) RawJSON() string {
-	return r.raw
-}
-
-// Exchange type
-type MarketDataKlinePayloadExchangeType string
-
-const (
-	MarketDataKlinePayloadExchangeTypeBinance       MarketDataKlinePayloadExchangeType = "BINANCE"
-	MarketDataKlinePayloadExchangeTypeBinanceMargin MarketDataKlinePayloadExchangeType = "BINANCE_MARGIN"
-	MarketDataKlinePayloadExchangeTypeB2C2          MarketDataKlinePayloadExchangeType = "B2C2"
-	MarketDataKlinePayloadExchangeTypeWintermute    MarketDataKlinePayloadExchangeType = "WINTERMUTE"
-	MarketDataKlinePayloadExchangeTypeBlockfills    MarketDataKlinePayloadExchangeType = "BLOCKFILLS"
-	MarketDataKlinePayloadExchangeTypeStonex        MarketDataKlinePayloadExchangeType = "STONEX"
-)
-
-func (r MarketDataKlinePayloadExchangeType) IsKnown() bool {
-	switch r {
-	case MarketDataKlinePayloadExchangeTypeBinance, MarketDataKlinePayloadExchangeTypeBinanceMargin, MarketDataKlinePayloadExchangeTypeB2C2, MarketDataKlinePayloadExchangeTypeWintermute, MarketDataKlinePayloadExchangeTypeBlockfills, MarketDataKlinePayloadExchangeTypeStonex:
-		return true
-	}
-	return false
-}
-
-type MarketDataKlinePayloadInterval string
-
-const (
-	MarketDataKlinePayloadInterval1s  MarketDataKlinePayloadInterval = "1s"
-	MarketDataKlinePayloadInterval1m  MarketDataKlinePayloadInterval = "1m"
-	MarketDataKlinePayloadInterval5m  MarketDataKlinePayloadInterval = "5m"
-	MarketDataKlinePayloadInterval15m MarketDataKlinePayloadInterval = "15m"
-	MarketDataKlinePayloadInterval30m MarketDataKlinePayloadInterval = "30m"
-	MarketDataKlinePayloadInterval1h  MarketDataKlinePayloadInterval = "1h"
-	MarketDataKlinePayloadInterval2h  MarketDataKlinePayloadInterval = "2h"
-	MarketDataKlinePayloadInterval1d  MarketDataKlinePayloadInterval = "1d"
-	MarketDataKlinePayloadInterval1w  MarketDataKlinePayloadInterval = "1w"
-)
-
-func (r MarketDataKlinePayloadInterval) IsKnown() bool {
-	switch r {
-	case MarketDataKlinePayloadInterval1s, MarketDataKlinePayloadInterval1m, MarketDataKlinePayloadInterval5m, MarketDataKlinePayloadInterval15m, MarketDataKlinePayloadInterval30m, MarketDataKlinePayloadInterval1h, MarketDataKlinePayloadInterval2h, MarketDataKlinePayloadInterval1d, MarketDataKlinePayloadInterval1w:
-		return true
-	}
-	return false
-}
-
 type MarketDataKlineParam struct {
 	// A unique identifier for the event.
 	EventID param.Field[string] `json:"eventId,required"`
 	// Event Type
 	EventType param.Field[MarketDataKlineEventType] `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp param.Field[int64]                       `json:"timestamp,required"`
-	Payload   param.Field[MarketDataKlinePayloadParam] `json:"payload"`
+	Timestamp param.Field[int64]      `json:"timestamp,required"`
+	Payload   param.Field[KlineParam] `json:"payload"`
 	// The source system or module that generated the event.
 	Source param.Field[string] `json:"source"`
 }
 
 func (r MarketDataKlineParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type MarketDataKlinePayloadParam struct {
-	Candles param.Field[[]OhlcvParam] `json:"candles"`
-	// The unique identifier for the account.
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
-	// Exchange type
-	ExchangeType param.Field[MarketDataKlinePayloadExchangeType] `json:"exchangeType"`
-	Interval     param.Field[MarketDataKlinePayloadInterval]     `json:"interval"`
-	Symbol       param.Field[string]                             `json:"symbol"`
-}
-
-func (r MarketDataKlinePayloadParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
