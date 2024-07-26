@@ -89,6 +89,7 @@ const (
 	EventEventTypeCadenzaTaskCancelOrderRequestAck EventEventType = "cadenza.task.cancelOrderRequestAck"
 	EventEventTypeCadenzaDropCopyQuote             EventEventType = "cadenza.dropCopy.quote"
 	EventEventTypeCadenzaDropCopyOrder             EventEventType = "cadenza.dropCopy.order"
+	EventEventTypeCadenzaDropCopyExecutionReport   EventEventType = "cadenza.dropCopy.executionReport"
 	EventEventTypeCadenzaDropCopyPortfolio         EventEventType = "cadenza.dropCopy.portfolio"
 	EventEventTypeCadenzaMarketDataOrderBook       EventEventType = "cadenza.marketData.orderBook"
 	EventEventTypeCadenzaMarketDataKline           EventEventType = "cadenza.marketData.kline"
@@ -96,7 +97,7 @@ const (
 
 func (r EventEventType) IsKnown() bool {
 	switch r {
-	case EventEventTypeCadenzaTaskQuoteRequestAck, EventEventTypeCadenzaTaskPlaceOrderRequestAck, EventEventTypeCadenzaTaskCancelOrderRequestAck, EventEventTypeCadenzaDropCopyQuote, EventEventTypeCadenzaDropCopyOrder, EventEventTypeCadenzaDropCopyPortfolio, EventEventTypeCadenzaMarketDataOrderBook, EventEventTypeCadenzaMarketDataKline:
+	case EventEventTypeCadenzaTaskQuoteRequestAck, EventEventTypeCadenzaTaskPlaceOrderRequestAck, EventEventTypeCadenzaTaskCancelOrderRequestAck, EventEventTypeCadenzaDropCopyQuote, EventEventTypeCadenzaDropCopyOrder, EventEventTypeCadenzaDropCopyExecutionReport, EventEventTypeCadenzaDropCopyPortfolio, EventEventTypeCadenzaMarketDataOrderBook, EventEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
