@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.0 (2024-07-26)
+
+Full Changelog: [v0.13.0...v0.14.0](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.13.0...v0.14.0)
+
+### Features
+
+* **api:** update via SDK Studio ([#44](https://github.com/cyberapper/cadenza-lite-sdk-go/issues/44)) ([e7ced4e](https://github.com/cyberapper/cadenza-lite-sdk-go/commit/e7ced4eaeda0fe29e95837e375174838d6fe91d7))
+
 ## 0.13.0 (2024-07-26)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/cyberapper/cadenza-lite-sdk-go/compare/v0.12.0...v0.13.0)
