@@ -258,28 +258,28 @@ func (r ExchangeAccountCreditParam) MarshalJSON() (data []byte, err error) {
 }
 
 type ExchangeAccountPortfolio struct {
-	Balances []ExchangeAccountPortfolioBalance `json:"balances,required"`
 	// Exchange Account Credit Info
 	Credit ExchangeAccountCredit `json:"credit,required"`
 	// The unique identifier for the account.
 	ExchangeAccountID string `json:"exchangeAccountId,required" format:"uuid"`
 	// Exchange type
 	ExchangeType ExchangeAccountPortfolioExchangeType `json:"exchangeType,required"`
-	Positions    []ExchangeAccountPortfolioPosition   `json:"positions,required"`
 	// The timestamp when the portfolio information was updated.
-	UpdatedAt int64                        `json:"updatedAt,required"`
-	JSON      exchangeAccountPortfolioJSON `json:"-"`
+	UpdatedAt int64                              `json:"updatedAt,required"`
+	Balances  []ExchangeAccountPortfolioBalance  `json:"balances"`
+	Positions []ExchangeAccountPortfolioPosition `json:"positions"`
+	JSON      exchangeAccountPortfolioJSON       `json:"-"`
 }
 
 // exchangeAccountPortfolioJSON contains the JSON metadata for the struct
 // [ExchangeAccountPortfolio]
 type exchangeAccountPortfolioJSON struct {
-	Balances          apijson.Field
 	Credit            apijson.Field
 	ExchangeAccountID apijson.Field
 	ExchangeType      apijson.Field
-	Positions         apijson.Field
 	UpdatedAt         apijson.Field
+	Balances          apijson.Field
+	Positions         apijson.Field
 	raw               string
 	ExtraFields       map[string]apijson.Field
 }
@@ -293,6 +293,26 @@ func (r exchangeAccountPortfolioJSON) RawJSON() string {
 }
 
 func (r ExchangeAccountPortfolio) implementsEventPayload() {}
+
+// Exchange type
+type ExchangeAccountPortfolioExchangeType string
+
+const (
+	ExchangeAccountPortfolioExchangeTypeBinance       ExchangeAccountPortfolioExchangeType = "BINANCE"
+	ExchangeAccountPortfolioExchangeTypeBinanceMargin ExchangeAccountPortfolioExchangeType = "BINANCE_MARGIN"
+	ExchangeAccountPortfolioExchangeTypeB2C2          ExchangeAccountPortfolioExchangeType = "B2C2"
+	ExchangeAccountPortfolioExchangeTypeWintermute    ExchangeAccountPortfolioExchangeType = "WINTERMUTE"
+	ExchangeAccountPortfolioExchangeTypeBlockfills    ExchangeAccountPortfolioExchangeType = "BLOCKFILLS"
+	ExchangeAccountPortfolioExchangeTypeStonex        ExchangeAccountPortfolioExchangeType = "STONEX"
+)
+
+func (r ExchangeAccountPortfolioExchangeType) IsKnown() bool {
+	switch r {
+	case ExchangeAccountPortfolioExchangeTypeBinance, ExchangeAccountPortfolioExchangeTypeBinanceMargin, ExchangeAccountPortfolioExchangeTypeB2C2, ExchangeAccountPortfolioExchangeTypeWintermute, ExchangeAccountPortfolioExchangeTypeBlockfills, ExchangeAccountPortfolioExchangeTypeStonex:
+		return true
+	}
+	return false
+}
 
 type ExchangeAccountPortfolioBalance struct {
 	// Asset
@@ -323,26 +343,6 @@ func (r *ExchangeAccountPortfolioBalance) UnmarshalJSON(data []byte) (err error)
 
 func (r exchangeAccountPortfolioBalanceJSON) RawJSON() string {
 	return r.raw
-}
-
-// Exchange type
-type ExchangeAccountPortfolioExchangeType string
-
-const (
-	ExchangeAccountPortfolioExchangeTypeBinance       ExchangeAccountPortfolioExchangeType = "BINANCE"
-	ExchangeAccountPortfolioExchangeTypeBinanceMargin ExchangeAccountPortfolioExchangeType = "BINANCE_MARGIN"
-	ExchangeAccountPortfolioExchangeTypeB2C2          ExchangeAccountPortfolioExchangeType = "B2C2"
-	ExchangeAccountPortfolioExchangeTypeWintermute    ExchangeAccountPortfolioExchangeType = "WINTERMUTE"
-	ExchangeAccountPortfolioExchangeTypeBlockfills    ExchangeAccountPortfolioExchangeType = "BLOCKFILLS"
-	ExchangeAccountPortfolioExchangeTypeStonex        ExchangeAccountPortfolioExchangeType = "STONEX"
-)
-
-func (r ExchangeAccountPortfolioExchangeType) IsKnown() bool {
-	switch r {
-	case ExchangeAccountPortfolioExchangeTypeBinance, ExchangeAccountPortfolioExchangeTypeBinanceMargin, ExchangeAccountPortfolioExchangeTypeB2C2, ExchangeAccountPortfolioExchangeTypeWintermute, ExchangeAccountPortfolioExchangeTypeBlockfills, ExchangeAccountPortfolioExchangeTypeStonex:
-		return true
-	}
-	return false
 }
 
 type ExchangeAccountPortfolioPosition struct {
@@ -414,16 +414,16 @@ func (r ExchangeAccountPortfolioPositionsStatus) IsKnown() bool {
 }
 
 type ExchangeAccountPortfolioParam struct {
-	Balances param.Field[[]ExchangeAccountPortfolioBalanceParam] `json:"balances,required"`
 	// Exchange Account Credit Info
 	Credit param.Field[ExchangeAccountCreditParam] `json:"credit,required"`
 	// The unique identifier for the account.
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId,required" format:"uuid"`
 	// Exchange type
-	ExchangeType param.Field[ExchangeAccountPortfolioExchangeType]    `json:"exchangeType,required"`
-	Positions    param.Field[[]ExchangeAccountPortfolioPositionParam] `json:"positions,required"`
+	ExchangeType param.Field[ExchangeAccountPortfolioExchangeType] `json:"exchangeType,required"`
 	// The timestamp when the portfolio information was updated.
-	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
+	UpdatedAt param.Field[int64]                                   `json:"updatedAt,required"`
+	Balances  param.Field[[]ExchangeAccountPortfolioBalanceParam]  `json:"balances"`
+	Positions param.Field[[]ExchangeAccountPortfolioPositionParam] `json:"positions"`
 }
 
 func (r ExchangeAccountPortfolioParam) MarshalJSON() (data []byte, err error) {
