@@ -13,7 +13,7 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
-func TestHealthGet(t *testing.T) {
+func TestUtilityHealth(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,7 +25,7 @@ func TestHealthGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Health.Get(context.TODO())
+	_, err := client.Utility.Health(context.TODO())
 	if err != nil {
 		var apierr *cadenzasdk.Error
 		if errors.As(err, &apierr) {
