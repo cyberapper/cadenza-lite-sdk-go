@@ -31,12 +31,12 @@ func TestEventMarketDataMarketDataKlineWithOptionalParams(t *testing.T) {
 			EventType: cadenzasdk.F(cadenzasdk.MarketDataKlineEventTypeCadenzaTaskQuoteRequestAck),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
-			Payload: cadenzasdk.F(cadenzasdk.MarketDataKlinePayloadParam{
+			Payload: cadenzasdk.F(cadenzasdk.KlineParam{
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				ExchangeType:      cadenzasdk.F(cadenzasdk.MarketDataKlinePayloadExchangeTypeBinance),
+				ExchangeType:      cadenzasdk.F(cadenzasdk.KlineExchangeTypeBinance),
 				Symbol:            cadenzasdk.F("symbol"),
-				Interval:          cadenzasdk.F(cadenzasdk.MarketDataKlinePayloadInterval1s),
-				Candles: cadenzasdk.F([]cadenzasdk.OhlcvParam{{
+				Interval:          cadenzasdk.F(cadenzasdk.KlineInterval1s),
+				Candles: cadenzasdk.F([]cadenzasdk.CandlesItemParam{{
 					C: cadenzasdk.F(0.000000),
 					H: cadenzasdk.F(0.000000),
 					L: cadenzasdk.F(0.000000),
