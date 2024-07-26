@@ -73,6 +73,28 @@ func (r *TradingOrderService) Cancel(ctx context.Context, body TradingOrderCance
 	return
 }
 
+type CancelOrderRequest struct {
+	// Order ID
+	OrderID string                 `json:"orderId,required"`
+	JSON    cancelOrderRequestJSON `json:"-"`
+}
+
+// cancelOrderRequestJSON contains the JSON metadata for the struct
+// [CancelOrderRequest]
+type cancelOrderRequestJSON struct {
+	OrderID     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CancelOrderRequest) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r cancelOrderRequestJSON) RawJSON() string {
+	return r.raw
+}
+
 type CancelOrderRequestParam struct {
 	// Order ID
 	OrderID param.Field[string] `json:"orderId,required"`
@@ -314,48 +336,76 @@ func (r OrderParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type PlaceOrderRequestParam struct {
+type PlaceOrderRequest struct {
 	// Route policy. For PRIORITY, the order request will be routed to the exchange
 	// account with the highest priority. For QUOTE, the system will execute the
 	// execution plan based on the quote. Order request with route policy QUOTE will
 	// only accept two parameters, quoteRequestId and priceSlippageTolerance
-	RoutePolicy param.Field[PlaceOrderRequestRoutePolicy] `json:"routePolicy,required"`
+	RoutePolicy PlaceOrderRequestRoutePolicy `json:"routePolicy,required"`
 	// Exchange account ID
-	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
+	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Levarage
-	Leverage param.Field[int64] `json:"leverage"`
+	Leverage int64 `json:"leverage"`
 	// Order side
-	OrderSide param.Field[PlaceOrderRequestOrderSide] `json:"orderSide"`
+	OrderSide PlaceOrderRequestOrderSide `json:"orderSide"`
 	// Order type
-	OrderType param.Field[PlaceOrderRequestOrderType] `json:"orderType"`
+	OrderType PlaceOrderRequestOrderType `json:"orderType"`
 	// Position ID for closing position in margin trading
-	PositionID param.Field[string] `json:"positionId" format:"uuid"`
+	PositionID string `json:"positionId" format:"uuid"`
 	// Price
-	Price param.Field[float64] `json:"price"`
+	Price float64 `json:"price"`
 	// Price slippage tolerance, range: [0, 0.1] with 2 decimal places
-	PriceSlippageTolerance param.Field[float64] `json:"priceSlippageTolerance"`
+	PriceSlippageTolerance float64 `json:"priceSlippageTolerance"`
 	// Priority list of exchange account ID in descending order
-	Priority param.Field[[]string] `json:"priority"`
+	Priority []string `json:"priority"`
 	// Quantity. One of quantity or quoteQuantity must be provided. If both is
 	// provided, only quantity will be used.
-	Quantity param.Field[float64] `json:"quantity"`
+	Quantity float64 `json:"quantity"`
 	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
 	// QUOTED order
-	QuoteID param.Field[string] `json:"quoteId"`
+	QuoteID string `json:"quoteId"`
 	// Quote Quantity
-	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
+	QuoteQuantity float64 `json:"quoteQuantity"`
 	// Quote request ID
-	QuoteRequestID param.Field[string] `json:"quoteRequestId" format:"uuid"`
+	QuoteRequestID string `json:"quoteRequestId" format:"uuid"`
 	// Symbol
-	Symbol param.Field[string] `json:"symbol"`
+	Symbol string `json:"symbol"`
 	// Tenant ID
-	TenantID param.Field[string] `json:"tenantId"`
+	TenantID string `json:"tenantId"`
 	// Time in force
-	TimeInForce param.Field[PlaceOrderRequestTimeInForce] `json:"timeInForce"`
+	TimeInForce PlaceOrderRequestTimeInForce `json:"timeInForce"`
+	JSON        placeOrderRequestJSON        `json:"-"`
 }
 
-func (r PlaceOrderRequestParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
+// placeOrderRequestJSON contains the JSON metadata for the struct
+// [PlaceOrderRequest]
+type placeOrderRequestJSON struct {
+	RoutePolicy            apijson.Field
+	ExchangeAccountID      apijson.Field
+	Leverage               apijson.Field
+	OrderSide              apijson.Field
+	OrderType              apijson.Field
+	PositionID             apijson.Field
+	Price                  apijson.Field
+	PriceSlippageTolerance apijson.Field
+	Priority               apijson.Field
+	Quantity               apijson.Field
+	QuoteID                apijson.Field
+	QuoteQuantity          apijson.Field
+	QuoteRequestID         apijson.Field
+	Symbol                 apijson.Field
+	TenantID               apijson.Field
+	TimeInForce            apijson.Field
+	raw                    string
+	ExtraFields            map[string]apijson.Field
+}
+
+func (r *PlaceOrderRequest) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r placeOrderRequestJSON) RawJSON() string {
+	return r.raw
 }
 
 // Route policy. For PRIORITY, the order request will be routed to the exchange
@@ -440,6 +490,50 @@ func (r PlaceOrderRequestTimeInForce) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+type PlaceOrderRequestParam struct {
+	// Route policy. For PRIORITY, the order request will be routed to the exchange
+	// account with the highest priority. For QUOTE, the system will execute the
+	// execution plan based on the quote. Order request with route policy QUOTE will
+	// only accept two parameters, quoteRequestId and priceSlippageTolerance
+	RoutePolicy param.Field[PlaceOrderRequestRoutePolicy] `json:"routePolicy,required"`
+	// Exchange account ID
+	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
+	// Levarage
+	Leverage param.Field[int64] `json:"leverage"`
+	// Order side
+	OrderSide param.Field[PlaceOrderRequestOrderSide] `json:"orderSide"`
+	// Order type
+	OrderType param.Field[PlaceOrderRequestOrderType] `json:"orderType"`
+	// Position ID for closing position in margin trading
+	PositionID param.Field[string] `json:"positionId" format:"uuid"`
+	// Price
+	Price param.Field[float64] `json:"price"`
+	// Price slippage tolerance, range: [0, 0.1] with 2 decimal places
+	PriceSlippageTolerance param.Field[float64] `json:"priceSlippageTolerance"`
+	// Priority list of exchange account ID in descending order
+	Priority param.Field[[]string] `json:"priority"`
+	// Quantity. One of quantity or quoteQuantity must be provided. If both is
+	// provided, only quantity will be used.
+	Quantity param.Field[float64] `json:"quantity"`
+	// Quote ID used by exchange for RFQ, e.g. WINTERMUTE need this field to execute
+	// QUOTED order
+	QuoteID param.Field[string] `json:"quoteId"`
+	// Quote Quantity
+	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
+	// Quote request ID
+	QuoteRequestID param.Field[string] `json:"quoteRequestId" format:"uuid"`
+	// Symbol
+	Symbol param.Field[string] `json:"symbol"`
+	// Tenant ID
+	TenantID param.Field[string] `json:"tenantId"`
+	// Time in force
+	TimeInForce param.Field[PlaceOrderRequestTimeInForce] `json:"timeInForce"`
+}
+
+func (r PlaceOrderRequestParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
 type TradingOrderNewParams struct {
