@@ -31,190 +31,29 @@ func NewEventTaskService(opts ...option.RequestOption) (r *EventTaskService) {
 	return
 }
 
-// PubSub event handler placeholder for cancel order request acknowledgment event
-func (r *EventTaskService) TaskCancelOrderRequestAck(ctx context.Context, body EventTaskTaskCancelOrderRequestAckParams, opts ...option.RequestOption) (res *TaskCancelOrderRequestAck, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/cancelOrderRequestAck"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// PubSub event handler placeholder for place order request acknowledgment event
-func (r *EventTaskService) TaskPlaceOrderRequestAck(ctx context.Context, body EventTaskTaskPlaceOrderRequestAckParams, opts ...option.RequestOption) (res *TaskPlaceOrderRequestAck, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/placeOrderRequestAck"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
 // PubSub event handler placeholder for quote request acknowledgment event
-func (r *EventTaskService) TaskQuoteRequestAck(ctx context.Context, body EventTaskTaskQuoteRequestAckParams, opts ...option.RequestOption) (res *TaskQuoteRequestAck, err error) {
+func (r *EventTaskService) TaskQuote(ctx context.Context, body EventTaskTaskQuoteParams, opts ...option.RequestOption) (res *TaskQuote, err error) {
 	opts = append(r.Options[:], opts...)
-	path := "api/v2/webhook/pubsub/task/quoteRequestAck"
+	path := "api/v2/webhook/pubsub/task/quote"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
-type TaskCancelOrderRequestAck struct {
+type TaskQuote struct {
 	// A unique identifier for the event.
 	EventID string `json:"eventId,required"`
 	// Event Type
-	EventType TaskCancelOrderRequestAckEventType `json:"eventType,required"`
-	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp int64              `json:"timestamp,required"`
-	Payload   CancelOrderRequest `json:"payload"`
-	// The source system or module that generated the event.
-	Source string                        `json:"source"`
-	JSON   taskCancelOrderRequestAckJSON `json:"-"`
-}
-
-// taskCancelOrderRequestAckJSON contains the JSON metadata for the struct
-// [TaskCancelOrderRequestAck]
-type taskCancelOrderRequestAckJSON struct {
-	EventID     apijson.Field
-	EventType   apijson.Field
-	Timestamp   apijson.Field
-	Payload     apijson.Field
-	Source      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TaskCancelOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r taskCancelOrderRequestAckJSON) RawJSON() string {
-	return r.raw
-}
-
-// Event Type
-type TaskCancelOrderRequestAckEventType string
-
-const (
-	TaskCancelOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck       TaskCancelOrderRequestAckEventType = "cadenza.task.quoteRequestAck"
-	TaskCancelOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck  TaskCancelOrderRequestAckEventType = "cadenza.task.placeOrderRequestAck"
-	TaskCancelOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskCancelOrderRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
-	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyQuote             TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.quote"
-	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyOrder             TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.order"
-	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
-	TaskCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio         TaskCancelOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
-	TaskCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook       TaskCancelOrderRequestAckEventType = "cadenza.marketData.orderBook"
-	TaskCancelOrderRequestAckEventTypeCadenzaMarketDataKline           TaskCancelOrderRequestAckEventType = "cadenza.marketData.kline"
-)
-
-func (r TaskCancelOrderRequestAckEventType) IsKnown() bool {
-	switch r {
-	case TaskCancelOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskCancelOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskCancelOrderRequestAckEventTypeCadenzaMarketDataKline:
-		return true
-	}
-	return false
-}
-
-type TaskCancelOrderRequestAckParam struct {
-	// A unique identifier for the event.
-	EventID param.Field[string] `json:"eventId,required"`
-	// Event Type
-	EventType param.Field[TaskCancelOrderRequestAckEventType] `json:"eventType,required"`
-	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp param.Field[int64]                   `json:"timestamp,required"`
-	Payload   param.Field[CancelOrderRequestParam] `json:"payload"`
-	// The source system or module that generated the event.
-	Source param.Field[string] `json:"source"`
-}
-
-func (r TaskCancelOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type TaskPlaceOrderRequestAck struct {
-	// A unique identifier for the event.
-	EventID string `json:"eventId,required"`
-	// Event Type
-	EventType TaskPlaceOrderRequestAckEventType `json:"eventType,required"`
-	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp int64             `json:"timestamp,required"`
-	Payload   PlaceOrderRequest `json:"payload"`
-	// The source system or module that generated the event.
-	Source string                       `json:"source"`
-	JSON   taskPlaceOrderRequestAckJSON `json:"-"`
-}
-
-// taskPlaceOrderRequestAckJSON contains the JSON metadata for the struct
-// [TaskPlaceOrderRequestAck]
-type taskPlaceOrderRequestAckJSON struct {
-	EventID     apijson.Field
-	EventType   apijson.Field
-	Timestamp   apijson.Field
-	Payload     apijson.Field
-	Source      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TaskPlaceOrderRequestAck) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r taskPlaceOrderRequestAckJSON) RawJSON() string {
-	return r.raw
-}
-
-// Event Type
-type TaskPlaceOrderRequestAckEventType string
-
-const (
-	TaskPlaceOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck       TaskPlaceOrderRequestAckEventType = "cadenza.task.quoteRequestAck"
-	TaskPlaceOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck  TaskPlaceOrderRequestAckEventType = "cadenza.task.placeOrderRequestAck"
-	TaskPlaceOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskPlaceOrderRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
-	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote             TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.quote"
-	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder             TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.order"
-	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.executionReport"
-	TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio         TaskPlaceOrderRequestAckEventType = "cadenza.dropCopy.portfolio"
-	TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook       TaskPlaceOrderRequestAckEventType = "cadenza.marketData.orderBook"
-	TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataKline           TaskPlaceOrderRequestAckEventType = "cadenza.marketData.kline"
-)
-
-func (r TaskPlaceOrderRequestAckEventType) IsKnown() bool {
-	switch r {
-	case TaskPlaceOrderRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyQuote, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyOrder, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskPlaceOrderRequestAckEventTypeCadenzaDropCopyPortfolio, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataOrderBook, TaskPlaceOrderRequestAckEventTypeCadenzaMarketDataKline:
-		return true
-	}
-	return false
-}
-
-type TaskPlaceOrderRequestAckParam struct {
-	// A unique identifier for the event.
-	EventID param.Field[string] `json:"eventId,required"`
-	// Event Type
-	EventType param.Field[TaskPlaceOrderRequestAckEventType] `json:"eventType,required"`
-	// Unix timestamp in milliseconds when the event was generated.
-	Timestamp param.Field[int64]                  `json:"timestamp,required"`
-	Payload   param.Field[PlaceOrderRequestParam] `json:"payload"`
-	// The source system or module that generated the event.
-	Source param.Field[string] `json:"source"`
-}
-
-func (r TaskPlaceOrderRequestAckParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type TaskQuoteRequestAck struct {
-	// A unique identifier for the event.
-	EventID string `json:"eventId,required"`
-	// Event Type
-	EventType TaskQuoteRequestAckEventType `json:"eventType,required"`
+	EventType TaskQuoteEventType `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
 	Timestamp int64        `json:"timestamp,required"`
 	Payload   QuoteRequest `json:"payload"`
 	// The source system or module that generated the event.
-	Source string                  `json:"source"`
-	JSON   taskQuoteRequestAckJSON `json:"-"`
+	Source string        `json:"source"`
+	JSON   taskQuoteJSON `json:"-"`
 }
 
-// taskQuoteRequestAckJSON contains the JSON metadata for the struct
-// [TaskQuoteRequestAck]
-type taskQuoteRequestAckJSON struct {
+// taskQuoteJSON contains the JSON metadata for the struct [TaskQuote]
+type taskQuoteJSON struct {
 	EventID     apijson.Field
 	EventType   apijson.Field
 	Timestamp   apijson.Field
@@ -224,42 +63,43 @@ type taskQuoteRequestAckJSON struct {
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *TaskQuoteRequestAck) UnmarshalJSON(data []byte) (err error) {
+func (r *TaskQuote) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r taskQuoteRequestAckJSON) RawJSON() string {
+func (r taskQuoteJSON) RawJSON() string {
 	return r.raw
 }
 
 // Event Type
-type TaskQuoteRequestAckEventType string
+type TaskQuoteEventType string
 
 const (
-	TaskQuoteRequestAckEventTypeCadenzaTaskQuoteRequestAck       TaskQuoteRequestAckEventType = "cadenza.task.quoteRequestAck"
-	TaskQuoteRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck  TaskQuoteRequestAckEventType = "cadenza.task.placeOrderRequestAck"
-	TaskQuoteRequestAckEventTypeCadenzaTaskCancelOrderRequestAck TaskQuoteRequestAckEventType = "cadenza.task.cancelOrderRequestAck"
-	TaskQuoteRequestAckEventTypeCadenzaDropCopyQuote             TaskQuoteRequestAckEventType = "cadenza.dropCopy.quote"
-	TaskQuoteRequestAckEventTypeCadenzaDropCopyOrder             TaskQuoteRequestAckEventType = "cadenza.dropCopy.order"
-	TaskQuoteRequestAckEventTypeCadenzaDropCopyExecutionReport   TaskQuoteRequestAckEventType = "cadenza.dropCopy.executionReport"
-	TaskQuoteRequestAckEventTypeCadenzaDropCopyPortfolio         TaskQuoteRequestAckEventType = "cadenza.dropCopy.portfolio"
-	TaskQuoteRequestAckEventTypeCadenzaMarketDataOrderBook       TaskQuoteRequestAckEventType = "cadenza.marketData.orderBook"
-	TaskQuoteRequestAckEventTypeCadenzaMarketDataKline           TaskQuoteRequestAckEventType = "cadenza.marketData.kline"
+	TaskQuoteEventTypeCadenzaTaskQuote                     TaskQuoteEventType = "cadenza.task.quote"
+	TaskQuoteEventTypeCadenzaDropCopyQuoteRequestAck       TaskQuoteEventType = "cadenza.dropCopy.quoteRequestAck"
+	TaskQuoteEventTypeCadenzaDropCopyPlaceOrderRequestAck  TaskQuoteEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	TaskQuoteEventTypeCadenzaDropCopyCancelOrderRequestAck TaskQuoteEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	TaskQuoteEventTypeCadenzaDropCopyQuote                 TaskQuoteEventType = "cadenza.dropCopy.quote"
+	TaskQuoteEventTypeCadenzaDropCopyOrder                 TaskQuoteEventType = "cadenza.dropCopy.order"
+	TaskQuoteEventTypeCadenzaDropCopyExecutionReport       TaskQuoteEventType = "cadenza.dropCopy.executionReport"
+	TaskQuoteEventTypeCadenzaDropCopyPortfolio             TaskQuoteEventType = "cadenza.dropCopy.portfolio"
+	TaskQuoteEventTypeCadenzaMarketDataOrderBook           TaskQuoteEventType = "cadenza.marketData.orderBook"
+	TaskQuoteEventTypeCadenzaMarketDataKline               TaskQuoteEventType = "cadenza.marketData.kline"
 )
 
-func (r TaskQuoteRequestAckEventType) IsKnown() bool {
+func (r TaskQuoteEventType) IsKnown() bool {
 	switch r {
-	case TaskQuoteRequestAckEventTypeCadenzaTaskQuoteRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskPlaceOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaTaskCancelOrderRequestAck, TaskQuoteRequestAckEventTypeCadenzaDropCopyQuote, TaskQuoteRequestAckEventTypeCadenzaDropCopyOrder, TaskQuoteRequestAckEventTypeCadenzaDropCopyExecutionReport, TaskQuoteRequestAckEventTypeCadenzaDropCopyPortfolio, TaskQuoteRequestAckEventTypeCadenzaMarketDataOrderBook, TaskQuoteRequestAckEventTypeCadenzaMarketDataKline:
+	case TaskQuoteEventTypeCadenzaTaskQuote, TaskQuoteEventTypeCadenzaDropCopyQuoteRequestAck, TaskQuoteEventTypeCadenzaDropCopyPlaceOrderRequestAck, TaskQuoteEventTypeCadenzaDropCopyCancelOrderRequestAck, TaskQuoteEventTypeCadenzaDropCopyQuote, TaskQuoteEventTypeCadenzaDropCopyOrder, TaskQuoteEventTypeCadenzaDropCopyExecutionReport, TaskQuoteEventTypeCadenzaDropCopyPortfolio, TaskQuoteEventTypeCadenzaMarketDataOrderBook, TaskQuoteEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
 }
 
-type TaskQuoteRequestAckParam struct {
+type TaskQuoteParam struct {
 	// A unique identifier for the event.
 	EventID param.Field[string] `json:"eventId,required"`
 	// Event Type
-	EventType param.Field[TaskQuoteRequestAckEventType] `json:"eventType,required"`
+	EventType param.Field[TaskQuoteEventType] `json:"eventType,required"`
 	// Unix timestamp in milliseconds when the event was generated.
 	Timestamp param.Field[int64]             `json:"timestamp,required"`
 	Payload   param.Field[QuoteRequestParam] `json:"payload"`
@@ -267,30 +107,14 @@ type TaskQuoteRequestAckParam struct {
 	Source param.Field[string] `json:"source"`
 }
 
-func (r TaskQuoteRequestAckParam) MarshalJSON() (data []byte, err error) {
+func (r TaskQuoteParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type EventTaskTaskCancelOrderRequestAckParams struct {
-	TaskCancelOrderRequestAck TaskCancelOrderRequestAckParam `json:"taskCancelOrderRequestAck,required"`
+type EventTaskTaskQuoteParams struct {
+	TaskQuote TaskQuoteParam `json:"taskQuote,required"`
 }
 
-func (r EventTaskTaskCancelOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskCancelOrderRequestAck)
-}
-
-type EventTaskTaskPlaceOrderRequestAckParams struct {
-	TaskPlaceOrderRequestAck TaskPlaceOrderRequestAckParam `json:"taskPlaceOrderRequestAck,required"`
-}
-
-func (r EventTaskTaskPlaceOrderRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskPlaceOrderRequestAck)
-}
-
-type EventTaskTaskQuoteRequestAckParams struct {
-	TaskQuoteRequestAck TaskQuoteRequestAckParam `json:"taskQuoteRequestAck,required"`
-}
-
-func (r EventTaskTaskQuoteRequestAckParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.TaskQuoteRequestAck)
+func (r EventTaskTaskQuoteParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.TaskQuote)
 }

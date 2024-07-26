@@ -100,20 +100,21 @@ func (r dropCopyExecutionReportJSON) RawJSON() string {
 type DropCopyExecutionReportEventType string
 
 const (
-	DropCopyExecutionReportEventTypeCadenzaTaskQuoteRequestAck       DropCopyExecutionReportEventType = "cadenza.task.quoteRequestAck"
-	DropCopyExecutionReportEventTypeCadenzaTaskPlaceOrderRequestAck  DropCopyExecutionReportEventType = "cadenza.task.placeOrderRequestAck"
-	DropCopyExecutionReportEventTypeCadenzaTaskCancelOrderRequestAck DropCopyExecutionReportEventType = "cadenza.task.cancelOrderRequestAck"
-	DropCopyExecutionReportEventTypeCadenzaDropCopyQuote             DropCopyExecutionReportEventType = "cadenza.dropCopy.quote"
-	DropCopyExecutionReportEventTypeCadenzaDropCopyOrder             DropCopyExecutionReportEventType = "cadenza.dropCopy.order"
-	DropCopyExecutionReportEventTypeCadenzaDropCopyExecutionReport   DropCopyExecutionReportEventType = "cadenza.dropCopy.executionReport"
-	DropCopyExecutionReportEventTypeCadenzaDropCopyPortfolio         DropCopyExecutionReportEventType = "cadenza.dropCopy.portfolio"
-	DropCopyExecutionReportEventTypeCadenzaMarketDataOrderBook       DropCopyExecutionReportEventType = "cadenza.marketData.orderBook"
-	DropCopyExecutionReportEventTypeCadenzaMarketDataKline           DropCopyExecutionReportEventType = "cadenza.marketData.kline"
+	DropCopyExecutionReportEventTypeCadenzaTaskQuote                     DropCopyExecutionReportEventType = "cadenza.task.quote"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyExecutionReportEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyExecutionReportEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyExecutionReportEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyQuote                 DropCopyExecutionReportEventType = "cadenza.dropCopy.quote"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyOrder                 DropCopyExecutionReportEventType = "cadenza.dropCopy.order"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyExecutionReport       DropCopyExecutionReportEventType = "cadenza.dropCopy.executionReport"
+	DropCopyExecutionReportEventTypeCadenzaDropCopyPortfolio             DropCopyExecutionReportEventType = "cadenza.dropCopy.portfolio"
+	DropCopyExecutionReportEventTypeCadenzaMarketDataOrderBook           DropCopyExecutionReportEventType = "cadenza.marketData.orderBook"
+	DropCopyExecutionReportEventTypeCadenzaMarketDataKline               DropCopyExecutionReportEventType = "cadenza.marketData.kline"
 )
 
 func (r DropCopyExecutionReportEventType) IsKnown() bool {
 	switch r {
-	case DropCopyExecutionReportEventTypeCadenzaTaskQuoteRequestAck, DropCopyExecutionReportEventTypeCadenzaTaskPlaceOrderRequestAck, DropCopyExecutionReportEventTypeCadenzaTaskCancelOrderRequestAck, DropCopyExecutionReportEventTypeCadenzaDropCopyQuote, DropCopyExecutionReportEventTypeCadenzaDropCopyOrder, DropCopyExecutionReportEventTypeCadenzaDropCopyExecutionReport, DropCopyExecutionReportEventTypeCadenzaDropCopyPortfolio, DropCopyExecutionReportEventTypeCadenzaMarketDataOrderBook, DropCopyExecutionReportEventTypeCadenzaMarketDataKline:
+	case DropCopyExecutionReportEventTypeCadenzaTaskQuote, DropCopyExecutionReportEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyExecutionReportEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyExecutionReportEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyExecutionReportEventTypeCadenzaDropCopyQuote, DropCopyExecutionReportEventTypeCadenzaDropCopyOrder, DropCopyExecutionReportEventTypeCadenzaDropCopyExecutionReport, DropCopyExecutionReportEventTypeCadenzaDropCopyPortfolio, DropCopyExecutionReportEventTypeCadenzaMarketDataOrderBook, DropCopyExecutionReportEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
@@ -171,20 +172,21 @@ func (r dropCopyOrderJSON) RawJSON() string {
 type DropCopyOrderEventType string
 
 const (
-	DropCopyOrderEventTypeCadenzaTaskQuoteRequestAck       DropCopyOrderEventType = "cadenza.task.quoteRequestAck"
-	DropCopyOrderEventTypeCadenzaTaskPlaceOrderRequestAck  DropCopyOrderEventType = "cadenza.task.placeOrderRequestAck"
-	DropCopyOrderEventTypeCadenzaTaskCancelOrderRequestAck DropCopyOrderEventType = "cadenza.task.cancelOrderRequestAck"
-	DropCopyOrderEventTypeCadenzaDropCopyQuote             DropCopyOrderEventType = "cadenza.dropCopy.quote"
-	DropCopyOrderEventTypeCadenzaDropCopyOrder             DropCopyOrderEventType = "cadenza.dropCopy.order"
-	DropCopyOrderEventTypeCadenzaDropCopyExecutionReport   DropCopyOrderEventType = "cadenza.dropCopy.executionReport"
-	DropCopyOrderEventTypeCadenzaDropCopyPortfolio         DropCopyOrderEventType = "cadenza.dropCopy.portfolio"
-	DropCopyOrderEventTypeCadenzaMarketDataOrderBook       DropCopyOrderEventType = "cadenza.marketData.orderBook"
-	DropCopyOrderEventTypeCadenzaMarketDataKline           DropCopyOrderEventType = "cadenza.marketData.kline"
+	DropCopyOrderEventTypeCadenzaTaskQuote                     DropCopyOrderEventType = "cadenza.task.quote"
+	DropCopyOrderEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyOrderEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyOrderEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyOrderEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyOrderEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyOrderEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyOrderEventTypeCadenzaDropCopyQuote                 DropCopyOrderEventType = "cadenza.dropCopy.quote"
+	DropCopyOrderEventTypeCadenzaDropCopyOrder                 DropCopyOrderEventType = "cadenza.dropCopy.order"
+	DropCopyOrderEventTypeCadenzaDropCopyExecutionReport       DropCopyOrderEventType = "cadenza.dropCopy.executionReport"
+	DropCopyOrderEventTypeCadenzaDropCopyPortfolio             DropCopyOrderEventType = "cadenza.dropCopy.portfolio"
+	DropCopyOrderEventTypeCadenzaMarketDataOrderBook           DropCopyOrderEventType = "cadenza.marketData.orderBook"
+	DropCopyOrderEventTypeCadenzaMarketDataKline               DropCopyOrderEventType = "cadenza.marketData.kline"
 )
 
 func (r DropCopyOrderEventType) IsKnown() bool {
 	switch r {
-	case DropCopyOrderEventTypeCadenzaTaskQuoteRequestAck, DropCopyOrderEventTypeCadenzaTaskPlaceOrderRequestAck, DropCopyOrderEventTypeCadenzaTaskCancelOrderRequestAck, DropCopyOrderEventTypeCadenzaDropCopyQuote, DropCopyOrderEventTypeCadenzaDropCopyOrder, DropCopyOrderEventTypeCadenzaDropCopyExecutionReport, DropCopyOrderEventTypeCadenzaDropCopyPortfolio, DropCopyOrderEventTypeCadenzaMarketDataOrderBook, DropCopyOrderEventTypeCadenzaMarketDataKline:
+	case DropCopyOrderEventTypeCadenzaTaskQuote, DropCopyOrderEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyOrderEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyOrderEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyOrderEventTypeCadenzaDropCopyQuote, DropCopyOrderEventTypeCadenzaDropCopyOrder, DropCopyOrderEventTypeCadenzaDropCopyExecutionReport, DropCopyOrderEventTypeCadenzaDropCopyPortfolio, DropCopyOrderEventTypeCadenzaMarketDataOrderBook, DropCopyOrderEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
@@ -243,20 +245,21 @@ func (r dropCopyPortfolioJSON) RawJSON() string {
 type DropCopyPortfolioEventType string
 
 const (
-	DropCopyPortfolioEventTypeCadenzaTaskQuoteRequestAck       DropCopyPortfolioEventType = "cadenza.task.quoteRequestAck"
-	DropCopyPortfolioEventTypeCadenzaTaskPlaceOrderRequestAck  DropCopyPortfolioEventType = "cadenza.task.placeOrderRequestAck"
-	DropCopyPortfolioEventTypeCadenzaTaskCancelOrderRequestAck DropCopyPortfolioEventType = "cadenza.task.cancelOrderRequestAck"
-	DropCopyPortfolioEventTypeCadenzaDropCopyQuote             DropCopyPortfolioEventType = "cadenza.dropCopy.quote"
-	DropCopyPortfolioEventTypeCadenzaDropCopyOrder             DropCopyPortfolioEventType = "cadenza.dropCopy.order"
-	DropCopyPortfolioEventTypeCadenzaDropCopyExecutionReport   DropCopyPortfolioEventType = "cadenza.dropCopy.executionReport"
-	DropCopyPortfolioEventTypeCadenzaDropCopyPortfolio         DropCopyPortfolioEventType = "cadenza.dropCopy.portfolio"
-	DropCopyPortfolioEventTypeCadenzaMarketDataOrderBook       DropCopyPortfolioEventType = "cadenza.marketData.orderBook"
-	DropCopyPortfolioEventTypeCadenzaMarketDataKline           DropCopyPortfolioEventType = "cadenza.marketData.kline"
+	DropCopyPortfolioEventTypeCadenzaTaskQuote                     DropCopyPortfolioEventType = "cadenza.task.quote"
+	DropCopyPortfolioEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyPortfolioEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyPortfolioEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyPortfolioEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyPortfolioEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyPortfolioEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyPortfolioEventTypeCadenzaDropCopyQuote                 DropCopyPortfolioEventType = "cadenza.dropCopy.quote"
+	DropCopyPortfolioEventTypeCadenzaDropCopyOrder                 DropCopyPortfolioEventType = "cadenza.dropCopy.order"
+	DropCopyPortfolioEventTypeCadenzaDropCopyExecutionReport       DropCopyPortfolioEventType = "cadenza.dropCopy.executionReport"
+	DropCopyPortfolioEventTypeCadenzaDropCopyPortfolio             DropCopyPortfolioEventType = "cadenza.dropCopy.portfolio"
+	DropCopyPortfolioEventTypeCadenzaMarketDataOrderBook           DropCopyPortfolioEventType = "cadenza.marketData.orderBook"
+	DropCopyPortfolioEventTypeCadenzaMarketDataKline               DropCopyPortfolioEventType = "cadenza.marketData.kline"
 )
 
 func (r DropCopyPortfolioEventType) IsKnown() bool {
 	switch r {
-	case DropCopyPortfolioEventTypeCadenzaTaskQuoteRequestAck, DropCopyPortfolioEventTypeCadenzaTaskPlaceOrderRequestAck, DropCopyPortfolioEventTypeCadenzaTaskCancelOrderRequestAck, DropCopyPortfolioEventTypeCadenzaDropCopyQuote, DropCopyPortfolioEventTypeCadenzaDropCopyOrder, DropCopyPortfolioEventTypeCadenzaDropCopyExecutionReport, DropCopyPortfolioEventTypeCadenzaDropCopyPortfolio, DropCopyPortfolioEventTypeCadenzaMarketDataOrderBook, DropCopyPortfolioEventTypeCadenzaMarketDataKline:
+	case DropCopyPortfolioEventTypeCadenzaTaskQuote, DropCopyPortfolioEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyPortfolioEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyPortfolioEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyPortfolioEventTypeCadenzaDropCopyQuote, DropCopyPortfolioEventTypeCadenzaDropCopyOrder, DropCopyPortfolioEventTypeCadenzaDropCopyExecutionReport, DropCopyPortfolioEventTypeCadenzaDropCopyPortfolio, DropCopyPortfolioEventTypeCadenzaMarketDataOrderBook, DropCopyPortfolioEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
@@ -314,20 +317,21 @@ func (r dropCopyQuoteJSON) RawJSON() string {
 type DropCopyQuoteEventType string
 
 const (
-	DropCopyQuoteEventTypeCadenzaTaskQuoteRequestAck       DropCopyQuoteEventType = "cadenza.task.quoteRequestAck"
-	DropCopyQuoteEventTypeCadenzaTaskPlaceOrderRequestAck  DropCopyQuoteEventType = "cadenza.task.placeOrderRequestAck"
-	DropCopyQuoteEventTypeCadenzaTaskCancelOrderRequestAck DropCopyQuoteEventType = "cadenza.task.cancelOrderRequestAck"
-	DropCopyQuoteEventTypeCadenzaDropCopyQuote             DropCopyQuoteEventType = "cadenza.dropCopy.quote"
-	DropCopyQuoteEventTypeCadenzaDropCopyOrder             DropCopyQuoteEventType = "cadenza.dropCopy.order"
-	DropCopyQuoteEventTypeCadenzaDropCopyExecutionReport   DropCopyQuoteEventType = "cadenza.dropCopy.executionReport"
-	DropCopyQuoteEventTypeCadenzaDropCopyPortfolio         DropCopyQuoteEventType = "cadenza.dropCopy.portfolio"
-	DropCopyQuoteEventTypeCadenzaMarketDataOrderBook       DropCopyQuoteEventType = "cadenza.marketData.orderBook"
-	DropCopyQuoteEventTypeCadenzaMarketDataKline           DropCopyQuoteEventType = "cadenza.marketData.kline"
+	DropCopyQuoteEventTypeCadenzaTaskQuote                     DropCopyQuoteEventType = "cadenza.task.quote"
+	DropCopyQuoteEventTypeCadenzaDropCopyQuoteRequestAck       DropCopyQuoteEventType = "cadenza.dropCopy.quoteRequestAck"
+	DropCopyQuoteEventTypeCadenzaDropCopyPlaceOrderRequestAck  DropCopyQuoteEventType = "cadenza.dropCopy.placeOrderRequestAck"
+	DropCopyQuoteEventTypeCadenzaDropCopyCancelOrderRequestAck DropCopyQuoteEventType = "cadenza.dropCopy.cancelOrderRequestAck"
+	DropCopyQuoteEventTypeCadenzaDropCopyQuote                 DropCopyQuoteEventType = "cadenza.dropCopy.quote"
+	DropCopyQuoteEventTypeCadenzaDropCopyOrder                 DropCopyQuoteEventType = "cadenza.dropCopy.order"
+	DropCopyQuoteEventTypeCadenzaDropCopyExecutionReport       DropCopyQuoteEventType = "cadenza.dropCopy.executionReport"
+	DropCopyQuoteEventTypeCadenzaDropCopyPortfolio             DropCopyQuoteEventType = "cadenza.dropCopy.portfolio"
+	DropCopyQuoteEventTypeCadenzaMarketDataOrderBook           DropCopyQuoteEventType = "cadenza.marketData.orderBook"
+	DropCopyQuoteEventTypeCadenzaMarketDataKline               DropCopyQuoteEventType = "cadenza.marketData.kline"
 )
 
 func (r DropCopyQuoteEventType) IsKnown() bool {
 	switch r {
-	case DropCopyQuoteEventTypeCadenzaTaskQuoteRequestAck, DropCopyQuoteEventTypeCadenzaTaskPlaceOrderRequestAck, DropCopyQuoteEventTypeCadenzaTaskCancelOrderRequestAck, DropCopyQuoteEventTypeCadenzaDropCopyQuote, DropCopyQuoteEventTypeCadenzaDropCopyOrder, DropCopyQuoteEventTypeCadenzaDropCopyExecutionReport, DropCopyQuoteEventTypeCadenzaDropCopyPortfolio, DropCopyQuoteEventTypeCadenzaMarketDataOrderBook, DropCopyQuoteEventTypeCadenzaMarketDataKline:
+	case DropCopyQuoteEventTypeCadenzaTaskQuote, DropCopyQuoteEventTypeCadenzaDropCopyQuoteRequestAck, DropCopyQuoteEventTypeCadenzaDropCopyPlaceOrderRequestAck, DropCopyQuoteEventTypeCadenzaDropCopyCancelOrderRequestAck, DropCopyQuoteEventTypeCadenzaDropCopyQuote, DropCopyQuoteEventTypeCadenzaDropCopyOrder, DropCopyQuoteEventTypeCadenzaDropCopyExecutionReport, DropCopyQuoteEventTypeCadenzaDropCopyPortfolio, DropCopyQuoteEventTypeCadenzaMarketDataOrderBook, DropCopyQuoteEventTypeCadenzaMarketDataKline:
 		return true
 	}
 	return false
