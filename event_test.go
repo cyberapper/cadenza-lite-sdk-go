@@ -31,14 +31,7 @@ func TestEventNewWithOptionalParams(t *testing.T) {
 			EventType: cadenzasdk.F(cadenzasdk.EventEventTypeCadenzaTaskQuote),
 			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
-			Payload: cadenzasdk.F[cadenzasdk.EventPayloadUnionParam](cadenzasdk.QuoteRequestParam{
-				BaseCurrency:      cadenzasdk.F("baseCurrency"),
-				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
-				OrderSide:         cadenzasdk.F("orderSide"),
-				Quantity:          cadenzasdk.F(0.000000),
-				QuoteQuantity:     cadenzasdk.F(0.000000),
-				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			}),
+			Payload:   cadenzasdk.F[any](map[string]interface{}{}),
 		},
 	})
 	if err != nil {
