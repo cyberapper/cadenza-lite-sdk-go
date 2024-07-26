@@ -86,9 +86,7 @@ Params Types:
 
 Response Types:
 
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#CancelOrderRequest">CancelOrderRequest</a>
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Order">Order</a>
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#PlaceOrderRequest">PlaceOrderRequest</a>
 
 Methods:
 
