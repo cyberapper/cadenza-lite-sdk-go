@@ -13,6 +13,38 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
+func TestEventDropCopyDropCopyCancelOrderRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.DropCopy.DropCopyCancelOrderRequestAck(context.TODO(), cadenzasdk.EventDropCopyDropCopyCancelOrderRequestAckParams{
+		DropCopyCancelOrderRequestAck: cadenzasdk.DropCopyCancelOrderRequestAckParam{
+			EventID:   cadenzasdk.F("eventId"),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyCancelOrderRequestAckEventTypeCadenzaTaskQuote),
+			Source:    cadenzasdk.F("source"),
+			Timestamp: cadenzasdk.F(int64(1632933600000)),
+			Payload: cadenzasdk.F(cadenzasdk.CancelOrderRequestParam{
+				OrderID: cadenzasdk.F("orderId"),
+			}),
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestEventDropCopyDropCopyExecutionReportWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -200,6 +232,53 @@ func TestEventDropCopyDropCopyOrderWithOptionalParams(t *testing.T) {
 	}
 }
 
+func TestEventDropCopyDropCopyPlaceOrderRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.DropCopy.DropCopyPlaceOrderRequestAck(context.TODO(), cadenzasdk.EventDropCopyDropCopyPlaceOrderRequestAckParams{
+		DropCopyPlaceOrderRequestAck: cadenzasdk.DropCopyPlaceOrderRequestAckParam{
+			EventID:   cadenzasdk.F("eventId"),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyPlaceOrderRequestAckEventTypeCadenzaTaskQuote),
+			Source:    cadenzasdk.F("source"),
+			Timestamp: cadenzasdk.F(int64(1632933600000)),
+			Payload: cadenzasdk.F(cadenzasdk.PlaceOrderRequestParam{
+				QuoteRequestID:         cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				ExchangeAccountID:      cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Leverage:               cadenzasdk.F(int64(0)),
+				OrderSide:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderSideBuy),
+				OrderType:              cadenzasdk.F(cadenzasdk.PlaceOrderRequestOrderTypeMarket),
+				PositionID:             cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Price:                  cadenzasdk.F(0.000000),
+				PriceSlippageTolerance: cadenzasdk.F(0.000000),
+				Quantity:               cadenzasdk.F(0.000000),
+				QuoteQuantity:          cadenzasdk.F(0.000000),
+				Symbol:                 cadenzasdk.F("BTC/USDT"),
+				TimeInForce:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestTimeInForceDay),
+				RoutePolicy:            cadenzasdk.F(cadenzasdk.PlaceOrderRequestRoutePolicyPriority),
+				Priority:               cadenzasdk.F([]string{"exchange_account_id_1", "exchange_account_id_2", "exchange_account_id_3"}),
+				QuoteID:                cadenzasdk.F("quoteId"),
+				TenantID:               cadenzasdk.F("tenantId"),
+			}),
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestEventDropCopyDropCopyPortfolioWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -326,6 +405,43 @@ func TestEventDropCopyDropCopyQuoteWithOptionalParams(t *testing.T) {
 				ExpiredAt:         cadenzasdk.F(int64(1632933600000)),
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 				ExchangeType:      cadenzasdk.F(cadenzasdk.QuoteExchangeTypeBinance),
+			}),
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestEventDropCopyDropCopyQuoteRequestAckWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Event.DropCopy.DropCopyQuoteRequestAck(context.TODO(), cadenzasdk.EventDropCopyDropCopyQuoteRequestAckParams{
+		DropCopyRequestAck: cadenzasdk.DropCopyRequestAckParam{
+			EventID:   cadenzasdk.F("eventId"),
+			EventType: cadenzasdk.F(cadenzasdk.DropCopyRequestAckEventTypeCadenzaTaskQuote),
+			Source:    cadenzasdk.F("source"),
+			Timestamp: cadenzasdk.F(int64(1632933600000)),
+			Payload: cadenzasdk.F(cadenzasdk.QuoteRequestParam{
+				BaseCurrency:      cadenzasdk.F("baseCurrency"),
+				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+				OrderSide:         cadenzasdk.F("orderSide"),
+				Quantity:          cadenzasdk.F(0.000000),
+				QuoteQuantity:     cadenzasdk.F(0.000000),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}),
 		},
 	})
