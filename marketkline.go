@@ -41,67 +41,8 @@ func (r *MarketKlineService) Get(ctx context.Context, query MarketKlineGetParams
 	return
 }
 
-type Candles []CandlesItem
-
-type CandlesItem struct {
-	// Close price
-	C float64 `json:"c"`
-	// High price
-	H float64 `json:"h"`
-	// Low price
-	L float64 `json:"l"`
-	// Open price
-	O float64 `json:"o"`
-	// Start time (in unix milliseconds)
-	T int64 `json:"t"`
-	// Volume
-	V    float64         `json:"v"`
-	JSON candlesItemJSON `json:"-"`
-}
-
-// candlesItemJSON contains the JSON metadata for the struct [CandlesItem]
-type candlesItemJSON struct {
-	C           apijson.Field
-	H           apijson.Field
-	L           apijson.Field
-	O           apijson.Field
-	T           apijson.Field
-	V           apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CandlesItem) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r candlesItemJSON) RawJSON() string {
-	return r.raw
-}
-
-type CandlesParam []CandlesItemParam
-
-type CandlesItemParam struct {
-	// Close price
-	C param.Field[float64] `json:"c"`
-	// High price
-	H param.Field[float64] `json:"h"`
-	// Low price
-	L param.Field[float64] `json:"l"`
-	// Open price
-	O param.Field[float64] `json:"o"`
-	// Start time (in unix milliseconds)
-	T param.Field[int64] `json:"t"`
-	// Volume
-	V param.Field[float64] `json:"v"`
-}
-
-func (r CandlesItemParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
 type Kline struct {
-	Candles Candles `json:"candles"`
+	Candles []BalanceEntry `json:"candles"`
 	// The unique identifier for the account.
 	ExchangeAccountID string `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type
@@ -173,7 +114,7 @@ func (r KlineInterval) IsKnown() bool {
 }
 
 type KlineParam struct {
-	Candles param.Field[CandlesParam] `json:"candles"`
+	Candles param.Field[[]BalanceEntryParam] `json:"candles"`
 	// The unique identifier for the account.
 	ExchangeAccountID param.Field[string] `json:"exchangeAccountId" format:"uuid"`
 	// Exchange type

@@ -62,12 +62,10 @@ Methods:
 
 Params Types:
 
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#CandlesParam">CandlesParam</a>
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#KlineParam">KlineParam</a>
 
 Response Types:
 
-- <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Candles">Candles</a>
 - <a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go">cadenzasdk</a>.<a href="https://pkg.go.dev/github.com/cyberapper/cadenza-lite-sdk-go#Kline">Kline</a>
 
 Methods:
