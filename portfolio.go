@@ -93,12 +93,16 @@ func (r exchangeAccountBalanceJSON) RawJSON() string {
 type ExchangeAccountBalanceBalance struct {
 	// Asset
 	Asset string `json:"asset,required"`
+	// Borrowed balance from exchange
+	Borrowed float64 `json:"borrowed"`
 	// Free balance
-	Free float64 `json:"free,required"`
+	Free float64 `json:"free"`
 	// Locked balance
-	Locked float64 `json:"locked,required"`
-	// Total balance
-	Total float64                           `json:"total,required"`
+	Locked float64 `json:"locked"`
+	// Net Balance, net = total - borrowed
+	Net float64 `json:"net"`
+	// Total available balance
+	Total float64                           `json:"total"`
 	JSON  exchangeAccountBalanceBalanceJSON `json:"-"`
 }
 
@@ -106,8 +110,10 @@ type ExchangeAccountBalanceBalance struct {
 // [ExchangeAccountBalanceBalance]
 type exchangeAccountBalanceBalanceJSON struct {
 	Asset       apijson.Field
+	Borrowed    apijson.Field
 	Free        apijson.Field
 	Locked      apijson.Field
+	Net         apijson.Field
 	Total       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -317,12 +323,16 @@ func (r ExchangeAccountPortfolioExchangeType) IsKnown() bool {
 type ExchangeAccountPortfolioBalance struct {
 	// Asset
 	Asset string `json:"asset,required"`
+	// Borrowed balance from exchange
+	Borrowed float64 `json:"borrowed"`
 	// Free balance
-	Free float64 `json:"free,required"`
+	Free float64 `json:"free"`
 	// Locked balance
-	Locked float64 `json:"locked,required"`
-	// Total balance
-	Total float64                             `json:"total,required"`
+	Locked float64 `json:"locked"`
+	// Net Balance, net = total - borrowed
+	Net float64 `json:"net"`
+	// Total available balance
+	Total float64                             `json:"total"`
 	JSON  exchangeAccountPortfolioBalanceJSON `json:"-"`
 }
 
@@ -330,8 +340,10 @@ type ExchangeAccountPortfolioBalance struct {
 // [ExchangeAccountPortfolioBalance]
 type exchangeAccountPortfolioBalanceJSON struct {
 	Asset       apijson.Field
+	Borrowed    apijson.Field
 	Free        apijson.Field
 	Locked      apijson.Field
+	Net         apijson.Field
 	Total       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -435,12 +447,16 @@ func (r ExchangeAccountPortfolioParam) implementsEventPayloadUnionParam() {}
 type ExchangeAccountPortfolioBalanceParam struct {
 	// Asset
 	Asset param.Field[string] `json:"asset,required"`
+	// Borrowed balance from exchange
+	Borrowed param.Field[float64] `json:"borrowed"`
 	// Free balance
-	Free param.Field[float64] `json:"free,required"`
+	Free param.Field[float64] `json:"free"`
 	// Locked balance
-	Locked param.Field[float64] `json:"locked,required"`
-	// Total balance
-	Total param.Field[float64] `json:"total,required"`
+	Locked param.Field[float64] `json:"locked"`
+	// Net Balance, net = total - borrowed
+	Net param.Field[float64] `json:"net"`
+	// Total available balance
+	Total param.Field[float64] `json:"total"`
 }
 
 func (r ExchangeAccountPortfolioBalanceParam) MarshalJSON() (data []byte, err error) {
