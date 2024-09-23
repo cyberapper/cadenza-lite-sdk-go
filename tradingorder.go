@@ -129,6 +129,8 @@ type Order struct {
 	TimeInForce OrderTimeInForce `json:"timeInForce,required"`
 	// Last updated timestamp
 	UpdatedAt int64 `json:"updatedAt,required"`
+	// Base currency
+	BaseCurrency string `json:"baseCurrency"`
 	// Fee
 	Fee float64 `json:"fee"`
 	// Fee currency
@@ -138,6 +140,8 @@ type Order struct {
 	PositionID string `json:"positionId" format:"uuid"`
 	// Price
 	Price float64 `json:"price"`
+	// Quote currency
+	QuoteCurrency string `json:"quoteCurrency"`
 	// Quote Quantity
 	QuoteQuantity float64 `json:"quoteQuantity"`
 	// Tenant ID
@@ -161,11 +165,13 @@ type orderJSON struct {
 	Symbol            apijson.Field
 	TimeInForce       apijson.Field
 	UpdatedAt         apijson.Field
+	BaseCurrency      apijson.Field
 	Fee               apijson.Field
 	FeeCurrency       apijson.Field
 	OrderID           apijson.Field
 	PositionID        apijson.Field
 	Price             apijson.Field
+	QuoteCurrency     apijson.Field
 	QuoteQuantity     apijson.Field
 	TenantID          apijson.Field
 	UserID            apijson.Field
@@ -315,6 +321,8 @@ type OrderParam struct {
 	TimeInForce param.Field[OrderTimeInForce] `json:"timeInForce,required"`
 	// Last updated timestamp
 	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
+	// Base currency
+	BaseCurrency param.Field[string] `json:"baseCurrency"`
 	// Fee
 	Fee param.Field[float64] `json:"fee"`
 	// Fee currency
@@ -324,6 +332,8 @@ type OrderParam struct {
 	PositionID param.Field[string] `json:"positionId" format:"uuid"`
 	// Price
 	Price param.Field[float64] `json:"price"`
+	// Quote currency
+	QuoteCurrency param.Field[string] `json:"quoteCurrency"`
 	// Quote Quantity
 	QuoteQuantity param.Field[float64] `json:"quoteQuantity"`
 	// Tenant ID
