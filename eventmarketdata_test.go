@@ -29,36 +29,36 @@ func TestEventMarketDataMarketDataKlineWithOptionalParams(t *testing.T) {
 		MarketDataKline: cadenzasdk.MarketDataKlineParam{
 			EventID:   cadenzasdk.F("eventId"),
 			EventType: cadenzasdk.F(cadenzasdk.MarketDataKlineEventTypeCadenzaTaskQuote),
-			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.KlineParam{
-				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				ExchangeType:      cadenzasdk.F(cadenzasdk.KlineExchangeTypeBinance),
-				Symbol:            cadenzasdk.F("symbol"),
-				Interval:          cadenzasdk.F(cadenzasdk.KlineInterval1s),
 				Candles: cadenzasdk.F([]cadenzasdk.BalanceEntryParam{{
 					Asset:    cadenzasdk.F("BTC"),
+					Borrowed: cadenzasdk.F(3.000000),
 					Free:     cadenzasdk.F(1.000000),
 					Locked:   cadenzasdk.F(0.000000),
-					Borrowed: cadenzasdk.F(3.000000),
 					Net:      cadenzasdk.F(-2.000000),
 					Total:    cadenzasdk.F(1.000000),
 				}, {
 					Asset:    cadenzasdk.F("BTC"),
+					Borrowed: cadenzasdk.F(3.000000),
 					Free:     cadenzasdk.F(1.000000),
 					Locked:   cadenzasdk.F(0.000000),
-					Borrowed: cadenzasdk.F(3.000000),
 					Net:      cadenzasdk.F(-2.000000),
 					Total:    cadenzasdk.F(1.000000),
 				}, {
 					Asset:    cadenzasdk.F("BTC"),
+					Borrowed: cadenzasdk.F(3.000000),
 					Free:     cadenzasdk.F(1.000000),
 					Locked:   cadenzasdk.F(0.000000),
-					Borrowed: cadenzasdk.F(3.000000),
 					Net:      cadenzasdk.F(-2.000000),
 					Total:    cadenzasdk.F(1.000000),
 				}}),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				ExchangeType:      cadenzasdk.F(cadenzasdk.KlineExchangeTypeBinance),
+				Interval:          cadenzasdk.F(cadenzasdk.KlineInterval1s),
+				Symbol:            cadenzasdk.F("symbol"),
 			}),
+			Source: cadenzasdk.F("source"),
 		},
 	})
 	if err != nil {
@@ -86,16 +86,16 @@ func TestEventMarketDataMarketDataOrderBookWithOptionalParams(t *testing.T) {
 		MarketDataOrderBook: cadenzasdk.MarketDataOrderBookParam{
 			EventID:   cadenzasdk.F("eventId"),
 			EventType: cadenzasdk.F(cadenzasdk.MarketDataOrderBookEventTypeCadenzaTaskQuote),
-			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.OrderbookParam{
 				Asks:              cadenzasdk.F([][]float64{{0.000000, 0.000000}, {0.000000, 0.000000}, {0.000000, 0.000000}}),
 				Bids:              cadenzasdk.F([][]float64{{0.000000, 0.000000}, {0.000000, 0.000000}, {0.000000, 0.000000}}),
-				ExchangeType:      cadenzasdk.F("exchangeType"),
 				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				Symbol:            cadenzasdk.F("symbol"),
+				ExchangeType:      cadenzasdk.F("exchangeType"),
 				Level:             cadenzasdk.F(int64(0)),
+				Symbol:            cadenzasdk.F("symbol"),
 			}),
+			Source: cadenzasdk.F("source"),
 		},
 	})
 	if err != nil {

@@ -29,16 +29,16 @@ func TestEventTaskTaskQuoteWithOptionalParams(t *testing.T) {
 		TaskQuote: cadenzasdk.TaskQuoteParam{
 			EventID:   cadenzasdk.F("eventId"),
 			EventType: cadenzasdk.F(cadenzasdk.TaskQuoteEventTypeCadenzaTaskQuote),
-			Source:    cadenzasdk.F("source"),
 			Timestamp: cadenzasdk.F(int64(1632933600000)),
 			Payload: cadenzasdk.F(cadenzasdk.QuoteRequestParam{
 				BaseCurrency:      cadenzasdk.F("baseCurrency"),
-				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
 				OrderSide:         cadenzasdk.F("orderSide"),
+				QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 				Quantity:          cadenzasdk.F(0.000000),
 				QuoteQuantity:     cadenzasdk.F(0.000000),
-				ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}),
+			Source: cadenzasdk.F("source"),
 		},
 	})
 	if err != nil {
