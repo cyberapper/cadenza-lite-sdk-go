@@ -13,7 +13,7 @@ import (
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
 )
 
-func TestTradingQuoteGetWithOptionalParams(t *testing.T) {
+func TestTradingQuotePostWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,7 +25,38 @@ func TestTradingQuoteGetWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithBearerToken("My Bearer Token"),
 	)
-	_, err := client.Trading.Quote.Get(context.TODO(), cadenzasdk.TradingQuoteGetParams{
+	_, err := client.Trading.Quote.Post(context.TODO(), cadenzasdk.TradingQuotePostParams{
+		QuoteRequest: cadenzasdk.QuoteRequestParam{
+			BaseCurrency:      cadenzasdk.F("baseCurrency"),
+			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+			OrderSide:         cadenzasdk.F("orderSide"),
+			Quantity:          cadenzasdk.F(0.000000),
+			QuoteQuantity:     cadenzasdk.F(0.000000),
+			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	})
+	if err != nil {
+		var apierr *cadenzasdk.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := cadenzasdk.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBearerToken("My Bearer Token"),
+	)
+	_, err := client.Trading.Quote.RequestForQuote(context.TODO(), cadenzasdk.TradingQuoteRequestForQuoteParams{
 		QuoteRequest: cadenzasdk.QuoteRequestParam{
 			BaseCurrency:      cadenzasdk.F("baseCurrency"),
 			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),

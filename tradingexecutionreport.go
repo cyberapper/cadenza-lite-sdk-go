@@ -9,6 +9,7 @@ import (
 
 	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apijson"
 	"github.com/cyberapper/cadenza-lite-sdk-go/internal/apiquery"
+	"github.com/cyberapper/cadenza-lite-sdk-go/internal/pagination"
 	"github.com/cyberapper/cadenza-lite-sdk-go/internal/param"
 	"github.com/cyberapper/cadenza-lite-sdk-go/internal/requestconfig"
 	"github.com/cyberapper/cadenza-lite-sdk-go/option"
@@ -34,15 +35,30 @@ func NewTradingExecutionReportService(opts ...option.RequestOption) (r *TradingE
 }
 
 // Quote will give the best quote from all available exchange accounts
-func (r *TradingExecutionReportService) List(ctx context.Context, query TradingExecutionReportListParams, opts ...option.RequestOption) (res *ExecutionReport, err error) {
+func (r *TradingExecutionReportService) List(ctx context.Context, query TradingExecutionReportListParams, opts ...option.RequestOption) (res *pagination.Offset[ExecutionReport], err error) {
+	var raw *http.Response
 	opts = append(r.Options[:], opts...)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "api/v2/trading/listExecutionReports"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
 }
 
 // Quote will give the best quote from all available exchange accounts
-func (r *TradingExecutionReportService) GetQuoteExecutionReport(ctx context.Context, query TradingExecutionReportGetQuoteExecutionReportParams, opts ...option.RequestOption) (res *QuoteExecutionReport, err error) {
+func (r *TradingExecutionReportService) ListAutoPaging(ctx context.Context, query TradingExecutionReportListParams, opts ...option.RequestOption) *pagination.OffsetAutoPager[ExecutionReport] {
+	return pagination.NewOffsetAutoPager(r.List(ctx, query, opts...))
+}
+
+// Quote will give the best quote from all available exchange accounts
+func (r *TradingExecutionReportService) GetQuoteExecutionReport(ctx context.Context, query TradingExecutionReportGetQuoteExecutionReportParams, opts ...option.RequestOption) (res *ExecutionReport, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/trading/getQuoteExecutionReport"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
@@ -71,8 +87,8 @@ type ExecutionReport struct {
 	Status ExecutionReportStatus `json:"status,required"`
 	// Last updated time of the quote execution
 	UpdatedAt int64 `json:"updatedAt,required"`
-	// Order request ID, Client Order ID
-	ClOrdID string `json:"clOrdId" format:"uuid"`
+	// Execution Report ID
+	ID string `json:"id" format:"uuid"`
 	// List of executions to fulfill the order, the order status should only have
 	// FILLED, REJECTED, or EXPIRED
 	Executions []Order `json:"executions"`
@@ -92,7 +108,7 @@ type executionReportJSON struct {
 	RoutePolicy   apijson.Field
 	Status        apijson.Field
 	UpdatedAt     apijson.Field
-	ClOrdID       apijson.Field
+	ID            apijson.Field
 	Executions    apijson.Field
 	Fees          apijson.Field
 	Order         apijson.Field
@@ -200,8 +216,8 @@ type ExecutionReportParam struct {
 	Status param.Field[ExecutionReportStatus] `json:"status,required"`
 	// Last updated time of the quote execution
 	UpdatedAt param.Field[int64] `json:"updatedAt,required"`
-	// Order request ID, Client Order ID
-	ClOrdID param.Field[string] `json:"clOrdId" format:"uuid"`
+	// Execution Report ID
+	ID param.Field[string] `json:"id" format:"uuid"`
 	// List of executions to fulfill the order, the order status should only have
 	// FILLED, REJECTED, or EXPIRED
 	Executions param.Field[[]OrderParam] `json:"executions"`
@@ -223,32 +239,6 @@ type ExecutionReportFeeParam struct {
 
 func (r ExecutionReportFeeParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
-}
-
-type QuoteExecutionReport struct {
-	// Quote request ID
-	QuoteRequestID string `json:"quoteRequestId,required" format:"uuid"`
-	// Expiration time of the quote
-	ValidUntil int64                    `json:"validUntil,required"`
-	JSON       quoteExecutionReportJSON `json:"-"`
-	ExecutionReport
-}
-
-// quoteExecutionReportJSON contains the JSON metadata for the struct
-// [QuoteExecutionReport]
-type quoteExecutionReportJSON struct {
-	QuoteRequestID apijson.Field
-	ValidUntil     apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *QuoteExecutionReport) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r quoteExecutionReportJSON) RawJSON() string {
-	return r.raw
 }
 
 type TradingExecutionReportListParams struct {
