@@ -52,7 +52,7 @@ func main() {
 		option.WithBearerToken("My Bearer Token"), // defaults to os.LookupEnv("CADENZA_CLIENT_SDK_BEARER_TOKEN")
 		option.WithEnvironmentUat(),               // defaults to option.WithEnvironmentProd()
 	)
-	utility, err := client.Utility.Health(context.TODO())
+	response, err := client.Utility.Health(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}

@@ -27,8 +27,8 @@ func TestWebhookPubsubWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Webhook.Pubsub(context.TODO(), cadenzasdk.WebhookPubsubParams{
 		Message: cadenzasdk.F(cadenzasdk.WebhookPubsubParamsMessage{
-			Data: cadenzasdk.F("U3RhaW5sZXNzIHJvY2tz"),
 			ID:   cadenzasdk.F("id"),
+			Data: cadenzasdk.F("U3RhaW5sZXNzIHJvY2tz"),
 		}),
 		Subscription: cadenzasdk.F("subscription"),
 	})
