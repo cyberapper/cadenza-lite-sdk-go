@@ -32,7 +32,15 @@ func NewTradingQuoteService(opts ...option.RequestOption) (r *TradingQuoteServic
 }
 
 // Quote will give the best quote from all available exchange accounts
-func (r *TradingQuoteService) Get(ctx context.Context, body TradingQuoteGetParams, opts ...option.RequestOption) (res *[]Quote, err error) {
+func (r *TradingQuoteService) Post(ctx context.Context, body TradingQuotePostParams, opts ...option.RequestOption) (res *[]Quote, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "api/v2/trading/fetchQuotes"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+// Quote will give the best quote from all available exchange accounts
+func (r *TradingQuoteService) RequestForQuote(ctx context.Context, body TradingQuoteRequestForQuoteParams, opts ...option.RequestOption) (res *[]Quote, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "api/v2/trading/fetchQuotes"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
@@ -206,10 +214,18 @@ func (r QuoteRequestParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type TradingQuoteGetParams struct {
+type TradingQuotePostParams struct {
 	QuoteRequest QuoteRequestParam `json:"quoteRequest,required"`
 }
 
-func (r TradingQuoteGetParams) MarshalJSON() (data []byte, err error) {
+func (r TradingQuotePostParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r.QuoteRequest)
+}
+
+type TradingQuoteRequestForQuoteParams struct {
+	QuoteRequest QuoteRequestParam `json:"quoteRequest,required"`
+}
+
+func (r TradingQuoteRequestForQuoteParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r.QuoteRequest)
 }
