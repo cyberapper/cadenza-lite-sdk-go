@@ -28,11 +28,11 @@ func TestTradingQuotePostWithOptionalParams(t *testing.T) {
 	_, err := client.Trading.Quote.Post(context.TODO(), cadenzasdk.TradingQuotePostParams{
 		QuoteRequest: cadenzasdk.QuoteRequestParam{
 			BaseCurrency:      cadenzasdk.F("baseCurrency"),
-			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
 			OrderSide:         cadenzasdk.F("orderSide"),
+			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Quantity:          cadenzasdk.F(0.000000),
 			QuoteQuantity:     cadenzasdk.F(0.000000),
-			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	})
 	if err != nil {
@@ -59,11 +59,11 @@ func TestTradingQuoteRequestForQuoteWithOptionalParams(t *testing.T) {
 	_, err := client.Trading.Quote.RequestForQuote(context.TODO(), cadenzasdk.TradingQuoteRequestForQuoteParams{
 		QuoteRequest: cadenzasdk.QuoteRequestParam{
 			BaseCurrency:      cadenzasdk.F("baseCurrency"),
-			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
 			OrderSide:         cadenzasdk.F("orderSide"),
+			QuoteCurrency:     cadenzasdk.F("quoteCurrency"),
+			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Quantity:          cadenzasdk.F(0.000000),
 			QuoteQuantity:     cadenzasdk.F(0.000000),
-			ExchangeAccountID: cadenzasdk.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	})
 	if err != nil {

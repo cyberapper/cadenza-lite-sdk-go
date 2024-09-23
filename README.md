@@ -24,7 +24,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/cyberapper/cadenza-lite-sdk-go@v0.21.0'
+go get -u 'github.com/cyberapper/cadenza-lite-sdk-go@v0.21.1'
 ```
 
 <!-- x-release-please-end -->
@@ -52,7 +52,7 @@ func main() {
 		option.WithBearerToken("My Bearer Token"), // defaults to os.LookupEnv("CADENZA_CLIENT_SDK_BEARER_TOKEN")
 		option.WithEnvironmentUat(),               // defaults to option.WithEnvironmentProd()
 	)
-	utility, err := client.Utility.Health(context.TODO())
+	response, err := client.Utility.Health(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
